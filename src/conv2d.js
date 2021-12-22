@@ -3,11 +3,32 @@
 import {Tensor} from './tensor.js';
 import {transpose} from './transpose.js';
 
-// TODO: implement autoPad
 // TODO: implement dilations
 // TODO: implement groups
 // TODO: implement activation
 // TODO: implement bias
+
+function computePaddingForAutoPad(autoPad, dilation, inputSize, filterSize, stride) {
+  const outSize = Math.ceil(inputSize / stride);
+  const dilatedFilter = (filterSize - 1) * dilation + 1;
+  const neededInput = (outSize - 1) * stride + dilatedFilter;
+  const totalPadding = neededInput > inputSize ? neededInput - inputSize : 0;
+  let paddingBegin;
+  let paddingEnd;
+  switch (autoPad) {
+    case 'same-upper':
+      paddingBegin = Math.floor(totalPadding / 2);
+      paddingEnd = Math.floor((totalPadding + 1) / 2);
+      break;
+    case 'same-lower':
+      paddingBegin = Math.floor((totalPadding + 1) / 2);
+      paddingEnd = Math.floor(totalPadding / 2);
+      break;
+    default:
+      throw new Error('The autoPad is invalid.');
+  }
+  return [paddingBegin, paddingEnd];
+}
 
 /**
  * Compute a 2-D convolution given 4-D input and filter tensors.
@@ -28,6 +49,8 @@ export function conv2d(input, filter, options = {}) {
   const padding = options.padding ? options.padding : [0, 0, 0, 0];
   const strides = options.strides ? options.strides : [1, 1];
   const groups = options.groups ? options.groups : 1;
+  const dilations = options.dilations ? options.dilations : [1, 1];
+
   const inputLayout = options.inputLayout ? options.inputLayout : 'nchw';
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
@@ -53,12 +76,24 @@ export function conv2d(input, filter, options = {}) {
   const filterInputChannels = filter.shape[1];
   const filterHeight = filter.shape[2];
   const filterWidth = filter.shape[3];
-  const beginningPaddingHeight = padding[0];
-  const endingPaddingHeight = padding[1];
-  const beginningPaddingWidth = padding[2];
-  const endingPaddingWidth = padding[3];
   const strideHeight = strides[0];
   const strideWidth = strides[1];
+  const dilationHeight = dilations[0];
+  const dilationWidth = dilations[1];
+
+  let beginningPaddingHeight;
+  let endingPaddingHeight;
+  let beginningPaddingWidth;
+  let endingPaddingWidth;
+  if (options.autoPad === undefined || options.autoPad === 'explicit') {
+    [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
+      padding;
+  } else {
+    [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
+        options.autoPad, dilationHeight, inputHeight, filterHeight, strideHeight);
+    [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
+        options.autoPad, dilationWidth, inputWidth, filterWidth, strideWidth);
+  }
 
   if (inputChannels !== filterInputChannels * groups) {
     throw Error('The input channels of filter is invalid.');
@@ -67,10 +102,10 @@ export function conv2d(input, filter, options = {}) {
   const outputShape = new Array(4);
   outputShape[0] = batchCount;
   outputShape[1] = outputChannels;
-  const outputHeight = 1 + (inputHeight - filterHeight +
+  const outputHeight = 1 + (inputHeight - filterHeight - (filterHeight - 1) * (dilationHeight - 1) +
     beginningPaddingHeight + endingPaddingHeight) / strideHeight;
   outputShape[2] = outputHeight;
-  const outputWidth = 1 + (inputWidth - filterWidth +
+  const outputWidth = 1 + (inputWidth - filterWidth - (filterWidth - 1) * (dilationWidth - 1) +
     beginningPaddingWidth + endingPaddingWidth) / strideWidth;
   outputShape[3] = outputWidth;
 
