@@ -3,15 +3,13 @@
 import {Tensor} from './tensor.js';
 import {transpose} from './transpose.js';
 
-// TODO: implement dilations
 // TODO: implement groups
 // TODO: implement activation
 // TODO: implement bias
 
-function computePaddingForAutoPad(autoPad, dilation, inputSize, filterSize, stride) {
+function computePaddingForAutoPad(autoPad, inputSize, effectiveFilterSize, stride) {
   const outSize = Math.ceil(inputSize / stride);
-  const dilatedFilter = (filterSize - 1) * dilation + 1;
-  const neededInput = (outSize - 1) * stride + dilatedFilter;
+  const neededInput = (outSize - 1) * stride + effectiveFilterSize;
   const totalPadding = neededInput > inputSize ? neededInput - inputSize : 0;
   let paddingBegin;
   let paddingEnd;
@@ -80,6 +78,8 @@ export function conv2d(input, filter, options = {}) {
   const strideWidth = strides[1];
   const dilationHeight = dilations[0];
   const dilationWidth = dilations[1];
+  const effectiveFilterHeight = filterHeight + (filterHeight - 1) * (dilationHeight - 1);
+  const effectiveFilterWidth = filterWidth + (filterWidth - 1) * (dilationWidth - 1);
 
   let beginningPaddingHeight;
   let endingPaddingHeight;
@@ -90,9 +90,9 @@ export function conv2d(input, filter, options = {}) {
       padding;
   } else {
     [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
-        options.autoPad, dilationHeight, inputHeight, filterHeight, strideHeight);
+        options.autoPad, inputHeight, effectiveFilterHeight, strideHeight);
     [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
-        options.autoPad, dilationWidth, inputWidth, filterWidth, strideWidth);
+        options.autoPad, inputWidth, effectiveFilterWidth, strideWidth);
   }
 
   if (inputChannels !== filterInputChannels * groups) {
@@ -102,34 +102,39 @@ export function conv2d(input, filter, options = {}) {
   const outputShape = new Array(4);
   outputShape[0] = batchCount;
   outputShape[1] = outputChannels;
-  const outputHeight = 1 + (inputHeight - filterHeight - (filterHeight - 1) * (dilationHeight - 1) +
-    beginningPaddingHeight + endingPaddingHeight) / strideHeight;
+  const outputHeight =
+    1 + (inputHeight - effectiveFilterHeight + beginningPaddingHeight + endingPaddingHeight) /
+      strideHeight;
   outputShape[2] = outputHeight;
-  const outputWidth = 1 + (inputWidth - filterWidth - (filterWidth - 1) * (dilationWidth - 1) +
-    beginningPaddingWidth + endingPaddingWidth) / strideWidth;
+  const outputWidth =
+    1 + (inputWidth - effectiveFilterWidth + beginningPaddingWidth + endingPaddingWidth) /
+      strideWidth;
   outputShape[3] = outputWidth;
-
   let output = new Tensor(outputShape);
+
   for (let ib = 0; ib < batchCount; ++ib) {
     for (let oc = 0; oc < outputChannels; ++oc) {
       for (let ic = 0; ic < inputChannels; ++ic) {
         for (let ih = -beginningPaddingHeight, oh = 0;
-          ih + filterHeight <= inputHeight + endingPaddingHeight;
+          ih + effectiveFilterHeight <= inputHeight + endingPaddingHeight;
           ih += strideHeight, ++oh) {
           for (let iw = -beginningPaddingWidth, ow = 0;
-            iw + filterWidth <= inputWidth + endingPaddingWidth;
+            iw + effectiveFilterWidth <= inputWidth + endingPaddingWidth;
             iw += strideWidth, ++ow) {
-            const outputLocation = [ib, oc, oh, ow];
             for (let kh = 0; kh < filterHeight; ++kh) {
               for (let kw = 0; kw < filterWidth; ++kw) {
+                const dkh = kh * dilationHeight;
+                const dkw = kw * dilationWidth;
                 let inputValue;
-                if (ih + kh < 0 || ih + kh >= inputHeight || iw + kw < 0 || iw + kw >= inputWidth) {
+                if (ih + dkh < 0 || ih + dkh >= inputHeight ||
+                    iw + dkw < 0 || iw + dkw >= inputWidth) {
                   // Zero padding.
                   inputValue = 0;
                 } else {
-                  inputValue = input.getValue([ib, ic, ih + kh, iw + kw]);
+                  inputValue = input.getValue([ib, ic, ih + dkh, iw + dkw]);
                 }
                 const filterValue = filter.getValue([oc, ic, kh, kw]);
+                const outputLocation = [ib, oc, oh, ow];
                 output.setValue(outputLocation,
                     output.getValue(outputLocation) + inputValue * filterValue);
               }
