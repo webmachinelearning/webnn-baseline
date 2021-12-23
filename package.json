@@ -1,7 +1,7 @@
 {
   "name": "webnn-baseline",
   "version": "0.1.0",
-  "description": "WebNN API baseline implementation for testing",
+  "description": "WebNN API double-precision baseline implementation for testing",
   "directories": {
     "src": "src",
     "test": "test"
