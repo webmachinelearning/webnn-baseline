@@ -1,7 +1,12 @@
 'use strict';
 
 import {conv2d} from '../src/conv2d.js';
+import {clamp} from '../src/clamp.js';
+import {leakyRelu} from '../src/leaky_relu.js';
+import {relu} from '../src/relu.js';
+import {sigmoid} from '../src/sigmoid.js';
 import {Tensor} from '../src/tensor.js';
+
 import * as utils from './utils.js';
 
 describe('test conv2d', function() {
@@ -10,6 +15,19 @@ describe('test conv2d', function() {
       activation = undefined, fusion = false, activationOptions = {}) {
     const inputTensor = new Tensor(input.shape, input.data);
     const filterTensor = new Tensor(filter.shape, filter.data);
+    if (bias) {
+      options.bias = new Tensor(bias.shape, bias.data);
+    }
+    if (activation === 'relu') {
+      options.activation = relu;
+    } else if (activation === 'relu6') {
+      options.activation = utils.bindTrailingArgs(clamp, {minValue: 0, maxValue: 6});
+    } else if (activation === 'sigmoid') {
+      options.activation = sigmoid;
+    } else if (activation === 'leakyRelu') {
+      options.activation = utils.bindTrailingArgs(leakyRelu, activationOptions);
+    }
+
     const output = conv2d(inputTensor, filterTensor, options);
     utils.checkShape(output.shape, expected.shape);
     utils.checkValue(output.data, expected.data);
@@ -1497,7 +1515,7 @@ describe('test conv2d', function() {
     testConv2d(input, filter, expected, options, bias);
     testConv2d(input, filter, expected, options, bias, 'relu', true);
     expected = {
-      shape: [4],
+      shape: [1, 4, 1, 1],
       data: [6, 6, 6, 6],
     };
     testConv2d(input, filter, expected, options, bias, 'relu6', true);

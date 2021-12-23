@@ -3,10 +3,6 @@
 import {Tensor} from './tensor.js';
 import {transpose} from './transpose.js';
 
-// TODO: implement groups
-// TODO: implement activation
-// TODO: implement bias
-
 function computePaddingForAutoPad(autoPad, inputSize, effectiveFilterSize, stride) {
   const outSize = Math.ceil(inputSize / stride);
   const neededInput = (outSize - 1) * stride + effectiveFilterSize;
@@ -48,6 +44,7 @@ export function conv2d(input, filter, options = {}) {
   const strides = options.strides ? options.strides : [1, 1];
   const groups = options.groups ? options.groups : 1;
   const dilations = options.dilations ? options.dilations : [1, 1];
+  const activation = options.activation;
 
   const inputLayout = options.inputLayout ? options.inputLayout : 'nchw';
   if (inputLayout === 'nhwc') {
@@ -81,6 +78,15 @@ export function conv2d(input, filter, options = {}) {
   const effectiveFilterHeight = filterHeight + (filterHeight - 1) * (dilationHeight - 1);
   const effectiveFilterWidth = filterWidth + (filterWidth - 1) * (dilationWidth - 1);
 
+  if (inputChannels !== filterInputChannels * groups) {
+    throw Error('The input channels of filter is invalid.');
+  }
+
+  const bias = options.bias;
+  if (bias && (bias.rank !== 1 || bias.shape[0] != outputChannels)) {
+    throw Error('the bias should be a 1-D tensor with the shape of [output_channels].');
+  }
+
   let beginningPaddingHeight;
   let endingPaddingHeight;
   let beginningPaddingWidth;
@@ -93,10 +99,6 @@ export function conv2d(input, filter, options = {}) {
         options.autoPad, inputHeight, effectiveFilterHeight, strideHeight);
     [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
         options.autoPad, inputWidth, effectiveFilterWidth, strideWidth);
-  }
-
-  if (inputChannels !== filterInputChannels * groups) {
-    throw Error('The input channels of filter is invalid.');
   }
 
   const outputShape = new Array(4);
@@ -112,37 +114,61 @@ export function conv2d(input, filter, options = {}) {
   outputShape[3] = outputWidth;
   let output = new Tensor(outputShape);
 
+  const outputChannelsPerGroup = outputChannels / groups;
+  const inputChannelsPerGroup = inputChannels / groups;
+
   for (let ib = 0; ib < batchCount; ++ib) {
-    for (let oc = 0; oc < outputChannels; ++oc) {
-      for (let ic = 0; ic < inputChannels; ++ic) {
-        for (let ih = -beginningPaddingHeight, oh = 0;
-          ih + effectiveFilterHeight <= inputHeight + endingPaddingHeight;
-          ih += strideHeight, ++oh) {
-          for (let iw = -beginningPaddingWidth, ow = 0;
-            iw + effectiveFilterWidth <= inputWidth + endingPaddingWidth;
-            iw += strideWidth, ++ow) {
-            for (let kh = 0; kh < filterHeight; ++kh) {
-              for (let kw = 0; kw < filterWidth; ++kw) {
-                const dkh = kh * dilationHeight;
-                const dkw = kw * dilationWidth;
-                let inputValue;
-                if (ih + dkh < 0 || ih + dkh >= inputHeight ||
-                    iw + dkw < 0 || iw + dkw >= inputWidth) {
-                  // Zero padding.
-                  inputValue = 0;
-                } else {
-                  inputValue = input.getValue([ib, ic, ih + dkh, iw + dkw]);
+    for (let g = 0; g < groups; ++g) {
+      for (let oc = 0; oc < outputChannelsPerGroup; ++oc) {
+        for (let ic = 0; ic < inputChannelsPerGroup; ++ic) {
+          for (let ih = -beginningPaddingHeight, oh = 0;
+            ih + effectiveFilterHeight <= inputHeight + endingPaddingHeight;
+            ih += strideHeight, ++oh) {
+            for (let iw = -beginningPaddingWidth, ow = 0;
+              iw + effectiveFilterWidth <= inputWidth + endingPaddingWidth;
+              iw += strideWidth, ++ow) {
+              const effectiveOutputChannel = oc + g * outputChannelsPerGroup;
+              const outputLocation = [ib, effectiveOutputChannel, oh, ow];
+              for (let kh = 0; kh < filterHeight; ++kh) {
+                for (let kw = 0; kw < filterWidth; ++kw) {
+                  const dkh = kh * dilationHeight;
+                  const dkw = kw * dilationWidth;
+                  let inputValue;
+                  if (ih + dkh < 0 || ih + dkh >= inputHeight ||
+                      iw + dkw < 0 || iw + dkw >= inputWidth) {
+                    // Zero padding.
+                    inputValue = 0;
+                  } else {
+                    const effectiveInputChannel = ic + g * inputChannelsPerGroup;
+                    inputValue = input.getValue([ib, effectiveInputChannel, ih + dkh, iw + dkw]);
+                  }
+                  const filterValue = filter.getValue([effectiveOutputChannel, ic, kh, kw]);
+                  output.setValue(outputLocation,
+                      output.getValue(outputLocation) + inputValue * filterValue);
                 }
-                const filterValue = filter.getValue([oc, ic, kh, kw]);
-                const outputLocation = [ib, oc, oh, ow];
-                output.setValue(outputLocation,
-                    output.getValue(outputLocation) + inputValue * filterValue);
               }
             }
           }
         }
       }
     }
+  }
+
+  if (bias) {
+    for (let ib = 0; ib < batchCount; ++ib) {
+      for (let oc = 0; oc < outputChannels; ++oc) {
+        for (let oh = 0; oh < outputHeight; ++oh) {
+          for (let ow = 0; ow < outputWidth; ++ow) {
+            const outputLocation = [ib, oc, oh, ow];
+            output.setValue(outputLocation, output.getValue(outputLocation) + bias.getValue([oc]));
+          }
+        }
+      }
+    }
+  }
+
+  if (activation) {
+    output = activation(output);
   }
 
   if (inputLayout === 'nhwc') {

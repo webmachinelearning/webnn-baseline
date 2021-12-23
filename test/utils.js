@@ -48,9 +48,9 @@ export function sizeOfShape(array) {
 }
 
 export function checkShape(shape, expected) {
-  assert.isTrue(shape.length === expected.length);
+  assert.equal(shape.length, expected.length);
   for (let i = 0; i < shape.length; ++i) {
-    assert.isTrue(shape[i] === expected[i]);
+    assert.equal(shape[i], expected[i]);
   }
 }
 
@@ -63,4 +63,10 @@ export function computeExplicitPadding(
   const paddingToBeginning = Math.floor(totalPadding / 2);
   const paddingToEnd = Math.floor((totalPadding + 1) / 2);
   return [paddingToBeginning, paddingToEnd];
+}
+
+export function bindTrailingArgs(fn, ...boundArgs) {
+  return function(...args) {
+    return fn(...args, ...boundArgs);
+  };
 }
