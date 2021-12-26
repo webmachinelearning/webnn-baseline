@@ -140,11 +140,14 @@ export function conv2d(input, filter, options = {}) {
                     inputValue = 0;
                   } else {
                     const effectiveInputChannel = ic + g * inputChannelsPerGroup;
-                    inputValue = input.getValue([ib, effectiveInputChannel, ih + dkh, iw + dkw]);
+                    inputValue = input.getValueByLocation(
+                        [ib, effectiveInputChannel, ih + dkh, iw + dkw]);
                   }
-                  const filterValue = filter.getValue([effectiveOutputChannel, ic, kh, kw]);
-                  output.setValue(outputLocation,
-                      output.getValue(outputLocation) + inputValue * filterValue);
+                  const filterValue = filter.getValueByLocation(
+                      [effectiveOutputChannel, ic, kh, kw]);
+                  let outputValue = output.getValueByLocation(outputLocation);
+                  outputValue += inputValue * filterValue;
+                  output.setValueByLocation(outputLocation, outputValue);
                 }
               }
             }
@@ -160,7 +163,10 @@ export function conv2d(input, filter, options = {}) {
         for (let oh = 0; oh < outputHeight; ++oh) {
           for (let ow = 0; ow < outputWidth; ++ow) {
             const outputLocation = [ib, oc, oh, ow];
-            output.setValue(outputLocation, output.getValue(outputLocation) + bias.getValue([oc]));
+            const biasValue = bias.getValueByLocation([oc]);
+            let outputValue = output.getValueByLocation(outputLocation);
+            outputValue += biasValue;
+            output.setValueByLocation(outputLocation, outputValue);
           }
         }
       }

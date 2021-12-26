@@ -8,7 +8,7 @@ describe('test clamp', function() {
   function testClamp(inputShape, inputValue, expected, options = {}) {
     const inputTensor = new Tensor(inputShape, inputValue);
     const outputTensor = clamp(inputTensor, options);
-    utils.checkValue(outputTensor.data, expected);
+    utils.checkValue(outputTensor, expected);
   }
 
   it('clamp', function() {

@@ -9,8 +9,8 @@ describe('test transpose', function() {
       inputShape, inputData, expectedShape, expected, permutation = undefined) {
     const inputTensor = new Tensor(inputShape, inputData);
     const outputTensor = transpose(inputTensor, {permutation});
-    utils.checkShape(outputTensor.shape, expectedShape);
-    utils.checkValue(outputTensor.data, expected);
+    utils.checkShape(outputTensor, expectedShape);
+    utils.checkValue(outputTensor, expected);
   }
 
   it('transpose default', function() {

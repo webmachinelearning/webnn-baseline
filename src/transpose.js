@@ -12,19 +12,20 @@ export function transpose(input, options = {}) {
   const permutation = options.permutation ? options.permutation :
     new Array(input.rank).fill(0).map((e, i, a) => a.length - i - 1);
   if (permutation.length !== input.rank) {
-    throw new Error('The permutation is invalid.');
+    throw new Error(
+        `The permutation length ${permutation.length} is not equal to rank ${input.rank}.`);
   }
 
   const outputShape = new Array(input.rank).fill(0).map((e, i, a) => input.shape[permutation[i]]);
   const output = new Tensor(outputShape);
-  for (let inputIndex = 0; inputIndex < input.data.length; ++inputIndex) {
-    const inputValue = input.data[inputIndex];
+  for (let inputIndex = 0; inputIndex < input.size; ++inputIndex) {
+    const inputValue = input.getValueByIndex(inputIndex);
     const inputLocation = input.locationFromIndex(inputIndex);
     const outputLocation = new Array(output.rank);
     for (let i = 0; i < permutation.length; ++i) {
       outputLocation[i] = inputLocation[permutation[i]];
     }
-    output.setValue(outputLocation, inputValue);
+    output.setValueByLocation(outputLocation, inputValue);
   }
   return output;
 }

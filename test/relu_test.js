@@ -36,7 +36,7 @@ describe('test relu', function() {
       0.,        0.,        1.4515465,  0.,         2.0361354, 0.7899623,
     ];
     const outputTensor = relu(inputTensor);
-    utils.checkShape(outputTensor.shape, expectedShape);
-    utils.checkValue(outputTensor.data, expectedData);
+    utils.checkShape(outputTensor, expectedShape);
+    utils.checkValue(outputTensor, expectedData);
   });
 });

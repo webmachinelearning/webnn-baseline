@@ -9,8 +9,10 @@ import {Tensor} from './tensor.js';
  */
 export function sigmoid(input) {
   const output = new Tensor(input.shape);
-  for (let i = 0; i < output.data.length; ++i) {
-    output.data[i] = 1 / (Math.exp(-input.data[i]) + 1);
+  for (let i = 0; i < input.size; ++i) {
+    const x = input.getValueByIndex(i);
+    const y = 1 / (Math.exp(-x) + 1);
+    output.setValueByIndex(i, y);
   }
   return output;
 }

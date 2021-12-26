@@ -10,21 +10,23 @@ import {Tensor} from './tensor.js';
  */
 export function clamp(input, options = {}) {
   const output = new Tensor(input.shape);
-  for (let i = 0; i < output.data.length; ++i) {
-    const x = input.data[i];
+  for (let i = 0; i < input.size; ++i) {
+    const x = input.getValueByIndex(i);
+    let y;
     if (options.minValue === undefined) {
       if (options.maxValue === undefined) {
-        output.data[i] = x;
+        y = x;
       } else {
-        output.data[i] = Math.min(x, options.maxValue);
+        y = Math.min(x, options.maxValue);
       }
     } else {
       if (options.maxValue === undefined) {
-        output.data[i] = Math.max(x, options.minValue);
+        y = Math.max(x, options.minValue);
       } else {
-        output.data[i] = Math.min(Math.max(x, options.minValue), options.maxValue);
+        y = Math.min(Math.max(x, options.minValue), options.maxValue);
       }
     }
+    output.setValueByIndex(i, y);
   }
   return output;
 }

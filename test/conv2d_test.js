@@ -28,9 +28,9 @@ describe('test conv2d', function() {
       options.activation = utils.bindTrailingArgs(leakyRelu, activationOptions);
     }
 
-    const output = conv2d(inputTensor, filterTensor, options);
-    utils.checkShape(output.shape, expected.shape);
-    utils.checkValue(output.data, expected.data);
+    const outputTensor = conv2d(inputTensor, filterTensor, options);
+    utils.checkShape(outputTensor, expected.shape);
+    utils.checkValue(outputTensor, expected.data);
   }
 
   it('conv2d with padding default', function() {

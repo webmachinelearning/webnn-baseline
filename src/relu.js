@@ -9,8 +9,10 @@ import {Tensor} from './tensor.js';
  */
 export function relu(input) {
   const output = new Tensor(input.shape);
-  for (let i = 0; i < output.data.length; ++i) {
-    output.data[i] = Math.max(0, input.data[i]);
+  for (let i = 0; i < output.size; ++i) {
+    const x = input.getValueByIndex(i);
+    const y = Math.max(0, x);
+    output.setValueByIndex(i, y);
   }
   return output;
 }

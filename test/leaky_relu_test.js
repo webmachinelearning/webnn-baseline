@@ -8,7 +8,7 @@ describe('test leakyRelu', function() {
   function testLeakyRelu(input, expected, options = {}) {
     const inputTensor = new Tensor(input.shape, input.value);
     const outputTensor = leakyRelu(inputTensor, options);
-    utils.checkValue(outputTensor.data, expected);
+    utils.checkValue(outputTensor, expected);
   }
 
   it('leakyRelu', function() {

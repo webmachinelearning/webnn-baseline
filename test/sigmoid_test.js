@@ -8,7 +8,7 @@ describe('test sigmoid', function() {
   async function testSigmoid(input, expected, shape) {
     const inputTensor = new Tensor(shape, input);
     const outputTensor = sigmoid(inputTensor);
-    utils.checkValue(outputTensor.data, expected);
+    utils.checkValue(outputTensor, expected);
   }
   it('sigmoid 1d', async function() {
     testSigmoid([-1, 0, 1], [0.26894143, 0.5, 0.7310586], [3]);

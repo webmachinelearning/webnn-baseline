@@ -35,22 +35,17 @@ export function almostEqual(a, b, criteria) {
 }
 
 export function checkValue(
-    output, expected, criteria = opFp32AccuracyCriteria) {
-  assert.isTrue(output.length === expected.length);
-  for (let i = 0; i < output.length; ++i) {
-    assert.isTrue(almostEqual(output[i], expected[i], criteria));
+    tensor, expected, criteria = opFp32AccuracyCriteria) {
+  assert.isTrue(tensor.size === expected.length);
+  for (let i = 0; i < expected.length; ++i) {
+    assert.isTrue(almostEqual(tensor.getValueByIndex(i), expected[i], criteria));
   }
 }
 
-export function sizeOfShape(array) {
-  return array.reduce(
-      (accumulator, currentValue) => accumulator * currentValue, 1);
-}
-
-export function checkShape(shape, expected) {
-  assert.equal(shape.length, expected.length);
-  for (let i = 0; i < shape.length; ++i) {
-    assert.equal(shape[i], expected[i]);
+export function checkShape(tensor, expected) {
+  assert.equal(tensor.rank, expected.length);
+  for (let i = 0; i < expected.length; ++i) {
+    assert.equal(tensor.shape[i], expected[i]);
   }
 }
 
