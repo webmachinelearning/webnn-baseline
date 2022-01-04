@@ -385,6 +385,74 @@ describe('test pool2d', function() {
     utils.checkValue(y, expected);
   });
 
+  it('averagePool2d pads outputSizes=[3,3]', function() {
+    const x = new Tensor([1, 1, 7, 7], [
+      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    ]);
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const outputSizes = [3, 3];
+    const y =
+        averagePool2d(x, {windowDimensions, strides, padding, outputSizes});
+    utils.checkShape(y, [1, 1, 3, 3]);
+    const expected = [9, 10.5, 12.5, 19.5, 21, 23, 33.5, 35, 37];
+    utils.checkValue(y, expected);
+  });
+
+  it('averagePool2d pads outputSizes=[4,4]', function() {
+    const x = new Tensor([1, 1, 7, 7], [
+      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    ]);
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const outputSizes = [4, 4];
+    const y =
+        averagePool2d(x, {windowDimensions, strides, padding, outputSizes});
+    utils.checkShape(y, [1, 1, 4, 4]);
+    const expected = [9, 10.5, 12.5, 13.5, 19.5, 21, 23, 24, 33.5, 35, 37, 38, 40.5, 42, 44, 45];
+    utils.checkValue(y, expected);
+  });
+
+  it('averagePool2d pads roundingType=floor', function() {
+    const x = new Tensor([1, 1, 7, 7], [
+      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    ]);
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const roundingType = 'floor';
+    const y =
+        averagePool2d(x, {windowDimensions, strides, padding, roundingType});
+    utils.checkShape(y, [1, 1, 3, 3]);
+    const expected = [9, 10.5, 12.5, 19.5, 21, 23, 33.5, 35, 37];
+    utils.checkValue(y, expected);
+  });
+
+  it('averagePool2d pads roundingType=ceil', function() {
+    const x = new Tensor([1, 1, 7, 7], [
+      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    ]);
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const roundingType = 'ceil';
+    const y =
+        averagePool2d(x, {windowDimensions, strides, padding, roundingType});
+    utils.checkShape(y, [1, 1, 4, 4]);
+    const expected = [9, 10.5, 12.5, 13.5, 19.5, 21, 23, 24, 33.5, 35, 37, 38, 40.5, 42, 44, 45];
+    utils.checkValue(y, expected);
+  });
+
   it('global averagePool2d default', function() {
     const x = new Tensor([1, 3, 5, 5], [
       -1.1289884,  0.34016284,  0.497431,    2.1915932,   0.42038894,

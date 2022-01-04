@@ -78,12 +78,8 @@ function pool2d(input, reductionFunc, options = {}) {
 
   for (let ib = 0; ib < batchCount; ++ib) {
     for (let ic = 0; ic < channels; ++ic) {
-      for (let ih = -beginningPaddingHeight, oh = 0;
-        ih + effectiveWindowHeight <= inputHeight + endingPaddingHeight;
-        ih += strideHeight, ++oh) {
-        for (let iw = -beginningPaddingWidth, ow = 0;
-          iw + effectiveWindowWidth <= inputWidth + endingPaddingWidth;
-          iw += strideWidth, ++ow) {
+      for (let ih = -beginningPaddingHeight, oh = 0; oh < outputHeight; ih += strideHeight, ++oh) {
+        for (let iw = -beginningPaddingWidth, ow = 0; ow < outputWidth; iw += strideWidth, ++ow) {
           const outputLocation = [ib, ic, oh, ow];
           const valuesInWindow = [];
           for (let kh = 0; kh < windowHeight; ++kh) {

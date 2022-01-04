@@ -129,11 +129,9 @@ export function conv2d(input, filter, options = {}) {
     for (let g = 0; g < groups; ++g) {
       for (let oc = 0; oc < outputChannelsPerGroup; ++oc) {
         for (let ic = 0; ic < inputChannelsPerGroup; ++ic) {
-          for (let ih = -beginningPaddingHeight, oh = 0;
-            ih + effectiveFilterHeight <= inputHeight + endingPaddingHeight;
+          for (let ih = -beginningPaddingHeight, oh = 0; oh < outputHeight;
             ih += strideHeight, ++oh) {
-            for (let iw = -beginningPaddingWidth, ow = 0;
-              iw + effectiveFilterWidth <= inputWidth + endingPaddingWidth;
+            for (let iw = -beginningPaddingWidth, ow = 0; ow < outputWidth;
               iw += strideWidth, ++ow) {
               const effectiveOutputChannel = oc + g * outputChannelsPerGroup;
               const outputLocation = [ib, effectiveOutputChannel, oh, ow];
