@@ -1,6 +1,6 @@
 'use strict';
 
-function sizeOfShape(array) {
+export function sizeOfShape(array) {
   return array.reduce(
       (accumulator, currentValue) => accumulator * currentValue, 1);
 }
