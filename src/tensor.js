@@ -1,7 +1,12 @@
 'use strict';
 
-export function sizeOfShape(array) {
-  return array.reduce(
+/**
+ * Compute the number of elements given a shape.
+ * @param {Array} shape
+ * @return {Number}
+ */
+export function sizeOfShape(shape) {
+  return shape.reduce(
       (accumulator, currentValue) => accumulator * currentValue, 1);
 }
 

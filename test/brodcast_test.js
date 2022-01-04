@@ -1,7 +1,7 @@
 'use strict';
 
 import {broadcast} from '../src/broadcast.js';
-import {Tensor} from '../src/tensor.js';
+import {Tensor, sizeOfShape} from '../src/tensor.js';
 import * as utils from './utils.js';
 
 describe('test broadcast', function() {
@@ -10,7 +10,7 @@ describe('test broadcast', function() {
     const inputData = [0.6338172];
     const inputTensor = new Tensor(inputShape, inputData);
     const expectedShape = [3, 4, 5];
-    const expectedData = new Array(60).fill(0.6338172);
+    const expectedData = new Array(sizeOfShape(expectedShape)).fill(0.6338172);
     const outputTensor = broadcast(inputTensor, [3, 4, 5]);
     utils.checkShape(outputTensor, expectedShape);
     utils.checkValue(outputTensor, expectedData);
