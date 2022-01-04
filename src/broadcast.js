@@ -16,7 +16,7 @@ export function broadcast(input, newShape) {
     const newAxis = newRank - i - 1;
     const axis = input.rank - i - 1;
     if (input.shape[axis] === 1 && newShape[newAxis] !== 1) {
-      broadcastAxes[newAxis] = true;
+      broadcastAxes[axis] = true;
     } else if (input.shape[axis] !== newShape[newAxis]) {
       throw new Error(`The size of new shape at axis ${newAxis} is invalid.`);
     }

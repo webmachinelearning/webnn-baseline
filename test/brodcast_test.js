@@ -5,7 +5,18 @@ import {Tensor} from '../src/tensor.js';
 import * as utils from './utils.js';
 
 describe('test broadcast', function() {
-  it('broadcast', function() {
+  it('broadcast [1] to [3, 4, 5]', function() {
+    const inputShape = [1];
+    const inputData = [0.6338172];
+    const inputTensor = new Tensor(inputShape, inputData);
+    const expectedShape = [3, 4, 5];
+    const expectedData = new Array(60).fill(0.6338172);
+    const outputTensor = broadcast(inputTensor, [3, 4, 5]);
+    utils.checkShape(outputTensor, expectedShape);
+    utils.checkValue(outputTensor, expectedData);
+  });
+
+  it('broadcast [5] to [3, 4, 5]', function() {
     const inputShape = [5];
     const inputData = [0.6338172, 1.630534, -1.3819867, -1.0427561, 1.058136];
     const inputTensor = new Tensor(inputShape, inputData);
@@ -28,6 +39,21 @@ describe('test broadcast', function() {
       1.630534052848816, -1.3819867372512817, -1.0427560806274414, 1.058135986328125,
     ];
     const outputTensor = broadcast(inputTensor, [3, 4, 5]);
+    utils.checkShape(outputTensor, expectedShape);
+    utils.checkValue(outputTensor, expectedData);
+  });
+
+  it('broadcast [2, 1, 2] to [2, 2, 2]', function() {
+    const inputShape = [2, 1, 2];
+    const inputData = [
+      0.8189771771430969, 0.9455667734146118, 0.8828932046890259, 0.3519825041294098];
+    const inputTensor = new Tensor(inputShape, inputData);
+    const expectedShape = [2, 2, 2];
+    const expectedData = [
+      0.8189771771430969, 0.9455667734146118, 0.8189771771430969, 0.9455667734146118,
+      0.8828932046890259, 0.3519825041294098, 0.8828932046890259, 0.3519825041294098,
+    ];
+    const outputTensor = broadcast(inputTensor, [2, 2, 2]);
     utils.checkShape(outputTensor, expectedShape);
     utils.checkValue(outputTensor, expectedData);
   });
