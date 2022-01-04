@@ -3,7 +3,15 @@
 import {Tensor} from './tensor.js';
 import {transpose} from './transpose.js';
 
-function computePaddingForAutoPad(autoPad, inputSize, effectiveFilterSize, stride) {
+/**
+ * Compute the beginning and ending pad given input, filter and stride.
+ * @param {String} autoPad
+ * @param {Number} inputSize
+ * @param {Number} effectiveFilterSize
+ * @param {Number} stride
+ * @return {Array} [paddingBegin, paddingEnd]
+ */
+export function computePaddingForAutoPad(autoPad, inputSize, effectiveFilterSize, stride) {
   const outSize = Math.ceil(inputSize / stride);
   const neededInput = (outSize - 1) * stride + effectiveFilterSize;
   const totalPadding = neededInput > inputSize ? neededInput - inputSize : 0;
@@ -33,11 +41,11 @@ function computePaddingForAutoPad(autoPad, inputSize, effectiveFilterSize, strid
  */
 export function conv2d(input, filter, options = {}) {
   if (input.rank !== 4) {
-    throw Error('The input should be a 4-D tensor.');
+    throw new Error('The input should be a 4-D tensor.');
   }
 
   if (filter.rank !== 4) {
-    throw Error('The filter should be a 4-D tensor.');
+    throw new Error('The filter should be a 4-D tensor.');
   }
 
   const padding = options.padding ? options.padding : [0, 0, 0, 0];
@@ -79,12 +87,12 @@ export function conv2d(input, filter, options = {}) {
   const effectiveFilterWidth = filterWidth + (filterWidth - 1) * (dilationWidth - 1);
 
   if (inputChannels !== filterInputChannels * groups) {
-    throw Error('The input channels of filter is invalid.');
+    throw new Error('The input channels of filter is invalid.');
   }
 
   const bias = options.bias;
   if (bias && (bias.rank !== 1 || bias.shape[0] != outputChannels)) {
-    throw Error('the bias should be a 1-D tensor with the shape of [output_channels].');
+    throw new Error('the bias should be a 1-D tensor with the shape of [output_channels].');
   }
 
   let beginningPaddingHeight;
@@ -133,21 +141,20 @@ export function conv2d(input, filter, options = {}) {
                 for (let kw = 0; kw < filterWidth; ++kw) {
                   const dkh = kh * dilationHeight;
                   const dkw = kw * dilationWidth;
-                  let inputValue;
                   if (ih + dkh < 0 || ih + dkh >= inputHeight ||
                       iw + dkw < 0 || iw + dkw >= inputWidth) {
-                    // Zero padding.
-                    inputValue = 0;
+                    // Skip the padding values.
+                    continue;
                   } else {
                     const effectiveInputChannel = ic + g * inputChannelsPerGroup;
-                    inputValue = input.getValueByLocation(
+                    const inputValue = input.getValueByLocation(
                         [ib, effectiveInputChannel, ih + dkh, iw + dkw]);
+                    const filterValue = filter.getValueByLocation(
+                        [effectiveOutputChannel, ic, kh, kw]);
+                    let outputValue = output.getValueByLocation(outputLocation);
+                    outputValue += inputValue * filterValue;
+                    output.setValueByLocation(outputLocation, outputValue);
                   }
-                  const filterValue = filter.getValueByLocation(
-                      [effectiveOutputChannel, ic, kh, kw]);
-                  let outputValue = output.getValueByLocation(outputLocation);
-                  outputValue += inputValue * filterValue;
-                  output.setValueByLocation(outputLocation, outputValue);
                 }
               }
             }
