@@ -3,7 +3,7 @@
 import {Tensor, sizeOfShape} from './tensor.js';
 
 /**
- *
+ * Alter the shape of a tensor to a new shape.
  * @param {Tensor} input
  * @param {Array} newShape
  * @return {Tensor}
