@@ -11,10 +11,10 @@ import {Tensor, sizeOfShape} from './tensor.js';
 export function concat(inputs, axis) {
   const rank = inputs[0].rank;
   if (!Number.isInteger(axis)) {
-    throw new Error('The axis should be an integer.');
+    throw new Error(`Invalid axis ${axis}, axis should be an integer.`);
   } else {
     if (axis < 0 || axis >= rank) {
-      throw new Error(`Invalid axis, axis ${axis} should be in the interval [0, ${rank}).`);
+      throw new Error(`Invalid axis ${axis}, axis should be in the interval [0, ${rank}).`);
     }
   }
   const inputShape = inputs[0].shape;
