@@ -17,7 +17,7 @@ describe('test matmul', function() {
     testMatmul(
         {shape: [4], value: [0.9025404, 0.89538723, 0.16789329, 0.7440875]},
         {shape: [4], value: [0.8782074, 0.22533207, 0.7134056, 0.04190519]},
-        {shape: [1], value: [1.1453342]});
+        {shape: [], value: [1.1453342]});
   });
 
   it('matmul 1dx2d', function() {

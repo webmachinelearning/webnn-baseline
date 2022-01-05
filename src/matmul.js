@@ -16,6 +16,7 @@ export function matmul(a, b) {
   if (a.rank === 1 && b.rank === 1) {
     scalarOutput = true;
   }
+
   if (a.rank === 1) {
     a = reshape(a, [1, a.shape[0]]);
   }
@@ -65,7 +66,8 @@ export function matmul(a, b) {
   }
 
   if (scalarOutput) {
-    c = reshape(c, [1]);
+    const cValue = c.getValueByIndex(0);
+    c = new Tensor([], [cValue]);
   }
 
   return c;
