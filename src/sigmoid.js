@@ -1,18 +1,13 @@
 'use strict';
 
-import {Tensor} from './tensor.js';
+import {unary} from './unary.js';
 
 /**
  * Compute the sigmoid function of the input tensor.
+ * The calculation follows the expression 1 / (exp(-x) + 1).
  * @param {Tensor} input
  * @return {Tensor}
  */
 export function sigmoid(input) {
-  const output = new Tensor(input.shape);
-  for (let i = 0; i < input.size; ++i) {
-    const x = input.getValueByIndex(i);
-    const y = 1 / (Math.exp(-x) + 1);
-    output.setValueByIndex(i, y);
-  }
-  return output;
+  return unary(input, (x) => 1 / (Math.exp(-x) + 1));
 }
