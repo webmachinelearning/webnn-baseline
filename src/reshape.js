@@ -17,7 +17,7 @@ export function reshape(input, newShape) {
     } else if (newShape[i] > 0) {
       elements *= newShape[i];
     } else {
-      throw new Error('The new shape is invalid.');
+      throw new Error(`The value ${newShape[i]} at axis ${i} of new shape is invalid.`);
     }
   }
   const outputShape = newShape.slice();
@@ -25,7 +25,8 @@ export function reshape(input, newShape) {
     outputShape[minusOneAxis] = Math.round(sizeOfShape(input.shape) / elements);
   }
   if (sizeOfShape(input.shape) !== sizeOfShape(outputShape)) {
-    throw new Error('The new shape is invalid.');
+    throw new Error(`The element size of new shape ${sizeOfShape(outputShape)} is not equal to
+        element size of old shape ${sizeOfShape(input.shape)} invalid.`);
   }
   const output = new Tensor(outputShape, input.data);
   return output;
