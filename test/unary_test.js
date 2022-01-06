@@ -1,45 +1,13 @@
 'use strict';
 
 import {Tensor} from '../src/tensor.js';
-import {abs, ceil, cos, exp, floor, log, neg, sin, tan} from '../src/unary.js';
+import * as unaryFunctions from '../src/unary.js';
 import * as utils from './utils.js';
 
 describe('test unary', function() {
   function testUnary(op, input, expected, shape) {
     const x = new Tensor(shape, input);
-    let func;
-    switch (op) {
-      case 'abs':
-        func = abs;
-        break;
-      case 'ceil':
-        func = ceil;
-        break;
-      case 'cos':
-        func = cos;
-        break;
-      case 'exp':
-        func = exp;
-        break;
-      case 'floor':
-        func = floor;
-        break;
-      case 'log':
-        func = log;
-        break;
-      case 'neg':
-        func = neg;
-        break;
-      case 'sin':
-        func = sin;
-        break;
-      case 'tan':
-        func = tan;
-        break;
-      default:
-        throw new Error(`Unsupported ${op}`);
-    }
-    const y = func(x);
+    const y = unaryFunctions[op](x);
     utils.checkShape(y, shape);
     utils.checkValue(y, expected);
   }
