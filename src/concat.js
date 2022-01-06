@@ -37,15 +37,20 @@ export function concat(inputs, axis) {
     }
   }
   const output = new Tensor(outputShape);
-  let outputIndex = 0;
-  const times = sizeOfShape(inputShape.slice(0, axis));
-  for (let t = 0; t < times; ++t) {
-    for (let k = 0; k < inputs.length; ++k) {
-      const width = sizeOfShape(inputs[k].shape.slice(axis));
-      for (let w = 0; w < width; ++w) {
-        output.setValueByIndex(outputIndex++, inputs[k].getValueByIndex(t * width + w));
+  for (let i = 0; i < sizeOfShape(outputShape); ++i) {
+    const location = output.locationFromIndex(i);
+    let dim = location[axis];
+    let k = 0;
+    // Find out input k and its dim of axis according to output dim of axis
+    for (; k < inputs.length; ++k) {
+      if (dim < inputs[k].shape[axis]) {
+        break;
       }
+      dim -= inputs[k].shape[axis];
     }
+    location[axis] = dim;
+    const inputValue = inputs[k].getValueByLocation(location);
+    output.setValueByIndex(i, inputValue);
   }
   return output;
 }
