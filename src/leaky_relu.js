@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tensor} from './tensor.js';
+import {unary} from './unary.js';
 
 /**
  * Calculate the leaky version of rectified linear function on the input tensor element-wise.
@@ -9,12 +9,6 @@ import {Tensor} from './tensor.js';
  * @return {Tensor}
  */
 export function leakyRelu(input, options = {}) {
-  const alpha = options.alpha ? options.alpha : 0.01;
-  const output = new Tensor(input.shape);
-  for (let i = 0; i < input.size; ++i) {
-    const x = input.getValueByIndex(i);
-    const y = Math.max(0, x) + alpha * Math.min(0, x);
-    output.setValueByIndex(i, y);
-  }
-  return output;
+  const alpha = options.alpha !== undefined ? options.alpha : 0.01;
+  return unary(input, (x) => Math.max(0, x) + alpha * Math.min(0, x));
 }
