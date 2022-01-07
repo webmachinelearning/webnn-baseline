@@ -65,6 +65,9 @@ function reduce(input, reduceFunc, options = {}) {
   return output;
 }
 
+/* The max reducer */
+export const maxReducer = (previousValue, currentValue) => Math.max(previousValue, currentValue);
+
 /**
  * Compute the maximum value of all the input values along the axes.
  * @param {Tensor} input
@@ -72,8 +75,16 @@ function reduce(input, reduceFunc, options = {}) {
  * @return {Tensor}
  */
 export function reduceMax(input, options = {}) {
-  return reduce(input,
-      (previousValue, currentValue) => Math.max(previousValue, currentValue), options);
+  return reduce(input, maxReducer, options);
+}
+
+/* The mean reducer */
+export function meanReducer(previousValue, currentValue, currentIndex, array) {
+  if (currentIndex === array.length - 1) {
+    return (previousValue + currentValue) / array.length;
+  } else {
+    return previousValue + currentValue;
+  }
 }
 
 /**
@@ -83,14 +94,7 @@ export function reduceMax(input, options = {}) {
  * @return {Tensor}
  */
 export function reduceMean(input, options = {}) {
-  function mean(previousValue, currentValue, currentIndex, array) {
-    if (currentIndex === array.length - 1) {
-      return (previousValue + currentValue) / array.length;
-    } else {
-      return previousValue + currentValue;
-    }
-  }
-  return reduce(input, mean, options);
+  return reduce(input, meanReducer, options);
 }
 
 /**

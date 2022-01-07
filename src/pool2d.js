@@ -3,6 +3,7 @@
 import {computePaddingForAutoPad} from './conv2d.js';
 import {Tensor} from './tensor.js';
 import {transpose} from './transpose.js';
+import {meanReducer, maxReducer} from './reduce.js';
 
 /**
  * Compute a reduction operation across all the elements within the
@@ -120,14 +121,7 @@ function pool2d(input, reductionFunc, options = {}) {
  * @return {Tensor}
  */
 export function averagePool2d(input, options = {}) {
-  function averageReducer(previousValue, currentValue, currentIndex, array) {
-    if (currentIndex === array.length - 1) {
-      return (previousValue + currentValue) / array.length;
-    } else {
-      return previousValue + currentValue;
-    }
-  }
-  return pool2d(input, averageReducer, options);
+  return pool2d(input, meanReducer, options);
 }
 
 /**
@@ -138,6 +132,5 @@ export function averagePool2d(input, options = {}) {
  * @return {Tensor}
  */
 export function maxPool2d(input, options = {}) {
-  return pool2d(input,
-      (previousValue, currentValue) => Math.max(previousValue, currentValue), options);
+  return pool2d(input, maxReducer, options);
 }
