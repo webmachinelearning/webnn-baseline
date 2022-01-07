@@ -3,20 +3,6 @@
 import {Tensor, sizeOfShape} from './tensor.js';
 
 /**
- * Update the location with a given offset.
- * @param {Array} x
- * @param {Array} offset
- * @return {Array}
- */
-function updateLocation(x, offset) {
-  const out = x.slice();
-  for (let i = 0; i < x.length; ++i) {
-    out[i] = x[i] + offset[i];
-  }
-  return out;
-}
-
-/**
  * Produce a slice of the input tensor.
  * @param {Tensor} input
  * @param {Array} starts
@@ -26,15 +12,20 @@ function updateLocation(x, offset) {
  */
 export function slice(input, starts, sizes, options = {}) {
   const rank = input.rank;
-  const allStarts = new Array(rank).fill(0);
+  const startsForAllAxes = new Array(rank).fill(0);
   let axes = options.axes;
   if (axes) {
     if (axes.length > rank) {
-      throw new Error('The length of axes is invalid.');
+      throw new Error(`The length of axes ${axes.length} is greater than rank ${rank}.`);
     } else {
-      for (let i = 0; i < axes.length; ++i) {
-        if (!Number.isInteger(axes[i]) || axes[i] >= rank || axes[i] < -rank) {
-          throw new Error('The value of axes is invalid.');
+      for (const axis of axes) {
+        if (!Number.isInteger(axis)) {
+          throw new Error(`Invalid axes value ${axis}, it should be an integer.`);
+        } else {
+          if (axis >= rank || axis < -rank) {
+            throw new Error(`Invalid axes value ${axis}, it should be in the interval ` +
+              `[${-rank}, ${rank}).`);
+          }
         }
       }
     }
@@ -43,51 +34,65 @@ export function slice(input, starts, sizes, options = {}) {
   }
   const axesLen = axes.length;
   if (starts.length !== axesLen) {
-    throw new Error('The length of starts is invalid.');
+    throw new Error(`The length ${starts.length} of starts is not equal to the length ` +
+      `${axesLen} of axes.`);
   }
   if (sizes.length !== axesLen) {
-    throw new Error('The length of sizes is invalid.');
+    throw new Error(`The length ${sizes.length} of sizes is not equal to the length ${axesLen} ` +
+      'of axes.');
   }
   const outputShape = input.shape.slice();
-  for (let j = 0; j < axesLen; ++j) {
-    const slicedDim = axes[j] >= 0 ? axes[j] : axes[j] + rank;
-    const slicedDimSize = input.shape[slicedDim];
-    const slicedStart = starts[j];
-    allStarts[slicedDim] = slicedStart >= 0 ? slicedStart : slicedStart + slicedDimSize;
-    if (!Number.isInteger(slicedStart) || slicedStart >= slicedDimSize ||
-        slicedStart < -slicedDimSize) {
-      throw new Error('The value of starts is invalid.');
+  for (let i = 0; i < axesLen; ++i) {
+    const axis = axes[i] >= 0 ? axes[i] : axes[i] + rank;
+    const size = input.shape[axis];
+    const start = starts[i];
+    if (!Number.isInteger(start)) {
+      throw new Error(`Invalid starts value ${start}, it should be an integer.`);
+    }
+    startsForAllAxes[axis] = start >= 0 ? start : start + size;
+    if (start >= size || start < -size) {
+      throw new Error(`Invalid starts value ${start}, it shoule be in the interval ` +
+        `[${-size}, ${size}).`);
     } else {
-      const slicedSize = sizes[j];
-      if (Number.isInteger(slicedSize) && slicedSize >= 0) {
-        if (slicedStart >= 0) {
-          if (slicedStart + slicedSize > slicedDimSize) {
-            throw new Error('The value of sizes is invalid.');
+      const sliceSize = sizes[i];
+      if (!Number.isInteger(sliceSize)) {
+        throw new Error(`Invalid sizes value ${sliceSize}, it should be an integer.`);
+      }
+      if (sliceSize >= 0) {
+        if (start >= 0) {
+          if (start + sliceSize > size) {
+            throw new Error(`Invalid sizes value ${sliceSize}, the sum of the start ${start} ` +
+              `plus the size ${sliceSize} is greater than the dimensional size ${size}`);
           } else {
-            outputShape[slicedDim] = slicedSize;
+            outputShape[axis] = sliceSize;
           }
         } else {
-          if (slicedStart + slicedSize > 0) {
-            throw new Error('The value of sizes is invalid.');
+          if (start + sliceSize > 0) {
+            throw new Error(`Invalid sizes value ${sliceSize}, the sum of the start ${start} ` +
+              `plus the size ${sliceSize} is greater than the dimensional size ${size}`);
           } else {
-            outputShape[slicedDim] = slicedSize;
+            outputShape[axis] = sliceSize;
           }
         }
       } else {
-        if (slicedSize !== -1) {
-          throw new Error('The value of sizes is invalid.');
+        if (sliceSize !== -1) {
+          throw new Error(`The value ${sliceSize} of sizes is invalid, it is required to be -1 ` +
+            'when it is negative.');
         } else {
-          outputShape[slicedDim] = slicedStart >= 0 ? slicedDimSize - slicedStart : -slicedStart;
+          outputShape[axis] = start >= 0 ? size - start : -start;
         }
       }
     }
   }
   const output = new Tensor(outputShape);
-  for (let k = 0; k < sizeOfShape(outputShape); ++k) {
-    const loc = output.locationFromIndex(k);
-    const selectedInputLoc = updateLocation(loc, allStarts);
+  for (let outputIndex = 0; outputIndex < sizeOfShape(outputShape); ++outputIndex) {
+    const loc = output.locationFromIndex(outputIndex);
+    const selectedInputLoc = loc.slice();
+    for (let i = 0; i < loc.length; ++i) {
+      selectedInputLoc[i] = loc[i] + startsForAllAxes[i];
+    }
     const inputValue = input.getValueByLocation(selectedInputLoc);
-    output.setValueByIndex(k, inputValue);
+    output.setValueByIndex(outputIndex, inputValue);
   }
   return output;
 }
