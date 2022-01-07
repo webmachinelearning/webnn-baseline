@@ -2,7 +2,7 @@
 
 import {add, sub, mul, div, pow} from './binary.js';
 import {reshape} from './reshape.js';
-import {Tensor} from './tensor.js';
+import {Tensor, Scalar} from './tensor.js';
 
 /**
  * Check the tensor whether it is a 1-D tensor and its length is equal to `expectedSize`.
@@ -56,7 +56,7 @@ export function batchNormalization(input, mean, variance, options = {}) {
   shape[axis] = -1;
   output = sub(input, reshape(mean, shape));
   output = div(output,
-      pow(add(reshape(variance, shape), new Tensor([1], [epsilon])), new Tensor([1], [0.5])));
+      pow(add(reshape(variance, shape), new Scalar(epsilon)), new Scalar(0.5)));
   if (scale) {
     output = mul(output, reshape(scale, shape));
   }

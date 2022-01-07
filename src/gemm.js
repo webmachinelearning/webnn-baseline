@@ -2,7 +2,7 @@
 
 import {add, mul} from './binary.js';
 import {matmul} from './matmul.js';
-import {Tensor} from './tensor.js';
+import {Scalar} from './tensor.js';
 import {transpose} from './transpose.js';
 
 /**
@@ -21,8 +21,8 @@ export function gemm(a, b, options = {}) {
     throw new Error('The input b is not a 2-D tensor.');
   }
   const c = options.c ? options.c : undefined;
-  const alpha = new Tensor([1], [options.alpha ? options.alpha : 1.0]);
-  const beta = new Tensor([1], [options.beta ? options.beta : 1.0]);
+  const alpha = new Scalar(options.alpha ? options.alpha : 1.0);
+  const beta = new Scalar(options.beta ? options.beta : 1.0);
   const aTranspose = options.aTranspose ? options.aTranspose : false;
   const bTranspose = options.bTranspose ? options.bTranspose : false;
 

@@ -126,3 +126,16 @@ export class Tensor {
     return this.data[index];
   }
 }
+
+/**
+ * Scalar: a helper class to create a Tensor with a single value.
+ */
+export class Scalar extends Tensor {
+  /**
+   * Construct a Tensor with a single value.
+   * @param {Number} value
+   */
+  constructor(value) {
+    super([1], [value]);
+  }
+}
