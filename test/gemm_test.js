@@ -1,7 +1,7 @@
 'use strict';
 
 import {gemm} from '../src/gemm.js';
-import {Tensor} from '../src/tensor.js';
+import {Tensor, Scalar} from '../src/tensor.js';
 import * as utils from './utils.js';
 
 describe('test gemm', function() {
@@ -10,7 +10,7 @@ describe('test gemm', function() {
     const b = new Tensor(B.shape, B.value);
     if (C !== undefined) {
       if (typeof C === 'number') {
-        options.c = new Tensor([1], [C]);
+        options.c = new Scalar(C);
       } else {
         options.c = new Tensor(C.shape, C.value);
       }
