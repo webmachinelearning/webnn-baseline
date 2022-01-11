@@ -36,6 +36,11 @@ export function split(input, splits, options = {}) {
     if (!splits.every((v) => Number.isInteger(v) && v > 0)) {
       throw new Error(`Invalid splits ${splits}, it should be an Array of positive integers.`);
     }
+    const sum = splits.reduce((a, b) => a + b);
+    if (sum !== input.shape[axis]) {
+      throw new Error(`Invalid [${splits}], the sum of sizes ${sum} must equal to the dimension ` +
+        `size ${input.shape[axis]} of input along options.axis ${axis}`);
+    }
     sliceSizes = splits.slice();
   }
   let start = 0;
