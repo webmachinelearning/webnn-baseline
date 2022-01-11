@@ -21,7 +21,7 @@ export function split(input, splits, options = {}) {
     if (options.axis >= rank || options.axis < -rank) {
       throw new Error(`The axis ${options.axis} should be in the interval [${-rank}, ${rank}).`);
     }
-    axis = options.axis;
+    axis = options.axis >= 0 ? options.axis : rank + options.axis;
   }
   if (typeof splits === 'number') {
     if (!Number.isInteger(splits) || splits <= 0) {
@@ -29,7 +29,7 @@ export function split(input, splits, options = {}) {
     }
     if (input.shape[axis] % splits !== 0) {
       throw new Error(`The splits ${splits} must evenly divide the dimension size ` +
-        `${input.shape[axis]} of input along options.axis ${axis}.`);
+        `${input.shape[axis]} of input along options.axis ${options.axis}.`);
     }
     sliceSizes = new Array(splits).fill(input.shape[axis] / splits);
   } else if (splits instanceof Array) {
@@ -39,7 +39,7 @@ export function split(input, splits, options = {}) {
     const sum = splits.reduce((a, b) => a + b);
     if (sum !== input.shape[axis]) {
       throw new Error(`Invalid [${splits}], the sum of sizes ${sum} must equal to the dimension ` +
-        `size ${input.shape[axis]} of input along options.axis ${axis}`);
+        `size ${input.shape[axis]} of input along options.axis ${options.axis}`);
     }
     sliceSizes = splits.slice();
   }
