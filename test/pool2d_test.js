@@ -473,7 +473,11 @@ describe('test pool2d', function() {
     ]);
     const y = averagePool2d(x);
     utils.checkShape(y, [1, 3, 1, 1]);
-    const expected = [0.07170041, 0.05194739, 0.07117923];
+    const expected = [
+      0.07170040239999997,
+      0.05194737240000002,
+      0.07117922839999995,
+    ];
     utils.checkValue(y, expected);
   });
 
@@ -498,7 +502,11 @@ describe('test pool2d', function() {
     const layout = 'nhwc';
     const y = averagePool2d(x, {layout});
     utils.checkShape(y, [1, 1, 1, 3]);
-    const expected = [0.07170041, 0.05194739, 0.07117923];
+    const expected = [
+      0.07170040239999997,
+      0.05194737240000002,
+      0.07117922839999995,
+    ];
     utils.checkValue(y, expected);
   });
 });
