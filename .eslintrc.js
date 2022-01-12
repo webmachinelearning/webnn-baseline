@@ -5,6 +5,8 @@ module.exports = {
   parserOptions: { ecmaVersion: 2020, sourceType: 'module'},
   globals: {
     'chai': 'readonly',
+    'BigInt': 'readonly',
+    'BigInt64Array': 'readonly',
   },
   rules: {
     'semi': 'error',

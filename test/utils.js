@@ -2,43 +2,41 @@
 
 const assert = chai.assert;
 
-export class AccuracyCriterion {
-  constructor(atol, rtol) {
-    this.atol = atol;
-    this.rtol = rtol;
-  }
+/**
+ * Get bitwise of the given value.
+ * @param {Number} value
+ * @return {Number} A 64-bit signed integer.
+ */
+function getBitwise(value) {
+  const buffer = new ArrayBuffer(8);
+  const int64Array = new BigInt64Array(buffer);
+  int64Array[0] = value < 0 ? ~BigInt(0) : BigInt(0);
+  const f64Array = new Float64Array(buffer);
+  f64Array[0] = value;
+  return int64Array[0];
 }
 
-export const opFp32AccuracyCriteria =
-    new AccuracyCriterion(1e-6, 5.0 * 1.1920928955078125e-7);
-
-// The following 2 constants were used for converted tests from NNAPI CTS
-export const ctsFp32RestrictAccuracyCriteria =
-    new AccuracyCriterion(1e-5, 5.0 * 1.1920928955078125e-7);
-export const ctsFp32RelaxedAccuracyCriteria =
-    new AccuracyCriterion(5.0 * 0.0009765625, 5.0 * 0.0009765625);
-
-// Refer to onnx/models
-//   https://github.com/onnx/models/blob/master/workflow_scripts/ort_test_dir_utils.py#L239
-// See details of modelFp32AccuracyCriteria setting:
-//   https://github.com/webmachinelearning/webnn-polyfill/issues/55
-export const modelFp32AccuracyCriteria = new AccuracyCriterion(1e-3, 1e-3);
-
-export function almostEqual(a, b, criteria) {
-  const delta = Math.abs(a - b);
-  if (delta <= criteria.atol + criteria.rtol * Math.abs(b)) {
-    return true;
-  } else {
-    console.warn(`a(${a}) b(${b}) delta(${delta})`);
-    return false;
-  }
+/**
+ * Check the distance between a and b whether is close enough to the given ULP distance.
+ * @param {Number} a
+ * @param {Number} b
+ * @param {Number} nulp A BigInt value.
+ * @return {Boolean} A boolean value:
+ *     true: The distance between a and b is close enough to the given ULP distance.
+ *     false: The distance between a and b is far away from the given ULP distance.
+ */
+function almostEqualUlp(a, b, nulp) {
+  const aBitwise = getBitwise(a);
+  const bBitwise = getBitwise(b);
+  let distance = aBitwise - bBitwise;
+  distance = distance >= 0 ? distance : -distance;
+  return distance <= nulp;
 }
 
-export function checkValue(
-    tensor, expected, criteria = opFp32AccuracyCriteria) {
+export function checkValue(tensor, expected, nulp = 0n) {
   assert.isTrue(tensor.size === expected.length);
   for (let i = 0; i < expected.length; ++i) {
-    assert.isTrue(almostEqual(tensor.getValueByIndex(i), expected[i], criteria));
+    assert.isTrue(almostEqualUlp(tensor.getValueByIndex(i), expected[i], nulp));
   }
 }
 
@@ -47,17 +45,6 @@ export function checkShape(tensor, expected) {
   for (let i = 0; i < expected.length; ++i) {
     assert.equal(tensor.shape[i], expected[i]);
   }
-}
-
-export function computeExplicitPadding(
-    inputSize, stride, filterSize, dilation = 1) {
-  const outSize = Math.ceil(inputSize / stride);
-  const effectiveFilterSize = (filterSize - 1) * dilation + 1;
-  const neededInput = (outSize - 1) * stride + effectiveFilterSize;
-  const totalPadding = Math.max(0, neededInput - inputSize);
-  const paddingToBeginning = Math.floor(totalPadding / 2);
-  const paddingToEnd = Math.floor((totalPadding + 1) / 2);
-  return [paddingToBeginning, paddingToEnd];
 }
 
 export function bindTrailingArgs(fn, ...boundArgs) {
