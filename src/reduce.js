@@ -2,6 +2,7 @@
 
 import {squeeze} from './squeeze.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
+import {validateInput} from './lib/validate-input.js';
 
 /**
  * Reduce the input along the dimensions given in axes.
@@ -10,31 +11,24 @@ import {sizeOfShape, Tensor} from './lib/tensor.js';
  * @param {MLReduceOptions} options
  * @return {Tensor}
  */
-function reduce(input, reduceFunc, options = {}) {
-  const axes = options.axes ? options.axes :
-      new Array(input.rank).fill(0).map((_, i) => i);
-  const keepDimensions = options.keepDimensions ? options.keepDimensions : false;
-
-  if (axes.length > input.rank) {
-    throw new Error(`The length ${axes.length} of axes is bigger than input rank ${input.rank}.`);
-  }
+function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
+  const inpAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
 
   const outputShape = input.shape.slice();
-  for (let i = 0; i < axes.length; ++i) {
-    if (axes[i] === -1) {
-      axes[i] = input.rank - 1;
+  for (let i = 0; i < inpAxes.length; ++i) {
+    if (inpAxes[i] === -1) {
+      inpAxes[i] = input.rank - 1;
     }
-    if (axes[i] < 0 || axes[i] >= input.rank) {
-      throw new Error(`The value ${axes[i]} at axis ${i} of axes is invalid.`);
-    }
-    outputShape[axes[i]] = 1;
+    outputShape[inpAxes[i]] = 1;
   }
 
+  validateInput("reduce", [input, reduceFunc, {keepDimensions, axes: inpAxes}]);
+
   // Calculate the "strides" across the reduction dimensions given in axes.
-  axes.sort((a, b) => a - b);
-  const reduceDims = axes.map((axis) => input.shape[axis]);
+  inpAxes.sort((a, b) => a - b);
+  const reduceDims = inpAxes.map((axis) => input.shape[axis]);
   const reduceElements = sizeOfShape(reduceDims);
-  const reduceStrides = new Array(axes.length);
+  const reduceStrides = new Array(inpAxes.length);
   reduceStrides[reduceStrides.length - 1] = 1;
   for (let i = reduceStrides.length - 2; i >= 0; --i) {
     reduceStrides[i] = reduceStrides[i + 1] * reduceDims[i + 1];
@@ -48,8 +42,8 @@ function reduce(input, reduceFunc, options = {}) {
       // Calculate the input location given index of elements to reduce.
       const inputLocation = output.locationFromIndex(outputIndex);
       let remainingReduceIndex = reduceIndex;
-      for (let i = 0; i < axes.length; ++i) {
-        const axis = axes[i];
+      for (let i = 0; i < inpAxes.length; ++i) {
+        const axis = inpAxes[i];
         inputLocation[axis] = Math.floor(remainingReduceIndex / reduceStrides[i]);
         remainingReduceIndex -= inputLocation[axis] * reduceStrides[i];
       }

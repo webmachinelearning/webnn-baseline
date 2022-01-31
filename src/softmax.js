@@ -3,6 +3,7 @@
 import {div, sub} from './binary.js';
 import {exp} from './lib/unary.js';
 import {reduceMax, reduceSum} from './reduce.js';
+import {validateInput} from './lib/validate-input.js';
 
 /**
  * Compute the softmax values of the 2-D input tensor along axis 1.
@@ -10,9 +11,7 @@ import {reduceMax, reduceSum} from './reduce.js';
  * @return {Tensor}
  */
 export function softmax(x) {
-  if (x.rank !== 2) {
-    throw new Error('The input is not a 2-D tensor.');
-  }
+  validateInput("softmax", arguments);
   const maxX = reduceMax(x, {axes: [1], keepDimensions: true});
   const expX = exp(sub(x, maxX));
   return div(expX, reduceSum(expX, {axes: [1], keepDimensions: true}));

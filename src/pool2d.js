@@ -4,6 +4,7 @@ import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {Tensor} from './lib/tensor.js';
 import {transpose} from './transpose.js';
 import {meanReducer, maxReducer} from './reduce.js';
+import {validateInput} from './lib/validate-input.js';
 
 /**
  * Compute a reduction operation across all the elements within the
@@ -13,38 +14,28 @@ import {meanReducer, maxReducer} from './reduce.js';
  * @param {MLPool2dOptions} options
  * @return {Tensor}
  */
-function pool2d(input, reductionFunc, options = {}) {
-  if (input.rank !== 4) {
-    throw new Error('The input should be a 4-D tensor.');
-  }
-
-  const padding = options.padding ? options.padding : [0, 0, 0, 0];
-  const strides = options.strides ? options.strides : [1, 1];
-  const dilations = options.dilations ? options.dilations : [1, 1];
-  const roundingType = options.roundingType ? options.roundingType : 'floor';
-  if (roundingType !== 'floor' && roundingType !== 'ceil') {
-    throw new Error('The rounding type is invalid.');
-  }
+function pool2d(input, reductionFunc,
+                {padding = [0, 0, 0, 0],
+                 strides = [1,1],
+                 dilations = [1,1],
+                 roundingType = 'floor',
+                 layout = 'nchw',
+                 windowDimensions,
+                 autoPad = 'explicit',
+                 outputSizes
+                }= {}) {
+  validateInput('pool2d', arguments);
   const roundingFunc = roundingType === 'floor' ? Math.floor : Math.ceil;
 
-  const layout = options.layout ? options.layout : 'nchw';
   if (layout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
   }
 
-  const batchCount = input.shape[0];
-  const channels = input.shape[1];
-  const inputHeight = input.shape[2];
-  const inputWidth = input.shape[3];
-  const windowDimensions = options.windowDimensions ?
-    options.windowDimensions : [inputHeight, inputWidth];
-  const windowHeight = windowDimensions[0];
-  const windowWidth = windowDimensions[1];
-  const strideHeight = strides[0];
-  const strideWidth = strides[1];
-  const dilationHeight = dilations[0];
-  const dilationWidth = dilations[1];
+  const [batchCount, channels, inputHeight, inputWidth] = input.shape;
+  const [windowHeight, windowWidth] = windowDimensions ?? [inputHeight, inputWidth];
+  const [strideHeight, strideWidth] = strides;
+  const [dilationHeight, dilationWidth] = dilations;
   const effectiveWindowHeight = windowHeight + (windowHeight - 1) * (dilationHeight - 1);
   const effectiveWindowWidth = windowWidth + (windowWidth - 1) * (dilationWidth - 1);
 
@@ -52,25 +43,25 @@ function pool2d(input, reductionFunc, options = {}) {
   let endingPaddingHeight;
   let beginningPaddingWidth;
   let endingPaddingWidth;
-  if (options.autoPad === undefined || options.autoPad === 'explicit') {
+  if (autoPad === 'explicit') {
     [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
       padding;
   } else {
     [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
-        options.autoPad, inputHeight, effectiveWindowHeight, strideHeight);
+        autoPad, inputHeight, effectiveWindowHeight, strideHeight);
     [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
-        options.autoPad, inputWidth, effectiveWindowWidth, strideWidth);
+        autoPad, inputWidth, effectiveWindowWidth, strideWidth);
   }
 
   const outputShape = new Array(4);
   outputShape[0] = batchCount;
   outputShape[1] = channels;
-  const outputHeight = options.outputSizes ? options.outputSizes[0] :
+  const outputHeight = outputSizes ? outputSizes[0] :
     roundingFunc(
         1 + (inputHeight - effectiveWindowHeight + beginningPaddingHeight + endingPaddingHeight) /
           strideHeight);
   outputShape[2] = outputHeight;
-  const outputWidth = options.outputSizes ? options.outputSizes[1] :
+  const outputWidth = outputSizes ? outputSizes[1] :
     roundingFunc(
         1 + (inputWidth - effectiveWindowWidth + beginningPaddingWidth + endingPaddingWidth) /
           strideWidth);

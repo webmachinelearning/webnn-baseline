@@ -1,6 +1,7 @@
 'use strict';
 
 import {Tensor} from './lib/tensor.js';
+import {validateInput} from './lib/validate-input.js';
 
 /**
  * Permute the dimensions of the input tensor according to the permutation argument.
@@ -8,22 +9,19 @@ import {Tensor} from './lib/tensor.js';
  * @param {MLTransposeOptions} [options]
  * @return {Tensor}
  */
-export function transpose(input, options = {}) {
-  const permutation = options.permutation ? options.permutation :
-    new Array(input.rank).fill(0).map((e, i, a) => a.length - i - 1);
-  if (permutation.length !== input.rank) {
-    throw new Error(
-        `The permutation length ${permutation.length} is not equal to rank ${input.rank}.`);
-  }
+export function transpose(input, {permutation} = {}) {
+  const inpPermutation = permutation ??
+        new Array(input.rank).fill(0).map((e, i, a) => a.length - i - 1);
+  validateInput("transpose", [input, {permutation: inpPermutation}]);
 
-  const outputShape = new Array(input.rank).fill(0).map((e, i, a) => input.shape[permutation[i]]);
+  const outputShape = new Array(input.rank).fill(0).map((e, i, a) => input.shape[inpPermutation[i]]);
   const output = new Tensor(outputShape);
   for (let inputIndex = 0; inputIndex < input.size; ++inputIndex) {
     const inputValue = input.getValueByIndex(inputIndex);
     const inputLocation = input.locationFromIndex(inputIndex);
     const outputLocation = new Array(output.rank);
-    for (let i = 0; i < permutation.length; ++i) {
-      outputLocation[i] = inputLocation[permutation[i]];
+    for (let i = 0; i < inpPermutation.length; ++i) {
+      outputLocation[i] = inputLocation[inpPermutation[i]];
     }
     output.setValueByLocation(outputLocation, inputValue);
   }

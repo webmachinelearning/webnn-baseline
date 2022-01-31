@@ -1,6 +1,7 @@
 'use strict';
 
 import {Tensor} from './lib/tensor.js';
+import {validateInput} from './lib/validate-input.js';
 import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {transpose} from './transpose.js';
 
@@ -11,27 +12,22 @@ import {transpose} from './transpose.js';
  * @param {MLConv2dOptions} options
  * @return {Tensor}
  */
-export function conv2d(input, filter, options = {}) {
-  if (input.rank !== 4) {
-    throw new Error('The input should be a 4-D tensor.');
-  }
-
-  if (filter.rank !== 4) {
-    throw new Error('The filter should be a 4-D tensor.');
-  }
-
-  const padding = options.padding ? options.padding : [0, 0, 0, 0];
-  const strides = options.strides ? options.strides : [1, 1];
-  const groups = options.groups ? options.groups : 1;
-  const dilations = options.dilations ? options.dilations : [1, 1];
-  const activation = options.activation;
-
-  const inputLayout = options.inputLayout ? options.inputLayout : 'nchw';
+export function conv2d(input, filter, {padding = [0, 0, 0, 0],
+                                       strides = [1,1],
+                                       groups = 1,
+                                       dilations = [1,1],
+                                       activation = x => x,
+                                       inputLayout = 'nchw',
+                                       filterLayout = 'oihw',
+                                       bias,
+                                       autoPad = 'explicit'
+                                      }
+                                       = {}) {
+  validateInput("conv2d", arguments);
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
   }
-  const filterLayout = options.filterLayout ? options.filterLayout : 'oihw';
   if (filterLayout === 'hwio') {
     // hwio -> oihw
     filter = transpose(filter, {permutation: [3, 2, 0, 1]});
@@ -43,42 +39,25 @@ export function conv2d(input, filter, options = {}) {
     filter = transpose(filter, {permutation: [3, 0, 1, 2]});
   }
 
-  const batchCount = input.shape[0];
-  const inputChannels = input.shape[1];
-  const inputHeight = input.shape[2];
-  const inputWidth = input.shape[3];
-  const outputChannels = filter.shape[0];
-  const filterInputChannels = filter.shape[1];
-  const filterHeight = filter.shape[2];
-  const filterWidth = filter.shape[3];
-  const strideHeight = strides[0];
-  const strideWidth = strides[1];
-  const dilationHeight = dilations[0];
-  const dilationWidth = dilations[1];
+  const [batchCount, inputChannels, inputHeight, inputWidth] = input.shape;
+  const [outputChannels, filterInputChannels, filterHeight, filterWidth] = filter.shape;
+  const [strideHeight, strideWidth] = strides;
+  const [dilationHeight, dilationWidth] = dilations;
   const effectiveFilterHeight = filterHeight + (filterHeight - 1) * (dilationHeight - 1);
   const effectiveFilterWidth = filterWidth + (filterWidth - 1) * (dilationWidth - 1);
-
-  if (inputChannels !== filterInputChannels * groups) {
-    throw new Error('The input channels of filter is invalid.');
-  }
-
-  const bias = options.bias;
-  if (bias && (bias.rank !== 1 || bias.shape[0] != outputChannels)) {
-    throw new Error('the bias should be a 1-D tensor with the shape of [output_channels].');
-  }
 
   let beginningPaddingHeight;
   let endingPaddingHeight;
   let beginningPaddingWidth;
   let endingPaddingWidth;
-  if (options.autoPad === undefined || options.autoPad === 'explicit') {
+  if (autoPad === 'explicit') {
     [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
       padding;
   } else {
     [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
-        options.autoPad, inputHeight, effectiveFilterHeight, strideHeight);
+        autoPad, inputHeight, effectiveFilterHeight, strideHeight);
     [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
-        options.autoPad, inputWidth, effectiveFilterWidth, strideWidth);
+        autoPad, inputWidth, effectiveFilterWidth, strideWidth);
   }
 
   const outputShape = new Array(4);
@@ -150,9 +129,7 @@ export function conv2d(input, filter, options = {}) {
     }
   }
 
-  if (activation) {
-    output = activation(output);
-  }
+  output = activation(output);
 
   if (inputLayout === 'nhwc') {
     // nchw -> nhwc

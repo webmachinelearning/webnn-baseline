@@ -3,6 +3,7 @@
 import {add, mul} from './binary.js';
 import {matmul} from './matmul.js';
 import {Scalar} from './lib/tensor.js';
+import {validateInput} from './lib/validate-input.js';
 import {transpose} from './transpose.js';
 
 /**
@@ -13,19 +14,16 @@ import {transpose} from './transpose.js';
  * @param {MLGemmOptions} options
  * @return {Tensor}
  */
-export function gemm(a, b, options = {}) {
-  if (a.rank !== 2) {
-    throw new Error('The input a is not a 2-D tensor.');
-  }
-  if (b.rank !== 2) {
-    throw new Error('The input b is not a 2-D tensor.');
-  }
-  const c = options.c ? options.c : undefined;
-  const alpha = new Scalar(options.alpha ? options.alpha : 1.0);
-  const beta = new Scalar(options.beta ? options.beta : 1.0);
-  const aTranspose = options.aTranspose ? options.aTranspose : false;
-  const bTranspose = options.bTranspose ? options.bTranspose : false;
-
+export function gemm(a, b, {c = new Scalar(0.0),
+                            alpha : fAlpha = 1.0,
+                            beta : fBeta = 1.0,
+                            aTranspose = false,
+                            bTranspose = false
+                           } = {}) {
+  validateInput("gemm", arguments);
+  const alpha = new Scalar(fAlpha);
+  const beta = new Scalar(fBeta);
+  console.error(arguments);
   if (aTranspose) {
     a = transpose(a);
   }
@@ -35,7 +33,6 @@ export function gemm(a, b, options = {}) {
   }
 
   let output = matmul(mul(a, alpha), b);
-
   if (c) {
     output = add(output, mul(c, beta));
   }
