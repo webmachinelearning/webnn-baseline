@@ -1,7 +1,7 @@
 'use strict';
 
 import {squeeze} from '../src/squeeze.js';
-import {Tensor, sizeOfShape} from '../src/tensor.js';
+import {Tensor, sizeOfShape} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test squeeze', function() {

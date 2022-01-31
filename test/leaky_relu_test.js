@@ -1,7 +1,7 @@
 'use strict';
 
-import {leakyRelu} from '../src/leaky_relu.js';
-import {Tensor} from '../src/tensor.js';
+import {leakyRelu} from '../src/lib/leaky_relu.js';
+import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test leakyRelu', function() {

@@ -1,6 +1,6 @@
 'use strict';
 
-import {reshape} from './reshape.js';
+import {reshape} from './lib/reshape.js';
 
 /**
  * Reduce the rank of a tensor by eliminating dimensions with size 1 of the tensor shape.

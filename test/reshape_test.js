@@ -1,7 +1,7 @@
 'use strict';
 
-import {reshape} from '../src/reshape.js';
-import {Tensor, sizeOfShape} from '../src/tensor.js';
+import {reshape} from '../src/lib/reshape.js';
+import {Tensor, sizeOfShape} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test reshape', function() {

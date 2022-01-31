@@ -1,7 +1,7 @@
 'use strict';
 
-import {computePaddingForAutoPad} from './conv2d.js';
-import {Tensor} from './tensor.js';
+import {computePaddingForAutoPad} from './lib/compute-padding.js';
+import {Tensor} from './lib/tensor.js';
 import {transpose} from './transpose.js';
 import {meanReducer, maxReducer} from './reduce.js';
 

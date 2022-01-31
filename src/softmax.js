@@ -1,7 +1,7 @@
 'use strict';
 
 import {div, sub} from './binary.js';
-import {exp} from './unary.js';
+import {exp} from './lib/unary.js';
 import {reduceMax, reduceSum} from './reduce.js';
 
 /**

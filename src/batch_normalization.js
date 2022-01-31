@@ -1,8 +1,8 @@
 'use strict';
 
 import {add, sub, mul, div, pow} from './binary.js';
-import {reshape} from './reshape.js';
-import {Tensor, Scalar} from './tensor.js';
+import {reshape} from './lib/reshape.js';
+import {Tensor, Scalar} from './lib/tensor.js';
 
 /**
  * Check the tensor whether it is a 1-D tensor and its length is equal to `expectedSize`.

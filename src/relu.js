@@ -1,6 +1,6 @@
 'use strict';
 
-import {unary} from './unary.js';
+import {unary} from './lib/unary.js';
 
 /**
  * Compute the rectified linear function of the input tensor.

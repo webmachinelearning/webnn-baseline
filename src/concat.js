@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tensor, sizeOfShape} from './tensor.js';
+import {Tensor, sizeOfShape} from './lib/tensor.js';
 
 /**
  * Concatenates the input tensors along a given axis.

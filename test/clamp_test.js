@@ -1,7 +1,7 @@
 'use strict';
 
 import {clamp} from '../src/clamp.js';
-import {Tensor} from '../src/tensor.js';
+import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test clamp', function() {

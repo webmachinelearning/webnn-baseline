@@ -1,6 +1,6 @@
 'use strict';
 
-import {unary} from './unary.js';
+import {unary} from './lib/unary.js';
 
 /**
  * Compute the hyperbolic tangent function of the input tensor.

@@ -2,7 +2,7 @@
 
 import {add, mul} from './binary.js';
 import {matmul} from './matmul.js';
-import {Scalar} from './tensor.js';
+import {Scalar} from './lib/tensor.js';
 import {transpose} from './transpose.js';
 
 /**

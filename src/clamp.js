@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tensor} from './tensor.js';
+import {Tensor} from './lib/tensor.js';
 
 /**
  * Clamp the input tensor element-wise within a range specified by the minimum and maximum values.

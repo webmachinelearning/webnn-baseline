@@ -1,9 +1,9 @@
 
 'use strict';
 
-import {broadcast, getBroadcastShape} from './broadcast.js';
-import {reshape} from './reshape.js';
-import {sizeOfShape, Tensor} from './tensor.js';
+import {broadcast, getBroadcastShape} from './lib/broadcast.js';
+import {reshape} from './lib/reshape.js';
+import {sizeOfShape, Tensor} from './lib/tensor.js';
 
 /**
  * Compute the matrix product of two input tensors.

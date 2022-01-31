@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tensor} from './tensor.js';
+import {Tensor} from './lib/tensor.js';
 
 /**
  * Permute the dimensions of the input tensor according to the permutation argument.

@@ -1,7 +1,7 @@
 'use strict';
 
 import {gemm} from '../src/gemm.js';
-import {Tensor, Scalar} from '../src/tensor.js';
+import {Tensor, Scalar} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test gemm', function() {

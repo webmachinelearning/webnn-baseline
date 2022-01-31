@@ -1,7 +1,7 @@
 'use strict';
 
 import {squeeze} from './squeeze.js';
-import {sizeOfShape, Tensor} from './tensor.js';
+import {sizeOfShape, Tensor} from './lib/tensor.js';
 
 /**
  * Reduce the input along the dimensions given in axes.
