@@ -1,7 +1,7 @@
 'use strict';
 
 import {add, sub, mul, div, pow} from './binary.js';
-import {reshape} from './lib/reshape.js';
+import {reshape} from './reshape.js';
 import {Tensor, Scalar} from './lib/tensor.js';
 import {validateInput} from './lib/validate-input.js';
 

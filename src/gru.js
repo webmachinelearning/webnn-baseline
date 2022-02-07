@@ -2,9 +2,9 @@
 
 import {concat} from './concat.js';
 import {gruCell} from './gru_cell.js';
-import {reshape} from './lib/reshape.js';
+import {reshape} from './reshape.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
-import {sigmoid} from './lib/sigmoid.js';
+import {sigmoid} from './sigmoid.js';
 import {slice} from './slice.js';
 import {squeeze} from './squeeze.js';
 import {tanh} from './tanh.js';

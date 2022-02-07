@@ -1,6 +1,6 @@
 'use strict';
 
-import {reshape} from './lib/reshape.js';
+import {reshape} from './reshape.js';
 import {validateInput} from './lib/validate-input.js';
 
 /**

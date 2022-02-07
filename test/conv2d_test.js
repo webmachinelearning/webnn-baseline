@@ -2,9 +2,9 @@
 
 import {conv2d} from '../src/conv2d.js';
 import {clamp} from '../src/clamp.js';
-import {leakyRelu} from '../src/lib/leaky_relu.js';
+import {leakyRelu} from '../src/leaky_relu.js';
 import {relu} from '../src/relu.js';
-import {sigmoid} from '../src/lib/sigmoid.js';
+import {sigmoid} from '../src/sigmoid.js';
 import {Tensor} from '../src/lib/tensor.js';
 
 import * as utils from './utils.js';

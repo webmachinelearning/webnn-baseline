@@ -1,6 +1,6 @@
 'use strict';
 
-import {sigmoid} from '../src/lib/sigmoid.js';
+import {sigmoid} from '../src/sigmoid.js';
 import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 

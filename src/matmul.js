@@ -2,7 +2,7 @@
 'use strict';
 
 import {broadcast, getBroadcastShape} from './lib/broadcast.js';
-import {reshape} from './lib/reshape.js';
+import {reshape} from './reshape.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
 import {validateInput} from './lib/validate-input.js';
 

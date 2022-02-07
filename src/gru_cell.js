@@ -3,7 +3,7 @@
 import {add, mul, sub} from './binary.js';
 import {matmul} from './matmul.js';
 import {Scalar} from './lib/tensor.js';
-import {sigmoid} from './lib/sigmoid.js';
+import {sigmoid} from './sigmoid.js';
 import {slice} from './slice.js';
 import {tanh} from './tanh.js';
 import {transpose} from './transpose.js';

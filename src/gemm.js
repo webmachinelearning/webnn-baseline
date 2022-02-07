@@ -23,7 +23,6 @@ export function gemm(a, b, {c = new Scalar(0.0),
   validateInput("gemm", arguments);
   const alpha = new Scalar(fAlpha);
   const beta = new Scalar(fBeta);
-  console.error(arguments);
   if (aTranspose) {
     a = transpose(a);
   }

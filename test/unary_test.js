@@ -1,7 +1,7 @@
 'use strict';
 
 import {Tensor} from '../src/lib/tensor.js';
-import * as unaryFunctions from '../src/lib/unary.js';
+import * as unaryFunctions from '../src/unary.js';
 import * as utils from './utils.js';
 
 describe('test unary', function() {

@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tensor} from './tensor.js';
+import {Tensor} from './lib/tensor.js';
 
 /**
  * Compute the element-wise unary operation for input tensor.
