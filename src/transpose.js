@@ -12,9 +12,10 @@ import {validateInput} from './lib/validate-input.js';
 export function transpose(input, {permutation} = {}) {
   const inpPermutation = permutation ??
         new Array(input.rank).fill(0).map((e, i, a) => a.length - i - 1);
-  validateInput("transpose", [input, {permutation: inpPermutation}]);
+  validateInput('transpose', [input, {permutation: inpPermutation}]);
 
-  const outputShape = new Array(input.rank).fill(0).map((e, i, a) => input.shape[inpPermutation[i]]);
+  const outputShape = new Array(input.rank).fill(0).map(
+      (e, i, a) => input.shape[inpPermutation[i]]);
   const output = new Tensor(outputShape);
   for (let inputIndex = 0; inputIndex < input.size; ++inputIndex) {
     const inputValue = input.getValueByIndex(inputIndex);

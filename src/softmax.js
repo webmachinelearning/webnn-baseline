@@ -11,7 +11,7 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Tensor}
  */
 export function softmax(x) {
-  validateInput("softmax", arguments);
+  validateInput('softmax', arguments);
   const maxX = reduceMax(x, {axes: [1], keepDimensions: true});
   const expX = exp(sub(x, maxX));
   return div(expX, reduceSum(expX, {axes: [1], keepDimensions: true}));

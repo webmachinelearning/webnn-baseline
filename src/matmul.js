@@ -25,7 +25,7 @@ export function matmul(a, b) {
   }
   const bCols = b.shape[b.rank - 1];
 
-  validateInput("matmul", [a, b]);
+  validateInput('matmul', [a, b]);
 
   let cShape = [aRows, bCols];
   if (a.rank > 2 || b.rank > 2) {

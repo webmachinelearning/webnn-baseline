@@ -13,17 +13,17 @@ import {transpose} from './transpose.js';
  * @return {Tensor}
  */
 export function conv2d(input, filter, {padding = [0, 0, 0, 0],
-                                       strides = [1,1],
-                                       groups = 1,
-                                       dilations = [1,1],
-                                       activation = x => x,
-                                       inputLayout = 'nchw',
-                                       filterLayout = 'oihw',
-                                       bias,
-                                       autoPad = 'explicit'
-                                      }
-                                       = {}) {
-  validateInput("conv2d", arguments);
+  strides = [1, 1],
+  groups = 1,
+  dilations = [1, 1],
+  activation = (x) => x,
+  inputLayout = 'nchw',
+  filterLayout = 'oihw',
+  bias,
+  autoPad = 'explicit',
+}
+= {}) {
+  validateInput('conv2d', arguments);
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
@@ -40,7 +40,7 @@ export function conv2d(input, filter, {padding = [0, 0, 0, 0],
   }
 
   const [batchCount, inputChannels, inputHeight, inputWidth] = input.shape;
-  const [outputChannels, filterInputChannels, filterHeight, filterWidth] = filter.shape;
+  const [outputChannels, , filterHeight, filterWidth] = filter.shape;
   const [strideHeight, strideWidth] = strides;
   const [dilationHeight, dilationWidth] = dilations;
   const effectiveFilterHeight = filterHeight + (filterHeight - 1) * (dilationHeight - 1);

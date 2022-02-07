@@ -22,10 +22,10 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Array.<Tensor>}
  */
 export function gru(input, weight, recurrentWeight, steps, hiddenSize,
-                    {bias, recurrentBias, initialHiddenState, resetAfter = true,
-                     returnSequence = false, direction = 'forward',
-                     layout = 'zrn', activations = [sigmoid, tanh]}  = {}) {
-
+    {bias, recurrentBias, initialHiddenState, resetAfter = true,
+      returnSequence = false, direction = 'forward',
+      layout = 'zrn', activations = [sigmoid, tanh]} = {}) {
+  validateInput('gru', arguments);
   const numDirections = (direction === 'both' ? 2 : 1);
   const batchSize = input.shape[1];
 
@@ -35,7 +35,7 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
   } else {
     const initialHiddenStateShape = [numDirections, batchSize, hiddenSize];
     hiddenState = new Tensor(
-      initialHiddenStateShape, new Array(sizeOfShape(initialHiddenStateShape)).fill(0));
+        initialHiddenStateShape, new Array(sizeOfShape(initialHiddenStateShape)).fill(0));
   }
 
   let sequence;

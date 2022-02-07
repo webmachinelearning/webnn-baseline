@@ -14,11 +14,12 @@ import {validateInput} from './lib/validate-input.js';
  * @param {MLBatchNormalizationOptions} [options]
  * @return {Tensor}
  */
-export function batchNormalization(input, mean, variance, {axis=1, scale, bias, epsilon=1e-5, activation = x => x} = {}) {
-  validateInput("batchNormalization", arguments);
+export function batchNormalization(input, mean, variance, {axis=1, scale, bias, epsilon=1e-5,
+  activation = (x) => x} = {}) {
+  validateInput('batchNormalization', arguments);
   // The output tensor has the same shape as the input tensor.
   let output = new Tensor(input.shape);
-  let shape = new Array(input.rank).fill(1);
+  const shape = new Array(input.rank).fill(1);
   shape[axis] = -1;
   output = sub(input, reshape(mean, shape));
   output = div(output,

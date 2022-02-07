@@ -14,7 +14,7 @@ import {validateInput} from './lib/validate-input.js';
 export function slice(input, starts, sizes, {axes} = {}) {
   const rank = input.rank;
   const startsForAllAxes = new Array(rank).fill(0);
-  validateInput("slice", arguments);
+  validateInput('slice', arguments);
 
   axes = axes ?? [...Array(rank).keys()];
   const axesLen = axes.length;

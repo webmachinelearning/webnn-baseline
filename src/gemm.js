@@ -15,12 +15,12 @@ import {transpose} from './transpose.js';
  * @return {Tensor}
  */
 export function gemm(a, b, {c = new Scalar(0.0),
-                            alpha : fAlpha = 1.0,
-                            beta : fBeta = 1.0,
-                            aTranspose = false,
-                            bTranspose = false
-                           } = {}) {
-  validateInput("gemm", arguments);
+  alpha: fAlpha = 1.0,
+  beta: fBeta = 1.0,
+  aTranspose = false,
+  bTranspose = false,
+} = {}) {
+  validateInput('gemm', arguments);
   const alpha = new Scalar(fAlpha);
   const beta = new Scalar(fBeta);
   if (aTranspose) {

@@ -22,9 +22,9 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Tensor}
  */
 export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
-                        {bias, recurrentBias, resetAfter = true,
-                         layout = 'zrn', activations = [sigmoid, tanh]} = {}) {
-  validateInput("gruCell", arguments);
+    {bias, recurrentBias, resetAfter = true,
+      layout = 'zrn', activations = [sigmoid, tanh]} = {}) {
+  validateInput('gruCell', arguments);
 
   const one = new Scalar(1);
   const zero = new Scalar(0);

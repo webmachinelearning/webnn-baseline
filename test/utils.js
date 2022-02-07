@@ -32,19 +32,22 @@ assert.isAlmostEqualUlp = function(a, b, nulp, message) {
   let distance = aBitwise - bBitwise;
   distance = distance >= 0 ? distance : -distance;
   return assert.isTrue(distance <= nulp, message);
-}
+};
 
 export function checkValue(tensor, expected, nulp = 0) {
   assert.isTrue(tensor.size === expected.length);
   for (let i = 0; i < expected.length; ++i) {
-    assert.isAlmostEqualUlp(tensor.getValueByIndex(i), expected[i], nulp, `${tensor.getValueByIndex(i)} is almost equal to ${expected[i]}`);
+    assert.isAlmostEqualUlp(tensor.getValueByIndex(i), expected[i], nulp,
+        `${tensor.getValueByIndex(i)} is almost equal to ${expected[i]}`);
   }
 }
 
 export function checkShape(tensor, expected) {
-  assert.equal(tensor.rank, expected.length, `Tensor has expected rank ${expected.length}: ${tensor.rank}`);
+  assert.equal(tensor.rank, expected.length,
+      `Tensor has expected rank ${expected.length}: ${tensor.rank}`);
   for (let i = 0; i < expected.length; ++i) {
-    assert.equal(tensor.shape[i], expected[i], `Tensor line ${i} has expected length ${expected[i]}: ${tensor.shape[i]}`);
+    assert.equal(tensor.shape[i], expected[i],
+        `Tensor line ${i} has expected length ${expected[i]}: ${tensor.shape[i]}`);
   }
 }
 

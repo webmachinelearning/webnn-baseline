@@ -15,15 +15,15 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Tensor}
  */
 function pool2d(input, reductionFunc,
-                {padding = [0, 0, 0, 0],
-                 strides = [1,1],
-                 dilations = [1,1],
-                 roundingType = 'floor',
-                 layout = 'nchw',
-                 windowDimensions,
-                 autoPad = 'explicit',
-                 outputSizes
-                }= {}) {
+    {padding = [0, 0, 0, 0],
+      strides = [1, 1],
+      dilations = [1, 1],
+      roundingType = 'floor',
+      layout = 'nchw',
+      windowDimensions,
+      autoPad = 'explicit',
+      outputSizes,
+    }= {}) {
   validateInput('pool2d', arguments);
   const roundingFunc = roundingType === 'floor' ? Math.floor : Math.ceil;
 

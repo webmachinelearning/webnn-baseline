@@ -14,6 +14,7 @@ module.exports = {
     'indent': 2,
     'require-jsdoc': 'off',
     'max-len': ['error', {'code': 100}],
+    'prefer-rest-params': 'off'
   },
   extends: [
     'eslint:recommended',

@@ -13,9 +13,9 @@ import {validateInput} from './lib/validate-input.js';
 export function split(input, splits, {axis = 0} = {}) {
   const outputs = [];
   let sliceSizes = [];
-  validateInput("split", arguments);
+  validateInput('split', arguments);
   const rank = input.rank;
-  let inpAxis = axis >=0 ? axis : rank + axis;
+  const inpAxis = axis >=0 ? axis : rank + axis;
   if (typeof splits === 'number') {
     sliceSizes = new Array(splits).fill(input.shape[inpAxis] / splits);
   } else if (splits instanceof Array) {

@@ -22,7 +22,7 @@ function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
     outputShape[inpAxes[i]] = 1;
   }
 
-  validateInput("reduce", [input, reduceFunc, {keepDimensions, axes: inpAxes}]);
+  validateInput('reduce', [input, reduceFunc, {keepDimensions, axes: inpAxes}]);
 
   // Calculate the "strides" across the reduction dimensions given in axes.
   inpAxes.sort((a, b) => a - b);
