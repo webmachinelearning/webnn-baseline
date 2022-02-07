@@ -64,7 +64,7 @@ export function validateInput(op, args) {
       break;
 
     case 'conv2d': {
-      const [input, filter, {bias, groups}] = [...args];
+      const [input, filter, {bias, groups = 1}] = [...args];
       const inputChannels = input.shape[1];
       const outputChannels = filter.shape[0];
       const filterInputChannels = filter.shape[1];
@@ -149,7 +149,8 @@ export function validateInput(op, args) {
 
     case 'gru': {
       const [input, weight, recurrentWeight, steps, hiddenSize,
-        {bias, recurrentBias, initialHiddenState, direction, layout}] = [...args];
+        {bias, recurrentBias, initialHiddenState,
+          direction = 'forward', layout = 'zrn'}] = [...args];
       if (!Number.isInteger(steps) || steps <= 0) {
         throw new Error(`The steps ${steps} is invalid.`);
       }

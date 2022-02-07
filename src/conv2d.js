@@ -23,7 +23,6 @@ export function conv2d(input, filter, {padding = [0, 0, 0, 0],
   autoPad = 'explicit',
 }
 = {}) {
-  validateInput('conv2d', arguments);
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
@@ -38,6 +37,7 @@ export function conv2d(input, filter, {padding = [0, 0, 0, 0],
     // ihwo -> oihw
     filter = transpose(filter, {permutation: [3, 0, 1, 2]});
   }
+  validateInput('conv2d', [input, filter, {groups, bias}]);
 
   const [batchCount, inputChannels, inputHeight, inputWidth] = input.shape;
   const [outputChannels, , filterHeight, filterWidth] = filter.shape;
