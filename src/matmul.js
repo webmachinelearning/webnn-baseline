@@ -4,7 +4,7 @@
 import {broadcast, getBroadcastShape} from './lib/broadcast.js';
 import {reshape} from './reshape.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateMatmulParams} from './lib/validate-input.js';
 
 /**
  * Compute the matrix product of two input tensors.
@@ -25,7 +25,7 @@ export function matmul(a, b) {
   }
   const bCols = b.shape[b.rank - 1];
 
-  validateInput('matmul', [a, b]);
+  validateMatmulParams(a, b);
 
   let cShape = [aRows, bCols];
   if (a.rank > 2 || b.rank > 2) {

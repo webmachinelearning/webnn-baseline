@@ -1,7 +1,7 @@
 'use strict';
 
 import {Tensor, sizeOfShape} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateSliceParams} from './lib/validate-input.js';
 
 /**
  * Produce a slice of the input tensor.
@@ -12,9 +12,9 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Tensor}
  */
 export function slice(input, starts, sizes, {axes} = {}) {
+  validateSliceParams(...arguments);
   const rank = input.rank;
   const startsForAllAxes = new Array(rank).fill(0);
-  validateInput('slice', arguments);
 
   axes = axes ?? [...Array(rank).keys()];
   const axesLen = axes.length;

@@ -1,7 +1,7 @@
 'use strict';
 
 import {Tensor, sizeOfShape} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateConcatParams} from './lib/validate-input.js';
 
 /**
  * Concatenates the input tensors along a given axis.
@@ -10,7 +10,7 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Tensor}
  */
 export function concat(inputs, axis) {
-  validateInput('concat', arguments);
+  validateConcatParams(...arguments);
   const inputShape = inputs[0].shape;
   const outputShape = inputShape.slice();
   for (let i = 1; i < inputs.length; ++i) {

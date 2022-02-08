@@ -8,7 +8,7 @@ import {sigmoid} from './sigmoid.js';
 import {slice} from './slice.js';
 import {squeeze} from './squeeze.js';
 import {tanh} from './tanh.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateGruParams} from './lib/validate-input.js';
 
 /**
  * Gated Recurrent Unit [GRU] recurrent network using an update gate and a reset gate to compute
@@ -25,7 +25,7 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
     {bias, recurrentBias, initialHiddenState, resetAfter = true,
       returnSequence = false, direction = 'forward',
       layout = 'zrn', activations = [sigmoid, tanh]} = {}) {
-  validateInput('gru', arguments);
+  validateGruParams(...arguments);
   const numDirections = (direction === 'both' ? 2 : 1);
   const batchSize = input.shape[1];
 

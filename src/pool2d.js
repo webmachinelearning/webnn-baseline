@@ -4,7 +4,7 @@ import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {Tensor} from './lib/tensor.js';
 import {transpose} from './transpose.js';
 import {meanReducer, maxReducer} from './reduce.js';
-import {validateInput} from './lib/validate-input.js';
+import {validatePool2dParams} from './lib/validate-input.js';
 
 /**
  * Compute a reduction operation across all the elements within the
@@ -24,7 +24,7 @@ function pool2d(input, reductionFunc,
       autoPad = 'explicit',
       outputSizes,
     }= {}) {
-  validateInput('pool2d', arguments);
+  validatePool2dParams(...arguments);
   const roundingFunc = roundingType === 'floor' ? Math.floor : Math.ceil;
 
   if (layout === 'nhwc') {

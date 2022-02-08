@@ -7,7 +7,7 @@ import {sigmoid} from './sigmoid.js';
 import {slice} from './slice.js';
 import {tanh} from './tanh.js';
 import {transpose} from './transpose.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateGruCellParams} from './lib/validate-input.js';
 
 /**
  * A single time step of the Gated Recurrent Unit [GRU] recurrent network using an update gate
@@ -24,7 +24,7 @@ import {validateInput} from './lib/validate-input.js';
 export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
     {bias, recurrentBias, resetAfter = true,
       layout = 'zrn', activations = [sigmoid, tanh]} = {}) {
-  validateInput('gruCell', arguments);
+  validateGruCellParams(...arguments);
 
   const one = new Scalar(1);
   const zero = new Scalar(0);

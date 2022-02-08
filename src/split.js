@@ -1,7 +1,7 @@
 'use strict';
 
 import {slice} from './slice.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateSplitParams} from './lib/validate-input.js';
 
 /**
  * Split the input tensor into a number of sub tensors along the given axis.
@@ -11,9 +11,9 @@ import {validateInput} from './lib/validate-input.js';
  * @return {Array.<Tensor>}
  */
 export function split(input, splits, {axis = 0} = {}) {
+  validateSplitParams(...arguments);
   const outputs = [];
   let sliceSizes = [];
-  validateInput('split', arguments);
   const rank = input.rank;
   const inpAxis = axis >=0 ? axis : rank + axis;
   if (typeof splits === 'number') {

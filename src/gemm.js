@@ -3,7 +3,7 @@
 import {add, mul} from './binary.js';
 import {matmul} from './matmul.js';
 import {Scalar} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateGemmParams} from './lib/validate-input.js';
 import {transpose} from './transpose.js';
 
 /**
@@ -20,7 +20,7 @@ export function gemm(a, b, {c = new Scalar(0.0),
   aTranspose = false,
   bTranspose = false,
 } = {}) {
-  validateInput('gemm', arguments);
+  validateGemmParams(...arguments);
   const alpha = new Scalar(fAlpha);
   const beta = new Scalar(fBeta);
   if (aTranspose) {

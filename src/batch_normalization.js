@@ -3,7 +3,7 @@
 import {add, sub, mul, div, pow} from './binary.js';
 import {reshape} from './reshape.js';
 import {Tensor, Scalar} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateBatchNormalizationParams} from './lib/validate-input.js';
 
 /**
  * Normalize the tensor values of input features across the batch dimension using
@@ -16,7 +16,7 @@ import {validateInput} from './lib/validate-input.js';
  */
 export function batchNormalization(input, mean, variance, {axis=1, scale, bias, epsilon=1e-5,
   activation = (x) => x} = {}) {
-  validateInput('batchNormalization', arguments);
+  validateBatchNormalizationParams(...arguments);
   // The output tensor has the same shape as the input tensor.
   let output = new Tensor(input.shape);
   const shape = new Array(input.rank).fill(1);

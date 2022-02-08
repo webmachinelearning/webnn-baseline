@@ -1,7 +1,7 @@
 'use strict';
 
 import {Tensor} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateTranposeParams} from './lib/validate-input.js';
 
 /**
  * Permute the dimensions of the input tensor according to the permutation argument.
@@ -12,7 +12,7 @@ import {validateInput} from './lib/validate-input.js';
 export function transpose(input, {permutation} = {}) {
   const inpPermutation = permutation ??
         new Array(input.rank).fill(0).map((e, i, a) => a.length - i - 1);
-  validateInput('transpose', [input, {permutation: inpPermutation}]);
+  validateTranposeParams(input, {permutation: inpPermutation});
 
   const outputShape = new Array(input.rank).fill(0).map(
       (e, i, a) => input.shape[inpPermutation[i]]);

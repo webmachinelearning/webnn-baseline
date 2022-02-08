@@ -2,7 +2,7 @@
 
 import {squeeze} from './squeeze.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
-import {validateInput} from './lib/validate-input.js';
+import {validateReduceParams} from './lib/validate-input.js';
 
 /**
  * Reduce the input along the dimensions given in axes.
@@ -22,7 +22,7 @@ function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
     outputShape[inpAxes[i]] = 1;
   }
 
-  validateInput('reduce', [input, reduceFunc, {keepDimensions, axes: inpAxes}]);
+  validateReduceParams(input, reduceFunc, {keepDimensions, axes: inpAxes});
 
   // Calculate the "strides" across the reduction dimensions given in axes.
   inpAxes.sort((a, b) => a - b);
