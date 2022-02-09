@@ -1,7 +1,7 @@
 'use strict';
 
-import {broadcast} from '../src/broadcast.js';
-import {Tensor, sizeOfShape} from '../src/tensor.js';
+import {broadcast} from '../src/lib/broadcast.js';
+import {Tensor, sizeOfShape} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test broadcast', function() {

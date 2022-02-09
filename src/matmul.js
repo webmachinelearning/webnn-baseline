@@ -1,9 +1,10 @@
 
 'use strict';
 
-import {broadcast, getBroadcastShape} from './broadcast.js';
+import {broadcast, getBroadcastShape} from './lib/broadcast.js';
 import {reshape} from './reshape.js';
-import {sizeOfShape, Tensor} from './tensor.js';
+import {sizeOfShape, Tensor} from './lib/tensor.js';
+import {validateMatmulParams} from './lib/validate-input.js';
 
 /**
  * Compute the matrix product of two input tensors.
@@ -12,11 +13,7 @@ import {sizeOfShape, Tensor} from './tensor.js';
  * @return {Tensor}
  */
 export function matmul(a, b) {
-  let scalarOutput = false;
-  if (a.rank === 1 && b.rank === 1) {
-    scalarOutput = true;
-  }
-
+  const scalarOutput = a.rank === 1 && b.rank === 1;
   if (a.rank === 1) {
     a = reshape(a, [1, a.shape[0]]);
   }
@@ -26,13 +23,9 @@ export function matmul(a, b) {
   if (b.rank === 1) {
     b = reshape(b, [b.shape[0], 1]);
   }
-  const bRows = b.shape[b.rank - 2];
   const bCols = b.shape[b.rank - 1];
 
-  if (aCols !== bRows) {
-    throw new Error(
-        `The columns (${aCols}) of input a is not equal to rows (${bRows}) of input b.`);
-  }
+  validateMatmulParams(a, b);
 
   let cShape = [aRows, bCols];
   if (a.rank > 2 || b.rank > 2) {

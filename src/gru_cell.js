@@ -2,11 +2,12 @@
 
 import {add, mul, sub} from './binary.js';
 import {matmul} from './matmul.js';
-import {Scalar} from './tensor.js';
+import {Scalar} from './lib/tensor.js';
 import {sigmoid} from './sigmoid.js';
 import {slice} from './slice.js';
 import {tanh} from './tanh.js';
 import {transpose} from './transpose.js';
+import {validateGruCellParams} from './lib/validate-input.js';
 
 /**
  * A single time step of the Gated Recurrent Unit [GRU] recurrent network using an update gate
@@ -20,60 +21,10 @@ import {transpose} from './transpose.js';
  * @param {MLGruCellOptions} options
  * @return {Tensor}
  */
-export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize, options = {}) {
-  const bias = options.bias;
-  const recurrentBias = options.recurrentBias;
-  const resetAfter = options.resetAfter !== undefined ? options.resetAfter : true;
-  const layout = options.layout !== undefined ? options.layout : 'zrn';
-  const activations = options.activations ? options.activations : [sigmoid, tanh];
-
-  if (!Number.isInteger(hiddenSize) || hiddenSize <= 0) {
-    throw new Error(`The hiddenSize ${hiddenSize} is invalid.`);
-  }
-  if (input.rank !== 2) {
-    throw new Error(`The input (rank ${input.rank}) is not a 2-D tensor.`);
-  }
-  const batchSize = input.shape[0];
-  const inputSize = input.shape[1];
-  if (weight.rank !== 2) {
-    throw new Error(`The weight (rank ${weight.rank}) is not a 2-D tensor.`);
-  }
-  if (weight.shape[0] !== 3 * hiddenSize || weight.shape[1] !== inputSize) {
-    throw new Error(`The shape of weight [${weight.shape[0]}, ${weight.shape[1]}] is invalid.`);
-  }
-  if (recurrentWeight.rank !== 2) {
-    throw new Error(`The recurrentWeight (rank ${recurrentWeight.rank}) is not a 2-D tensor.`);
-  }
-  if (recurrentWeight.shape[0] !== 3 * hiddenSize || recurrentWeight.shape[1] !== hiddenSize) {
-    throw new Error(`The shape of recurrentWeight ` +
-      `[${recurrentWeight.shape[0]}, ${recurrentWeight.shape[1]}] is invalid.`);
-  }
-  if (hiddenState.rank !== 2) {
-    throw new Error(`The hiddenState (rank ${hiddenState.rank}) is not a 2-D tensor.`);
-  }
-  if (hiddenState.shape[0] !== batchSize || hiddenState.shape[1] !== hiddenSize) {
-    throw new Error(`The shape of hiddenState
-      [${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
-  }
-  if (bias) {
-    if (bias.rank !== 1) {
-      throw new Error(`The bias (rank ${bias.rank}) is not a 1-D tensor.`);
-    }
-    if (bias.shape[0] !== 3 * hiddenSize) {
-      throw new Error(`The shape of bias [${bias.shape[0]}] is invalid.`);
-    }
-  }
-  if (recurrentBias) {
-    if (recurrentBias.rank !== 1) {
-      throw new Error(`The recurrentBias (rank ${bias.rank}) is not a 1-D tensor.`);
-    }
-    if (recurrentBias.shape[0] !== 3 * hiddenSize) {
-      throw new Error(`The shape of recurrentBias [${recurrentBias.shape[0]}] is invalid.`);
-    }
-  }
-  if (layout !== 'zrn' && layout !== 'rzn') {
-    throw new Error(`The layout ${layout} is invalid.`);
-  }
+export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
+    {bias, recurrentBias, resetAfter = true,
+      layout = 'zrn', activations = [sigmoid, tanh]} = {}) {
+  validateGruCellParams(...arguments);
 
   const one = new Scalar(1);
   const zero = new Scalar(0);

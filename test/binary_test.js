@@ -1,7 +1,7 @@
 'use strict';
 
 import {add, sub, mul, div, max, min, pow} from '../src/binary.js';
-import {Tensor} from '../src/tensor.js';
+import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test binary', function() {

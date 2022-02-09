@@ -1,6 +1,6 @@
 'use strict';
 import {averagePool2d, maxPool2d} from '../src/pool2d.js';
-import {Tensor} from '../src/tensor.js';
+import {Tensor} from '../src/lib/tensor.js';
 
 import * as utils from './utils.js';
 

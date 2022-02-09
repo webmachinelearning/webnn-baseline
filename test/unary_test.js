@@ -1,6 +1,6 @@
 'use strict';
 
-import {Tensor} from '../src/tensor.js';
+import {Tensor} from '../src/lib/tensor.js';
 import * as unaryFunctions from '../src/unary.js';
 import * as utils from './utils.js';
 

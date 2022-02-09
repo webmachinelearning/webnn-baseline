@@ -1,7 +1,7 @@
 'use strict';
 
-import {broadcast, getBroadcastShape} from './broadcast.js';
-import {Tensor, sizeOfShape} from './tensor.js';
+import {broadcast, getBroadcastShape} from './lib/broadcast.js';
+import {Tensor, sizeOfShape} from './lib/tensor.js';
 
 /**
  * Compute the element-wise binary operation of two input tensors.

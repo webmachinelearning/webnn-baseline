@@ -17,33 +17,37 @@ function getBitwise(value) {
 }
 
 /**
- * Check the distance between a and b whether is close enough to the given ULP distance.
+ * Asserts that the distance between a and b whether is close enough to the given ULP distance.
  * @param {Number} a
  * @param {Number} b
  * @param {Number} nulp A BigInt value.
+ * @param {String} message A message to report when the assertion fails
  * @return {Boolean} A boolean value:
  *     true: The distance between a and b is close enough to the given ULP distance.
  *     false: The distance between a and b is far away from the given ULP distance.
  */
-function almostEqualUlp(a, b, nulp) {
+assert.isAlmostEqualUlp = function(a, b, nulp, message) {
   const aBitwise = getBitwise(a);
   const bBitwise = getBitwise(b);
   let distance = aBitwise - bBitwise;
   distance = distance >= 0 ? distance : -distance;
-  return distance <= nulp;
-}
+  return assert.isTrue(distance <= nulp, message);
+};
 
-export function checkValue(tensor, expected, nulp = 0n) {
+export function checkValue(tensor, expected, nulp = 0) {
   assert.isTrue(tensor.size === expected.length);
   for (let i = 0; i < expected.length; ++i) {
-    assert.isTrue(almostEqualUlp(tensor.getValueByIndex(i), expected[i], nulp));
+    assert.isAlmostEqualUlp(tensor.getValueByIndex(i), expected[i], nulp,
+        `${tensor.getValueByIndex(i)} is almost equal to ${expected[i]}`);
   }
 }
 
 export function checkShape(tensor, expected) {
-  assert.equal(tensor.rank, expected.length);
+  assert.equal(tensor.rank, expected.length,
+      `Tensor has expected rank ${expected.length}: ${tensor.rank}`);
   for (let i = 0; i < expected.length; ++i) {
-    assert.equal(tensor.shape[i], expected[i]);
+    assert.equal(tensor.shape[i], expected[i],
+        `Tensor line ${i} has expected length ${expected[i]}: ${tensor.shape[i]}`);
   }
 }
 
