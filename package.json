@@ -1,0 +1,27 @@
+{
+  "name": "webnn-baseline",
+  "version": "0.1.0",
+  "description": "WebNN API double-precision baseline implementation for testing",
+  "directories": {
+    "src": "src",
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "eslint . --config .eslintrc.js --ext .js",
+    "test": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/*.js"
+  },
+  "authors": [
+    "Ningxin Hu <ningxin.hu@intel.com>"
+  ],
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.18.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsdoc": "^30.3.1",
+    "eslint-plugin-prefer-arrow": "^1.2.2",
+    "mocha": "^9.0.3"
+  }
+}
