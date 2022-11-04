@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import {sizeOfShape} from '../../src/lib/tensor.js';
 
 
 const getRandomFunctions = {
@@ -57,6 +58,36 @@ function getRandomNumbers(min, max, size, type = 'float64') {
 }
 
 /**
+ * Prepare input data by specified config of inputsDataInfo, dataFile, min, max parameters .
+ * @param {Object} inputsDataInfo information object for input data
+ * @param {String} dataFile saved data file path
+ * @param {Number} min
+ * @param {Number} max
+ * @return {Object}
+ */
+function prepareInputsData(inputsDataInfo, dataFile, min, max) {
+  const dstDataDict = {inputsData: {}};
+  let srcDataDict = {};
+  if (fs.existsSync(dataFile)) {
+    srcDataDict = utils.readJsonFile(dataFile);
+  }
+  for (const category in inputsDataInfo) {
+    // reserve last input data when generating new required input data
+    if (srcDataDict['inputsData'] !== undefined &&
+        srcDataDict['inputsData'][category] !== undefined) {
+      dstDataDict['inputsData'][category] = srcDataDict['inputsData'][category];
+    } else {
+      const targetDataInfo = inputsDataInfo[category];
+      const total = sizeOfShape(targetDataInfo.shape);
+      const type = targetDataInfo.type;
+      const generatedNumbers = utils.getRandomNumbers(min, max, total, type);
+      dstDataDict['inputsData'][category] = generatedNumbers;
+    }
+  }
+  return dstDataDict;
+}
+
+/**
  * Get JSON object from specified JSON file.
  * @param {String} filePath
  * @return {Object}
@@ -105,6 +136,7 @@ function writeJsonFile(jsonDict, saveFile) {
 export const utils = {
   getPrecisionData: getPrecisionData,
   getRandomNumbers: getRandomNumbers,
+  prepareInputsData: prepareInputsData,
   readJsonFile: readJsonFile,
   writeJsonFile: writeJsonFile,
 };

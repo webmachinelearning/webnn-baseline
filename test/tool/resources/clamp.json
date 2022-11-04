@@ -1,0 +1,246 @@
+{
+  "tests": [
+    // default options
+    {
+      "name": "clamp 1D input with default options",
+      "input": {
+        "shape": [24],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [24],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 2D input with default options",
+      "input": {
+        "shape": [4, 6],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [4, 6],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 3D input with default options",
+      "input": {
+        "shape": [2, 3, 4],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 3, 4],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 4D input with default options",
+      "input": {
+        "shape": [3, 2, 2, 2],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [3, 2, 2, 2],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 5D input with default options",
+      "input": {
+        "shape": [4, 1, 1, 2, 3],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [4, 1, 1, 2, 3],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    // default options.maxValue and specified options.minValue
+    {
+      "name": "clamp 4D input with default options.maxValue and specified negative options.minValue",
+      "input": {
+        "shape": [2, 1, 4, 3],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 1, 4, 3],
+        "data": "float32NegativeMin"
+      },
+      "options": {
+        "minValue": -1.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 3D input with default options.maxValue and specified options.minValue being zero",
+      "input": {
+        "shape": [6, 2, 2],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [6, 2, 2],
+        "data": "float32ZeroMin"
+      },
+      "options": {
+        "minValue": 0.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 2D input with default options.maxValue and specified positive options.minValue",
+      "input": {
+        "shape": [3, 8],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [3, 8],
+        "data": "float32PositiveMin"
+      },
+      "options": {
+        "minValue": 1.0
+      },
+      "type": "float32"
+    },
+    // default options.minValue and specified options.maxValue
+    {
+      "name": "clamp 5D input with default options.minValue and specified negative options.maxValue",
+      "input": {
+        "shape": [2, 2, 1, 2, 3],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 1, 4, 3],
+        "data": "float32NegativeMax"
+      },
+      "options": {
+        "maxValue": -2.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 1D input with default options.minValue and specified options.maxValue being zero",
+      "input": {
+        "shape": [24],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [24],
+        "data": "float32ZeroMax"
+      },
+      "options": {
+        "maxValue": 0.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 3D input with default options.minValue and specified positive options.maxValue",
+      "input": {
+        "shape": [3, 4, 2],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [3, 4, 2],
+        "data": "float32PositiveMax"
+      },
+      "options": {
+        "maxValue": 3.0
+      },
+      "type": "float32"
+    },
+    // specified both options.minValue and options.maxValue
+    {
+      "name": "clamp 5D input with specified both negative options.minValue and options.maxValue",
+      "input": {
+        "shape": [3, 2, 1, 1, 4],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [3, 2, 1, 1, 4],
+        "data": "float32BothNegativeMinMax"
+      },
+      "options": {
+        "minValue": -8.0,
+        "maxValue": -1.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 4D input with specified negative options.minValue and options.maxValue being zero",
+      "input": {
+        "shape": [1, 4, 3, 2],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [1, 4, 3, 2],
+        "data": "float32NegativeMinZeroMax"
+      },
+      "options": {
+        "minValue": -6.0,
+        "maxValue": 0.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 3D input with specified negative options.minValue and positive options.maxValue",
+      "input": {
+        "shape": [2, 6, 2],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 6, 2],
+        "data": "float32NegativeMinPositiveMax"
+      },
+      "options": {
+        "minValue": -3.0,
+        "maxValue": 4.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 2D input with specified options.minValue being zero and positive options.maxValue",
+      "input": {
+        "shape": [6, 4],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [6, 4],
+        "data": "float32ZeroMinPositiveMax"
+      },
+      "options": {
+        "minValue": 0.0,
+        "maxValue": 6.0
+      },
+      "type": "float32"
+    },
+    {
+      "name": "clamp 1D input with specified both positive options.minValue and options.maxValue",
+      "input": {
+        "shape": [24],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [24],
+        "data": "float32BothPositiveMinMax"
+      },
+      "options": {
+        "minValue": 2.0,
+        "maxValue": 7.0
+      },
+      "type": "float32"
+    }
+  ],
+  "inputsData": {
+    "float64Data": {
+      "shape": [24],
+      "type": "float64"
+    }
+  },
+  "expectedData": {
+  }
+}
