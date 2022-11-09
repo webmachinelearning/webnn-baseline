@@ -33,8 +33,8 @@ import {utils} from './utils.js';
       const precisionType = test.type;
       const inputShape = test.input.shape;
       const inputDataCategory = test.input.data;
-      const feedData = toSaveDataDict['inputsData'][inputDataCategory];
-      const precisionData = utils.getPrecisionData(feedData, precisionType);
+      const precisionData = utils.getPrecisionDataFromDataDict(
+          toSaveDataDict['inputsData'], inputDataCategory, precisionType);
       const options = test.options;
       const result = clampCompute(inputShape, precisionData, options);
       toSaveDataDict['expectedData'][expectedDataCategory] =

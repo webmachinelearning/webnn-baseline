@@ -2,7 +2,8 @@
 
 import fs from 'fs';
 import path from 'path';
-import {sizeOfShape} from '../../src/lib/tensor.js';
+import {Tensor, sizeOfShape} from '../../src/lib/tensor.js';
+import {transpose} from '../../src/transpose.js';
 
 
 const getRandomFunctions = {
@@ -29,6 +30,19 @@ function getPrecisionData(input, precisionType) {
       break;
   }
   return data;
+}
+
+
+/**
+ * Get converted data from given data dict with specified field and precision type.
+ * @param {Object} srcDataDict
+ * @param {String} category
+ * @param {String} precisionType
+ * @return {Array<Number>}
+ */
+function getPrecisionDataFromDataDict(srcDataDict, category, precisionType) {
+  const feedData = srcDataDict[category];
+  return getPrecisionData(feedData, precisionType);
 }
 
 /**
@@ -78,10 +92,19 @@ function prepareInputsData(inputsDataInfo, dataFile, min, max) {
       dstDataDict['inputsData'][category] = srcDataDict['inputsData'][category];
     } else {
       const targetDataInfo = inputsDataInfo[category];
-      const total = sizeOfShape(targetDataInfo.shape);
-      const type = targetDataInfo.type;
-      const generatedNumbers = utils.getRandomNumbers(min, max, total, type);
-      dstDataDict['inputsData'][category] = generatedNumbers;
+      if (targetDataInfo.data !== undefined) {
+        const permutation = targetDataInfo.transpose;
+        const srcDataInfo = inputsDataInfo[targetDataInfo.data];
+        const inputTensor =
+          new Tensor(srcDataInfo.shape, dstDataDict['inputsData'][targetDataInfo.data]);
+        const outputTensor = transpose(inputTensor, {permutation});
+        dstDataDict['inputsData'][category] = outputTensor.data;
+      } else {
+        const total = sizeOfShape(targetDataInfo.shape);
+        const type = targetDataInfo.type;
+        const generatedNumbers = utils.getRandomNumbers(min, max, total, type);
+        dstDataDict['inputsData'][category] = generatedNumbers;
+      }
     }
   }
   return dstDataDict;
@@ -135,6 +158,7 @@ function writeJsonFile(jsonDict, saveFile) {
 
 export const utils = {
   getPrecisionData: getPrecisionData,
+  getPrecisionDataFromDataDict: getPrecisionDataFromDataDict,
   getRandomNumbers: getRandomNumbers,
   prepareInputsData: prepareInputsData,
   readJsonFile: readJsonFile,
