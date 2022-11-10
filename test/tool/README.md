@@ -11,7 +11,7 @@ Example for generating test data for `concat` operation tests as following:
 node gen-concat.js resources\concat.json
 ```
 
-, then you could see similar below output on the console, and find new / updated test data file under `test_data` folder. 
+Then you could see similar below output on the console, and find new / updated test data file under `test-data` folder.
 ```
-[ Done ] Saved test data onto \path\webnn-baseline\test\tool\test_data\concat_data.json .
+[ Done ] Saved test data onto \path\webnn-baseline\test\tool\test-data\concat-data.json .
 ```
