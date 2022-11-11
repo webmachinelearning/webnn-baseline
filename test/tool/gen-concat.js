@@ -39,8 +39,8 @@ import {utils} from './utils.js';
     const axis = test.axis;
     const precisionType = test.type;
     const inputShapes = test.inputs.shape;
-    const inputDataCategory = test.inputs.data;
-    const feedData = toSaveDataDict['inputsData'][inputDataCategory];
+    const inputDataSource = test.inputs.data;
+    const feedData = toSaveDataDict['inputsData'][inputDataSource];
     const inputShapeValues = [];
     let position = 0;
     for (const shape of inputShapes) {

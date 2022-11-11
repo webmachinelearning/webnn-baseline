@@ -36,12 +36,12 @@ function getPrecisionData(input, precisionType) {
 /**
  * Get converted data from given data dict with specified field and precision type.
  * @param {Object} srcDataDict
- * @param {String} category
+ * @param {String} source
  * @param {String} precisionType
  * @return {Array<Number>}
  */
-function getPrecisionDataFromDataDict(srcDataDict, category, precisionType) {
-  const feedData = srcDataDict[category];
+function getPrecisionDataFromDataDict(srcDataDict, source, precisionType) {
+  const feedData = srcDataDict[source];
   return getPrecisionData(feedData, precisionType);
 }
 
@@ -85,25 +85,25 @@ function prepareInputsData(inputsDataInfo, dataFile, min, max) {
   if (fs.existsSync(dataFile)) {
     srcDataDict = utils.readJsonFile(dataFile);
   }
-  for (const category in inputsDataInfo) {
+  for (const source in inputsDataInfo) {
     // reserve last input data when generating new required input data
     if (srcDataDict['inputsData'] !== undefined &&
-        srcDataDict['inputsData'][category] !== undefined) {
-      dstDataDict['inputsData'][category] = srcDataDict['inputsData'][category];
+        srcDataDict['inputsData'][source] !== undefined) {
+      dstDataDict['inputsData'][source] = srcDataDict['inputsData'][source];
     } else {
-      const targetDataInfo = inputsDataInfo[category];
+      const targetDataInfo = inputsDataInfo[source];
       if (targetDataInfo.data !== undefined) {
         const permutation = targetDataInfo.transpose;
         const srcDataInfo = inputsDataInfo[targetDataInfo.data];
         const inputTensor =
           new Tensor(srcDataInfo.shape, dstDataDict['inputsData'][targetDataInfo.data]);
         const outputTensor = transpose(inputTensor, {permutation});
-        dstDataDict['inputsData'][category] = outputTensor.data;
+        dstDataDict['inputsData'][source] = outputTensor.data;
       } else {
         const total = sizeOfShape(targetDataInfo.shape);
         const type = targetDataInfo.type;
         const generatedNumbers = utils.getRandomNumbers(min, max, total, type);
-        dstDataDict['inputsData'][category] = generatedNumbers;
+        dstDataDict['inputsData'][source] = generatedNumbers;
       }
     }
   }
