@@ -18,6 +18,10 @@ const getRandomFunctions = {
  */
 function getPrecisionData(input, precisionType) {
   let data;
+  const isNumber = typeof input === 'number';
+  if (isNumber) {
+    input = [input];
+  }
   switch (precisionType) {
     case 'float32':
       data = new Float32Array(input);
@@ -29,9 +33,11 @@ function getPrecisionData(input, precisionType) {
     default:
       break;
   }
+  if (isNumber) {
+    data = data[0];
+  }
   return data;
 }
-
 
 /**
  * Get converted data from given data dict with specified field and precision type.

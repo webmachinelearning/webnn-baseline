@@ -3,7 +3,7 @@
 
 import {broadcast, getBroadcastShape} from './lib/broadcast.js';
 import {reshape} from './reshape.js';
-import {sizeOfShape, Tensor} from './lib/tensor.js';
+import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
 import {validateMatmulParams} from './lib/validate-input.js';
 
 /**
@@ -60,7 +60,7 @@ export function matmul(a, b) {
 
   if (scalarOutput) {
     const cValue = c.getValueByIndex(0);
-    c = new Tensor([], [cValue]);
+    c = new Scalar(cValue);
   }
 
   return c;

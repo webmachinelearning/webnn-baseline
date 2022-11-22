@@ -1,0 +1,257 @@
+{
+  "tests": [
+    {
+      "name": "matmul 1D and 1D inputs",
+      "inputs": {
+        "a": {
+          "shape": [4],
+          "data": "float64DataA1D"
+        },
+        "b": {
+          "shape": [4],
+          "data": "float64DataB1D"
+        }
+      },
+      "expected": {
+        "data": "float32DataScalar"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 1D and 2D inputs",
+      "inputs": {
+        "a": {
+          "shape": [4],
+          "data": "float64DataA1D"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB2D"
+        }
+      },
+      "expected": {
+        "shape": [1, 5],
+        "data": "float32Data1D2D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 2D and 1D inputs",
+      "inputs": {
+        "a": {
+          "shape": [5, 4],
+          "data": "float64DataB2DT" // transpose float64DataB2D
+        },
+        "b": {
+          "shape": [4],
+          "data": "float64DataA1D"
+        }
+      },
+      "expected": {
+        "shape": [5, 1],
+        "data": "float32Data1D2D" // reuse float32Data1D2D
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 2D and 2D inputs",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA2D"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB2D"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32Data2D2D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 3D and 3D inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 3, 4],
+          "data": "float64DataA3D"
+        },
+        "b": {
+          "shape": [2, 4, 5],
+          "data": "float64DataB3D"
+        }
+      },
+      "expected": {
+        "shape": [2, 3, 5],
+        "data": "float32Data3D3D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 3D and 3D (broadcast) inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 3, 4],
+          "data": "float64DataA3D"
+        },
+        "b": {
+          "shape": [1, 4, 1],
+          "data": "float64DataB1D" // reuse float64DataB1D
+        }
+      },
+      "expected": {
+        "shape": [2, 3, 1],
+        "data": "float32Data3DBroadcast3D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 3D and 2D inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 3, 4],
+          "data": "float64DataA3D"
+        },
+        "b": {
+          "shape": [4, 1],
+          "data": "float64DataB1D" // reuse float64DataB1D
+        }
+      },
+      "expected": {
+        "shape": [2, 3, 1],
+        "data": "float32Data3DBroadcast3D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 3D and 1D inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 3, 4],
+          "data": "float64DataA3D"
+        },
+        "b": {
+          "shape": [4],
+          "data": "float64DataB1D"
+        }
+      },
+      "expected": {
+        "shape": [2, 3, 1],
+        "data": "float32Data3DBroadcast3D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 4D and 4D (broadcast) inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 2, 3, 4],
+          "data": "float64DataA4D"
+        },
+        "b": {
+          "shape": [1, 1, 4, 5],
+          "data": "float64DataB2D" // reuse float64DataB2D
+        }
+      },
+      "expected": {
+        "shape": [2, 2, 3, 5],
+        "data": "float32Data4DBroadcast4D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 4D and 3D inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 2, 3, 4],
+          "data": "float64DataA4D"
+        },
+        "b": {
+          "shape": [2, 4, 5],
+          "data": "float64DataB3D"
+        }
+      },
+      "expected": {
+        "shape": [2, 2, 3, 5],
+        "data": "float32Data4D3D"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 5D and 5D inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 2, 1, 3, 4],
+          "data": "float64DataA4D" // reuse float64DataA4D
+        },
+        "b": {
+          "shape": [1, 1, 1, 4, 5],
+          "data": "float64DataB2D" // reuse float64DataB2D
+        }
+      },
+      "expected": {
+        "shape": [2, 2, 1, 3, 5],
+        "data": "float32Data4DBroadcast4D" // reuse float32Data4DBroadcast4D
+      },
+      "type": "float32"
+    },
+    {
+      "name": "matmul 5D and 2D inputs",
+      "inputs": {
+        "a": {
+          "shape": [2, 2, 1, 3, 4],
+          "data": "float64DataA4D" // reuse float64DataA4D
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB2D"
+        }
+      },
+      "expected": {
+        "shape": [2, 2, 1, 3, 5],
+        "data": "float32Data4DBroadcast4D" // reuse float32Data4DBroadcast4D
+      },
+      "type": "float32"
+    }
+  ],
+  "inputsData": {
+    "float64DataA1D": {
+      "shape": [4],
+      "type": "float64" 
+    },
+    "float64DataB1D": {
+      "shape": [4],
+      "type": "float64" 
+    },
+    "float64DataA2D": {
+      "shape": [3, 4],
+      "type": "float64" 
+    },
+    "float64DataB2D": {
+      "shape": [4, 5],
+      "type": "float64" 
+    },
+    "float64DataB2DT": {
+      "data": "float64DataB2D",
+      "transpose": [1, 0],
+      "shape": [5, 4],
+      "type": "float64" 
+    },
+    "float64DataA3D": {
+      "shape": [2, 3, 4],
+      "type": "float64" 
+    },
+    "float64DataB3D": {
+      "shape": [2, 4, 5],
+      "type": "float64" 
+    },
+    "float64DataA4D": {
+      "shape": [2, 2, 3, 4],
+      "type": "float64" 
+    }
+  },
+  "expectedData": {
+  }
+}
