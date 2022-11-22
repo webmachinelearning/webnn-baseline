@@ -1,0 +1,72 @@
+{
+  "tests": [
+    {
+      "name": "relu 1D input",
+      "input": {
+        "shape": [24],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [24],
+        "data": "float32Data"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "relu 2D input",
+      "input": {
+        "shape": [4, 6],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [4, 6],
+        "data": "float32Data"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "relu 3D input",
+      "input": {
+        "shape": [2, 3, 4],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 3, 4],
+        "data": "float32Data"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "relu 4D input",
+      "input": {
+        "shape": [2, 2, 2, 3],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 2, 2, 3],
+        "data": "float32Data"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "relu 5D input",
+      "input": {
+        "shape": [2, 1, 4, 1, 3],
+        "data": "float64Data"
+      },
+      "expected": {
+        "shape": [2, 1, 4, 1, 3],
+        "data": "float32Data"
+      },
+      "type": "float32"
+    }
+  ],
+  "inputsData": {
+    "float64Data": {
+      "shape": [24],
+      "type": "float64"
+    }
+  },
+  "expectedData": {
+  }
+}
