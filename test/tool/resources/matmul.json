@@ -36,6 +36,24 @@
       "type": "float32"
     },
     {
+      "name": "matmul 1D and 4D inputs",
+      "inputs": {
+        "a": {
+          "shape": [4],
+          "data": "float64DataA1D"
+        },
+        "b": {
+          "shape": [2, 2, 4, 2],
+          "data": "float64DataB4D"
+        }
+      },
+      "expected": {
+        "shape": [2, 2, 1, 2],
+        "data": "float32Data1D4D"
+      },
+      "type": "float32"
+    },
+    {
       "name": "matmul 2D and 1D inputs",
       "inputs": {
         "a": {
@@ -232,6 +250,10 @@
     "float64DataB2D": {
       "shape": [4, 5],
       "type": "float64" 
+    },
+    "float64DataB4D": {
+      "shape": [2, 2, 4, 2],
+      "type": "float64"
     },
     "float64DataB2DT": {
       "data": "float64DataB2D",
