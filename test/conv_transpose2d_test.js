@@ -493,34 +493,35 @@ describe('test convTranspose2d', function() {
   });
 
   it('convTranspose2d options.dilations', function() {
+    // this test is from ONNX
+    //   https://github.com/onnx/onnx/blob/main/onnx/backend/test/case/node/convtranspose.py#L328
     const input = {
       shape: [1, 1, 3, 3],
       data: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
+        3.0, 8.0, 1.0,
+        9.0, 5.0, 7.0,
+        3.0, 2.0, 6.0,
       ],
     };
     const filter = {
-      shape: [3, 3, 1, 1],
-      data: new Array(9).fill(1),
+      shape: [2, 2, 1, 1],
+      data: [
+        7.0, 2.0,
+        1.0, 9.0,
+      ],
     };
     const options = {
-      strides: [2, 2],
       dilations: [2, 2],
-      inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
     const expected = {
-      shape: [1, 1, 9, 9],
+      shape: [1, 1, 5, 5],
       data: [
-        0, 0, 1, 0, 3, 0, 3, 0, 2,
-        0, 0, 0, 0, 0, 0, 0, 0, 0,
-        3, 0, 8, 0, 15, 0, 12, 0, 7,
-        0, 0, 0, 0, 0, 0, 0, 0, 0,
-        9, 0, 21, 0, 36, 0, 27, 0, 15,
-        0, 0, 0, 0, 0, 0, 0, 0, 0,
-        9, 0, 20, 0, 33, 0, 24, 0, 13,
-        0, 0, 0, 0, 0, 0, 0, 0, 0,
-        6, 0, 13, 0, 21, 0, 15, 0, 8,
+        21.0, 56.0, 13.0, 16.0, 2.0,
+        63.0, 35.0, 67.0, 10.0, 14.0,
+        24.0, 22.0, 76.0, 76.0, 21.0,
+        9.0, 5.0, 88.0, 45.0, 63.0,
+        3.0, 2.0, 33.0, 18.0, 54.0,
       ],
     };
     testConvTranspose2d(input, filter, expected, options);

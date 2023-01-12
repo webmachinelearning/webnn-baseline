@@ -93,10 +93,13 @@ export function convTranspose2d(input, filter, {padding = [0, 0, 0, 0],
   let output = new Tensor(outputShape);
 
   // using conv2d logic to compute convTranspose2d
+
+  // real padding = dilation * (kernel_size - 1) - padding, referring to
+  //   https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html
   const realBeginningPaddingHeight =
-    filter.shape[2] - beginningPaddingHeight + (dilationHeight - 1) * 2 - 1;
+    dilationHeight * (filter.shape[2] - 1) - beginningPaddingHeight;
   const realBeginningPaddingWidth =
-    filter.shape[3] - beginningPaddingWidth + (dilationWidth - 1) * 2 - 1;
+    dilationWidth * (filter.shape[3] - 1) - beginningPaddingWidth;
   const [realStrideHeight, realStrideWidth] = [1, 1];
 
   const outputChannelsPerGroup = outputChannels / groups;
