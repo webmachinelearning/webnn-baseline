@@ -12,25 +12,29 @@ import {transpose} from './transpose.js';
  * @param {MLConvTranspose2dOptions} options
  * @return {Tensor}
  */
-export function convTranspose2d(input, filter, {padding = [0, 0, 0, 0],
-  strides = [1, 1],
-  groups = 1,
-  dilations = [1, 1],
-  outputPadding = [0, 0],
-  outputSizes,
-  activation = (x) => x,
-  inputLayout = 'nchw',
-  filterLayout = 'iohw',
-  bias,
-  autoPad = 'explicit',
-}
-= {}) {
+export function convTranspose2d(
+    input,
+    filter,
+    {
+      padding = [0, 0, 0, 0],
+      strides = [1, 1],
+      groups = 1,
+      dilations = [1, 1],
+      outputPadding = [0, 0],
+      outputSizes,
+      activation = (x) => x,
+      inputLayout = 'nchw',
+      filterLayout = 'iohw',
+      bias,
+      autoPad = 'explicit',
+    } = {}) {
+  // Below codes are using conv2d logic to compute convTranspose2d
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
   }
   if (filterLayout === 'iohw') {
-    // iohw -> oihw
+    // iohw -> oihw, oihw is the default filterLayout of conv2d
     filter = transpose(filter, {permutation: [1, 0, 2, 3]});
   } else if (filterLayout === 'hwoi') {
     // hwoi -> oihw
@@ -46,8 +50,8 @@ export function convTranspose2d(input, filter, {padding = [0, 0, 0, 0],
   const [outputChannels, , filterHeight, filterWidth] = filter.shape;
   const [strideHeight, strideWidth] = strides;
   const [dilationHeight, dilationWidth] = dilations;
-  const effectiveFilterHeight = filterHeight + (filterHeight - 1) * (dilationHeight - 1);
-  const effectiveFilterWidth = filterWidth + (filterWidth - 1) * (dilationWidth - 1);
+  const effectiveFilterHeight = (filterHeight - 1) * dilationHeight + 1;
+  const effectiveFilterWidth = (filterWidth - 1) * dilationWidth + 1;
 
   let beginningPaddingHeight;
   let endingPaddingHeight;
@@ -91,8 +95,6 @@ export function convTranspose2d(input, filter, {padding = [0, 0, 0, 0],
   outputShape[2] = outputHeight;
   outputShape[3] = outputWidth;
   let output = new Tensor(outputShape);
-
-  // using conv2d logic to compute convTranspose2d
 
   // real padding = dilation * (kernel_size - 1) - padding, referring to
   //   https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html
