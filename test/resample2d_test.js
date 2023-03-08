@@ -16,7 +16,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -37,7 +40,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -59,7 +65,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [2, 2, 1, 1],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -81,7 +90,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 2, 2, 1],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -103,7 +115,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -124,7 +139,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -146,7 +164,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [2, 2, 1, 1],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -168,7 +189,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 2, 2, 1],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -190,7 +214,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'linear',
@@ -212,7 +239,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'nearest-neighbor',
@@ -222,8 +252,10 @@ describe('test resample2d', function() {
         {
           shape: [1, 1, 4, 6],
           data: [
-            1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2,
-            3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4,
+            1, 1, 1, 2, 2, 2,
+            1, 1, 1, 2, 2, 2,
+            3, 3, 3, 4, 4, 4,
+            3, 3, 3, 4, 4, 4,
           ],
         });
   });
@@ -233,8 +265,10 @@ describe('test resample2d', function() {
         {
           shape: [1, 1, 4, 6],
           data: [
-            1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2,
-            3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4,
+            1, 1, 1, 2, 2, 2,
+            1, 1, 1, 2, 2, 2,
+            3, 3, 3, 4, 4, 4,
+            3, 3, 3, 4, 4, 4,
           ],
         },
         {
@@ -243,7 +277,10 @@ describe('test resample2d', function() {
         },
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         });
   });
 
@@ -251,7 +288,10 @@ describe('test resample2d', function() {
     testResample2d(
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         },
         {
           mode: 'nearest-neighbor',
@@ -261,8 +301,10 @@ describe('test resample2d', function() {
         {
           shape: [1, 1, 4, 6],
           data: [
-            1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2,
-            3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4,
+            1, 1, 1, 2, 2, 2,
+            1, 1, 1, 2, 2, 2,
+            3, 3, 3, 4, 4, 4,
+            3, 3, 3, 4, 4, 4,
           ],
         });
   });
@@ -272,8 +314,10 @@ describe('test resample2d', function() {
         {
           shape: [1, 1, 4, 6],
           data: [
-            1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2,
-            3, 3, 3, 4, 4, 4, 3, 3, 3, 4, 4, 4,
+            1, 1, 1, 2, 2, 2,
+            1, 1, 1, 2, 2, 2,
+            3, 3, 3, 4, 4, 4,
+            3, 3, 3, 4, 4, 4,
           ],
         },
         {
@@ -282,7 +326,10 @@ describe('test resample2d', function() {
         },
         {
           shape: [1, 1, 2, 2],
-          data: [1, 2, 3, 4],
+          data: [
+            1, 2,
+            3, 4,
+          ],
         });
   });
 });
