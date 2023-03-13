@@ -12,17 +12,20 @@ import {transpose} from './transpose.js';
  * @param {MLConv2dOptions} options
  * @return {Tensor}
  */
-export function conv2d(input, filter, {padding = [0, 0, 0, 0],
-  strides = [1, 1],
-  groups = 1,
-  dilations = [1, 1],
-  activation = (x) => x,
-  inputLayout = 'nchw',
-  filterLayout = 'oihw',
-  bias,
-  autoPad = 'explicit',
-}
-= {}) {
+export function conv2d(
+    input,
+    filter,
+    {
+      padding = [0, 0, 0, 0],
+      strides = [1, 1],
+      groups = 1,
+      dilations = [1, 1],
+      activation = (x) => x,
+      inputLayout = 'nchw',
+      filterLayout = 'oihw',
+      bias,
+      autoPad = 'explicit',
+    } = {}) {
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
@@ -43,8 +46,8 @@ export function conv2d(input, filter, {padding = [0, 0, 0, 0],
   const [outputChannels, , filterHeight, filterWidth] = filter.shape;
   const [strideHeight, strideWidth] = strides;
   const [dilationHeight, dilationWidth] = dilations;
-  const effectiveFilterHeight = filterHeight + (filterHeight - 1) * (dilationHeight - 1);
-  const effectiveFilterWidth = filterWidth + (filterWidth - 1) * (dilationWidth - 1);
+  const effectiveFilterHeight = (filterHeight - 1) * dilationHeight + 1;
+  const effectiveFilterWidth = (filterWidth - 1) * dilationWidth + 1;
 
   let beginningPaddingHeight;
   let endingPaddingHeight;
