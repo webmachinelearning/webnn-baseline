@@ -24,14 +24,14 @@ describe('test prelu', function() {
     const slope = {
       'shape': [1, 2, 3],
       'data': [
-        0.1, -0.1, 0.25,
+        0.125, -0.125, 0.25,
         -0.25, -0.5, 0.5,
       ],
     };
     const expected = {
       'shape': [1, 2, 3],
       'data': [
-        1, 0.1, 2,
+        1, 0.125, 2,
         0.5, 3, -1.5,
       ],
     };
@@ -48,13 +48,13 @@ describe('test prelu', function() {
     };
     const slope = {
       'shape': [1],
-      'data': [0.1],
+      'data': [0.125],
     };
     const expected = {
       'shape': [1, 2, 3],
       'data': [
-        1, -0.1, 2,
-        -0.2, 3, -0.30000000000000004,
+        1, -0.125, 2,
+        -0.25, 3, -0.375,
       ],
     };
     testPRelu(input, slope, expected);
@@ -71,14 +71,14 @@ describe('test prelu', function() {
     const slope = {
       'shape': [1, 3],
       'data': [
-        0.1, -0.25, 0.5,
+        0.125, -0.25, 0.5,
       ],
     };
     const expected = {
       'shape': [1, 2, 3],
       'data': [
         1, 0.25, 2,
-        -0.2, 3, -1.5,
+        -0.25, 3, -1.5,
       ],
     };
     testPRelu(input, slope, expected);
@@ -95,15 +95,15 @@ describe('test prelu', function() {
     const slope = {
       'shape': [1, 2, 1],
       'data': [
-        0.1,
-        -0.1,
+        0.125,
+        -0.125,
       ],
     };
     const expected = {
       'shape': [1, 2, 3],
       'data': [
-        1, -0.1, 2,
-        0.2, 3, 0.30000000000000004,
+        1, -0.125, 2,
+        0.25, 3, 0.375,
       ],
     };
     testPRelu(input, slope, expected);
