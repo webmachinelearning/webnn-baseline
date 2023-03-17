@@ -12,7 +12,7 @@ export function reshape(input, newShape) {
   let minusOneAxis;
   let elements = 1;
   for (let i = 0; i < newShape.length; ++i) {
-    if (newShape[i] === -1) {
+    if (newShape[i] === null) {
       minusOneAxis = i;
     } else if (newShape[i] > 0) {
       elements *= newShape[i];

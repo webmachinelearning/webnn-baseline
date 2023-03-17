@@ -73,7 +73,7 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
               cellInput, cellWeight[slot], cellRecurrentWeight[slot],
               cellHidden[slot], hiddenSize, {bias: cellBias[slot],
                 recurrentBias: cellRecurrentBias[slot], resetAfter, layout, activations}),
-          [1, -1, hiddenSize]);
+          [1, null, hiddenSize]);
 
       cellOutput = (cellOutput ? concat([cellOutput, result], 0) : result);
     }
@@ -81,7 +81,7 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
     hiddenState = cellOutput;
 
     if (returnSequence) {
-      cellOutput = reshape(cellOutput, [1, numDirections, -1, hiddenSize]);
+      cellOutput = reshape(cellOutput, [1, numDirections, null, hiddenSize]);
       sequence =
           (sequence ? concat([sequence, cellOutput], 0) : cellOutput);
     }
