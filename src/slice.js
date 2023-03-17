@@ -20,7 +20,7 @@ export function slice(input, starts, sizes, {axes} = {}) {
   const axesLen = axes.length;
   const outputShape = input.shape.slice();
   for (let i = 0; i < axesLen; ++i) {
-    const axis = axes[i] >= 0 ? axes[i] : axes[i] + rank;
+    const axis = axes[i];
     const size = input.shape[axis];
     const start = starts[i];
     startsForAllAxes[axis] = start >= 0 ? start : start + size;

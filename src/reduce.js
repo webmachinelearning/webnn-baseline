@@ -16,9 +16,6 @@ function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
 
   const outputShape = input.shape.slice();
   for (let i = 0; i < inpAxes.length; ++i) {
-    if (inpAxes[i] === -1) {
-      inpAxes[i] = input.rank - 1;
-    }
     outputShape[inpAxes[i]] = 1;
   }
 

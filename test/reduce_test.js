@@ -58,15 +58,6 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
   });
 
-  it('reduceMax negative axes do not keep dims', function() {
-    testReduce(
-        'Max', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
-  });
-
   it('reduceMax axes0 keep dims', function() {
     testReduce(
         'Max', {axes: [0], keepDimensions: true}, {
@@ -88,15 +79,6 @@ describe('test reduce', function() {
   it('reduceMax axes2 keep dims', function() {
     testReduce(
         'Max', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2, 1], values: [100., 200., 300., 400., 500., 600.]});
-  });
-
-  it('reduceMax negative axes keep dims', function() {
-    testReduce(
-        'Max', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
         },
@@ -148,15 +130,6 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
-  it('reduceMean negative axes do not keep dims', function() {
-    testReduce(
-        'Mean', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
-        },
-        {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
-  });
-
   it('reduceMean axes0 keep dims', function() {
     testReduce(
         'Mean', {axes: [0], keepDimensions: true}, {
@@ -178,15 +151,6 @@ describe('test reduce', function() {
   it('reduceMean axes2 keep dims', function() {
     testReduce(
         'Mean', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
-        },
-        {shape: [3, 2, 1], values: [3., 11., 15.5, 21., 28., 31.]});
-  });
-
-  it('reduceMean negative axes keep dims', function() {
-    testReduce(
-        'Mean', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
         },
@@ -238,15 +202,6 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
   });
 
-  it('reduceMin negative axes do not keep dims', function() {
-    testReduce(
-        'Min', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
-  });
-
   it('reduceMin axes0 keep dims', function() {
     testReduce(
         'Min', {axes: [0], keepDimensions: true}, {
@@ -268,15 +223,6 @@ describe('test reduce', function() {
   it('reduceMin axes2 keep dims', function() {
     testReduce(
         'Min', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2, 1], values: [1., 2., 3., 4., 5., 6.]});
-  });
-
-  it('reduceMin negative axes keep dims', function() {
-    testReduce(
-        'Min', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
         },
@@ -337,18 +283,6 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct negative axes do not keep dims', function() {
-    testReduce(
-        'Product', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2],
-          values: [0., 6., 20., 42., 72., 110.],
-        });
-  });
-
   it('reduceProduct axes0 keep dims', function() {
     testReduce(
         'Product', {axes: [0], keepDimensions: true}, {
@@ -376,18 +310,6 @@ describe('test reduce', function() {
   it('reduceProduct axes2 keep dims', function() {
     testReduce(
         'Product', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [0., 6., 20., 42., 72., 110.],
-        });
-  });
-
-  it('reduceProduct negative axes keep dims', function() {
-    testReduce(
-        'Product', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
         },
@@ -451,18 +373,6 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum negative axes do not keep dims', function() {
-    testReduce(
-        'Sum', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2],
-          values: [1., 5., 9., 13., 17., 21.],
-        });
-  });
-
   it('reduceSum axes0 keep dims', function() {
     testReduce(
         'Sum', {axes: [0], keepDimensions: true}, {
@@ -490,18 +400,6 @@ describe('test reduce', function() {
   it('reduceSum axes2 keep dims', function() {
     testReduce(
         'Sum', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [1., 5., 9., 13., 17., 21.],
-        });
-  });
-
-  it('reduceSum negative axes keep dims', function() {
-    testReduce(
-        'Sum', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
         },
