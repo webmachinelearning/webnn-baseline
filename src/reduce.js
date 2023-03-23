@@ -1,7 +1,9 @@
 'use strict';
 
+import {pow} from './binary.js';
 import {squeeze} from './squeeze.js';
-import {sizeOfShape, Tensor} from './lib/tensor.js';
+import {abs, exp, log} from './unary.js';
+import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
 import {validateReduceParams} from './lib/validate-input.js';
 
 /**
@@ -119,4 +121,61 @@ export function reduceProduct(input, options = {}) {
 export function reduceSum(input, options = {}) {
   return reduce(input,
       (previousValue, currentValue) => previousValue + currentValue, options);
+}
+
+/**
+ * Compute the sum of the square of all the input values along the axes.
+ * @param {Tensor} input
+ * @param {MLReduceOptions} options
+ * @return {Tensor}
+ */
+export function reduceSumSquare(input, options = {}) {
+  return reduceSum(pow(input, new Scalar(2)), options);
+}
+
+/**
+ * Compute the L1 norm of all the input values along the axes.
+ * @param {Tensor} input
+ * @param {MLReduceOptions} options
+ * @return {Tensor}
+ */
+export function reduceL1(input, options = {}) {
+  return reduceSum(abs(input), options);
+}
+
+/**
+ * Compute the L2 norm of all the input values along the axes.
+ * @param {Tensor} input
+ * @param {MLReduceOptions} options
+ * @return {Tensor}
+ */
+export function reduceL2(input, options = {}) {
+  const intermediateResult = reduceSumSquare(input, options);
+  if (intermediateResult.rank === 0) {
+    return new Tensor(
+        [],
+        [Math.pow(intermediateResult.getValueByIndex(0), 0.5)]);
+  } else {
+    return pow(intermediateResult, new Scalar(0.5));
+  }
+}
+
+/**
+ * Compute the log value of the sum of all the input values along the axes.
+ * @param {Tensor} input
+ * @param {MLReduceOptions} options
+ * @return {Tensor}
+ */
+export function reduceLogSum(input, options = {}) {
+  return log(reduceSum(input, options));
+}
+
+/**
+ * Compute the log value of the sum of the exponent of all the input values along the axes.
+ * @param {Tensor} input
+ * @param {MLReduceOptions} options
+ * @return {Tensor}
+ */
+export function reduceLogSumExp(input, options = {}) {
+  return log(reduceSum(exp(input), options));
 }
