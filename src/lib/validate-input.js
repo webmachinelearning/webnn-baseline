@@ -31,6 +31,25 @@ export function validateBatchNormalizationParams(input, mean, variance,
   check1DTensorWithSize(bias, dim, 'bias');
 }
 
+export function validateInstanceNormalizationParams(
+    input,
+    {
+      scale,
+      bias,
+      epsilon=1e-5,
+      layout='nchw',
+    } = {}) {
+  if (layout !== 'nchw' && layout !== 'nhwc') {
+    throw new Error(`The layout ${layout} is invalid.`);
+  }
+  const axis = layout === 'nchw' ? 1 : 3;
+  const dim = input.shape[axis];
+  check1DTensorWithSize(scale, dim, 'scale');
+  check1DTensorWithSize(bias, dim, 'bias');
+  if (typeof epsilon !== 'number') {
+    throw new Error(`The epsilon ${epsilon} should be a number.`);
+  }
+}
 
 export function validateConcatParams(inputs, axis) {
   const rank = inputs[0].rank;
