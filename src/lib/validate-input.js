@@ -39,6 +39,9 @@ export function validateInstanceNormalizationParams(
       epsilon=1e-5,
       layout='nchw',
     } = {}) {
+  if (input.rank !== 4) {
+    throw new Error('The input should be a 4-D tensor.');
+  }
   if (layout !== 'nchw' && layout !== 'nhwc') {
     throw new Error(`The layout ${layout} is invalid.`);
   }
