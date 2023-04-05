@@ -28,11 +28,13 @@ function getMappedLocation(location, inputShape, beginningPadding, mode) {
     const offset = mode === 'symmetric' ? 1 : 0;
     for (let i = 0; i < rank; i++) {
       if (mappedLocation[i] < beginningPadding[i]) {
+        // Full equation:
         // mappedLocation[i] =
         //    beginningPadding[i] + (beginningPadding[i] - mappedLocation[i]) -
         //    beginningPadding[i] - offset;
         mappedLocation[i] = beginningPadding[i] - mappedLocation[i] - offset;
       } else if (mappedLocation[i] >= beginningPadding[i] + inputShape[i]) {
+        // Full equation:
         // mappedLocation[i] =
         //    beginningPadding[i] + inputShape[i] - 1 -
         //    (mappedLocation[i] - (beginningPadding[i] + inputShape[i] -1)) -
