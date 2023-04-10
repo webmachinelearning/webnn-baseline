@@ -20,7 +20,7 @@ export function batchNormalization(input, mean, variance, {axis=1, scale, bias, 
   // The output tensor has the same shape as the input tensor.
   let output = new Tensor(input.shape);
   const shape = new Array(input.rank).fill(1);
-  shape[axis] = -1;
+  shape[axis] = null;
   output = sub(input, reshape(mean, shape));
   output = div(output,
       pow(add(reshape(variance, shape), new Scalar(epsilon)), new Scalar(0.5)));
