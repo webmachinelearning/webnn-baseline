@@ -28,19 +28,12 @@ function getMappedLocation(location, inputShape, beginningPadding, mode) {
     const offset = mode === 'symmetric' ? 1 : 0;
     for (let i = 0; i < rank; i++) {
       if (mappedLocation[i] < beginningPadding[i]) {
-        // Full equation:
-        // mappedLocation[i] =
-        //    beginningPadding[i] + (beginningPadding[i] - mappedLocation[i]) -
-        //    beginningPadding[i] - offset;
-        mappedLocation[i] = beginningPadding[i] - mappedLocation[i] - offset;
+        mappedLocation[i] = beginningPadding[i] + (beginningPadding[i] - mappedLocation[i]) -
+            beginningPadding[i] - offset;
       } else if (mappedLocation[i] >= beginningPadding[i] + inputShape[i]) {
-        // Full equation:
-        // mappedLocation[i] =
-        //    beginningPadding[i] + inputShape[i] - 1 -
-        //    (mappedLocation[i] - (beginningPadding[i] + inputShape[i] -1)) -
-        //    beginningPadding[i] + offset;
-        mappedLocation[i] =
-            beginningPadding[i] + inputShape[i] * 2 - mappedLocation[i] - 2 + offset;
+        mappedLocation[i] = beginningPadding[i] + inputShape[i] - 1 -
+            (mappedLocation[i] - (beginningPadding[i] + inputShape[i] -1)) -
+            beginningPadding[i] + offset;
       } else {
         mappedLocation[i] -= beginningPadding[i];
       }
@@ -63,20 +56,22 @@ function updateOutputElement(index, source, destination, beginningPadding, mode,
   const sourceShape = source.shape;
   const location = destination.locationFromIndex(index);
   const rank = location.length;
-  let hasFillPadding = false;
+  let needPadding = false;
   for (let j = 0; j < rank; j++) {
     if (location[j] < beginningPadding[j] || location[j] >= beginningPadding[j] + sourceShape[j]) {
-      hasFillPadding = true;
+      needPadding = true;
       break;
     }
   }
   let result;
-  if (hasFillPadding) {
+  if (needPadding) {
     if (mode === 'constant') {
       result = value;
     } else if (mode === 'edge' || mode === 'reflection' || mode === 'symmetric') {
       const targetLocation = getMappedLocation(location, sourceShape, beginningPadding, mode);
       result = source.getValueByLocation(targetLocation);
+    } else {
+      throw new Error(`Invalid mode ${mode}.`);
     }
   } else {
     const inputLocation = location.map((v, d) => v - beginningPadding[d]);
