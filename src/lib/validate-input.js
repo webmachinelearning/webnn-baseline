@@ -301,34 +301,32 @@ export function validateSoftmaxParams(x) {
 }
 
 export function validateSplitParams(input, splits, {axis = 0} = {}) {
-  let inpAxis;
   if (axis !== undefined) {
     const rank = input.rank;
-    if (!Number.isInteger(axis)) {
-      throw new Error(`The axis ${axis} should be an integer.`);
+    if (!Number.isInteger(axis) || axis < 0) {
+      throw new Error(`The axis ${axis} should be an unsigned integer.`);
     }
-    if (axis >= rank || axis < -rank) {
-      throw new Error(`The axis ${axis} should be in the interval [${-rank}, ${rank}).`);
+    if (axis >= rank) {
+      throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
     }
-    inpAxis = axis >= 0 ? axis : rank + axis;
   }
   if (typeof splits === 'number') {
     if (!Number.isInteger(splits) || splits <= 0) {
       throw new Error(`Invalid splits ${splits}, it should be a positive integer.`);
     }
-    if (input.shape[inpAxis] % splits !== 0) {
+    if (input.shape[axis] % splits !== 0) {
       throw new Error(`The splits ${splits} must evenly divide the dimension size ` +
-                      `${input.shape[inpAxis]} of input along options.axis ${inpAxis}.`);
+                      `${input.shape[axis]} of input along options.axis ${axis}.`);
     }
   } else if (splits instanceof Array) {
     if (!splits.every((v) => Number.isInteger(v) && v > 0)) {
       throw new Error(`Invalid splits ${splits}, it should be an Array of positive integers.`);
     }
     const sum = splits.reduce((a, b) => a + b);
-    if (sum !== input.shape[inpAxis]) {
+    if (sum !== input.shape[axis]) {
       throw new Error(`Invalid [${splits}], the sum of sizes ${sum} must equal ` +
-                      `to the dimension size ${input.shape[inpAxis]} of input` +
-                      ` along options.axis ${inpAxis}`);
+                      `to the dimension size ${input.shape[axis]} of input` +
+                      ` along options.axis ${axis}`);
     }
   }
 }
