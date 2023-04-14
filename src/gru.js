@@ -28,6 +28,7 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
   validateGruParams(...arguments);
   const numDirections = (direction === 'both' ? 2 : 1);
   const batchSize = input.shape[1];
+  const inputSize = input.shape[2];
 
   let hiddenState;
   if (initialHiddenState) {
@@ -46,14 +47,15 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
 
   for (let slot = 0; slot < numDirections; ++slot) {
     cellWeight.push(
-        squeeze(slice(weight, [slot, 0, 0], [1, -1, -1]), [0]));
+        squeeze(slice(weight, [slot, 0, 0], [1, 3 * hiddenSize, inputSize]), [0]));
     cellRecurrentWeight.push(squeeze(
-        slice(recurrentWeight, [slot, 0, 0], [1, -1, -1]), [0]));
+        slice(recurrentWeight, [slot, 0, 0], [1, 3 * hiddenSize, hiddenSize]), [0]));
     cellBias.push(
-        bias ? (squeeze(slice(bias, [slot, 0], [1, -1]), [0])) :
+        bias ? (squeeze(slice(bias, [slot, 0], [1, 3 * hiddenSize]), [0])) :
                 undefined);
     cellRecurrentBias.push(
-        recurrentBias ? (squeeze(slice(recurrentBias, [slot, 0], [1, -1]), [0])) : undefined);
+        recurrentBias ? (squeeze(slice(recurrentBias, [slot, 0], [1, 3 * hiddenSize]), [0])) :
+                         undefined);
   }
 
   for (let step = 0; step < steps; ++step) {
@@ -61,12 +63,12 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
     let cellOutput;
 
     for (let slot = 0; slot < numDirections; ++slot) {
-      cellHidden.push(squeeze(slice(hiddenState, [slot, 0, 0], [1, -1, -1]), [0]));
+      cellHidden.push(squeeze(slice(hiddenState, [slot, 0, 0], [1, batchSize, hiddenSize]), [0]));
     }
 
     for (let slot = 0; slot < numDirections; ++slot) {
       const sliceStart = (slot === 1 || direction === 'backward' ? steps - step - 1 : step);
-      const cellInput = squeeze(slice(input, [sliceStart, 0, 0], [1, -1, -1]), [0]);
+      const cellInput = squeeze(slice(input, [sliceStart, 0, 0], [1, batchSize, inputSize]), [0]);
 
       const result = reshape(
           gruCell(
