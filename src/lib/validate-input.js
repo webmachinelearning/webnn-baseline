@@ -262,70 +262,33 @@ export function validateReduceParams(input, _, {axes}) {
   }
 }
 
-export function validateSliceParams(input, starts, sizes, {axes} = {}) {
-  let inpAxes = axes;
+export function validateSliceParams(input, starts, sizes) {
   const rank = input.rank;
-  const startsForAllAxes = new Array(rank).fill(0);
-  if (axes) {
-    if (axes.length > rank) {
-      throw new Error(`The length of axes ${axes.length} is greater than rank ${rank}.`);
-    } else {
-      for (const axis of axes) {
-        if (!Number.isInteger(axis)) {
-          throw new Error(`Invalid axes value ${axis}, it should be an integer.`);
-        } else {
-          if (axis >= rank || axis < -rank) {
-            throw new Error(`Invalid axes value ${axis}, it should be in the interval ` +
-                            `[${-rank}, ${rank}).`);
-          }
-        }
-      }
-    }
-  } else {
-    inpAxes = [...Array(rank).keys()];
-  }
-  const axesLen = inpAxes.length;
-  if (starts.length !== axesLen) {
+  if (starts.length !== rank) {
     throw new Error(`The length ${starts.length} of starts is not equal to the length ` +
-                    `${axesLen} of axes.`);
+                    `${rank} of input.`);
   }
-  if (sizes.length !== axesLen) {
+  if (sizes.length !== rank) {
     throw new Error(`The length ${sizes.length} of sizes is not equal` +
-                    ` to the length ${axesLen} of axes.`);
+                    ` to the length ${rank} of input.`);
   }
-  for (let i = 0; i < axesLen; ++i) {
-    const axis = inpAxes[i] >= 0 ? inpAxes[i] : inpAxes[i] + rank;
-    const size = input.shape[axis];
+  for (let i = 0; i < rank; ++i) {
+    const size = input.shape[i];
     const start = starts[i];
-    if (!Number.isInteger(start)) {
-      throw new Error(`Invalid starts value ${start}, it should be an integer.`);
+    if (!Number.isInteger(start) || start < 0 ) {
+      throw new Error(`Invalid starts value ${start}, it should be an unsigned integer.`);
     }
-    startsForAllAxes[axis] = start >= 0 ? start : start + size;
-    if (start >= size || start < -size) {
+    if (start >= size) {
       throw new Error(`Invalid starts value ${start}, it shoule be in the interval ` +
-                      `[${-size}, ${size}).`);
+                      `[0, ${size}).`);
     } else {
       const sliceSize = sizes[i];
-      if (!Number.isInteger(sliceSize)) {
-        throw new Error(`Invalid sizes value ${sliceSize}, it should be an integer.`);
+      if (!Number.isInteger(sliceSize) || sliceSize <= 0) {
+        throw new Error(`Invalid sizes value ${sliceSize}, it should be an unsigned integer.`);
       }
-      if (sliceSize >= 0) {
-        if (start >= 0) {
-          if (start + sliceSize > size) {
-            throw new Error(`Invalid sizes value ${sliceSize}, the sum of the start ${start} ` +
-             `plus the size ${sliceSize} is greater than the dimensional size ${size}`);
-          }
-        } else {
-          if (start + sliceSize > 0) {
-            throw new Error(`Invalid sizes value ${sliceSize}, the sum of the start ${start} ` +
-             `plus the size ${sliceSize} is greater than the dimensional size ${size}`);
-          }
-        }
-      } else {
-        if (sliceSize !== -1) {
-          throw new Error(`The value ${sliceSize} of sizes is invalid,` +
-                          ` it is required to be -1 when it is negative.`);
-        }
+      if (start + sliceSize > size) {
+        throw new Error(`Invalid sizes value ${sliceSize}, the sum of the start ${start} ` +
+          `plus the size ${sliceSize} is greater than the dimensional size ${size}`);
       }
     }
   }
@@ -338,34 +301,32 @@ export function validateSoftmaxParams(x) {
 }
 
 export function validateSplitParams(input, splits, {axis = 0} = {}) {
-  let inpAxis;
   if (axis !== undefined) {
     const rank = input.rank;
-    if (!Number.isInteger(axis)) {
-      throw new Error(`The axis ${axis} should be an integer.`);
+    if (!Number.isInteger(axis) || axis < 0) {
+      throw new Error(`The axis ${axis} should be an unsigned integer.`);
     }
-    if (axis >= rank || axis < -rank) {
-      throw new Error(`The axis ${axis} should be in the interval [${-rank}, ${rank}).`);
+    if (axis >= rank) {
+      throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
     }
-    inpAxis = axis >= 0 ? axis : rank + axis;
   }
   if (typeof splits === 'number') {
     if (!Number.isInteger(splits) || splits <= 0) {
       throw new Error(`Invalid splits ${splits}, it should be a positive integer.`);
     }
-    if (input.shape[inpAxis] % splits !== 0) {
+    if (input.shape[axis] % splits !== 0) {
       throw new Error(`The splits ${splits} must evenly divide the dimension size ` +
-                      `${input.shape[inpAxis]} of input along options.axis ${inpAxis}.`);
+                      `${input.shape[axis]} of input along options.axis ${axis}.`);
     }
   } else if (splits instanceof Array) {
     if (!splits.every((v) => Number.isInteger(v) && v > 0)) {
       throw new Error(`Invalid splits ${splits}, it should be an Array of positive integers.`);
     }
     const sum = splits.reduce((a, b) => a + b);
-    if (sum !== input.shape[inpAxis]) {
+    if (sum !== input.shape[axis]) {
       throw new Error(`Invalid [${splits}], the sum of sizes ${sum} must equal ` +
-                      `to the dimension size ${input.shape[inpAxis]} of input` +
-                      ` along options.axis ${inpAxis}`);
+                      `to the dimension size ${input.shape[axis]} of input` +
+                      ` along options.axis ${axis}`);
     }
   }
 }

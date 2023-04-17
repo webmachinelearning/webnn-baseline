@@ -19,9 +19,13 @@ export function split(input, splits, {axis = 0} = {}) {
   } else if (splits instanceof Array) {
     sliceSizes = splits.slice();
   }
+  const starts = new Array(input.rank).fill(0);
+  const sizes = input.shape.slice();
   let start = 0;
   for (const size of sliceSizes) {
-    outputs.push(slice(input, [start], [size], {axes: [axis]}));
+    starts[axis] = start;
+    sizes[axis] = size;
+    outputs.push(slice(input, starts, sizes));
     start += size;
   }
   return outputs;

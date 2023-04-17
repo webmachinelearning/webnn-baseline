@@ -28,6 +28,7 @@ export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
 
   const one = new Scalar(1);
   const zero = new Scalar(0);
+  const inputSize = input.shape[1];
   const starts = layout === 'zrn' ? {z: 0, r: hiddenSize, n: 2 * hiddenSize} :
     {r: 0, z: hiddenSize, n: 2 * hiddenSize};
   const activation0 = activations[0];
@@ -39,10 +40,10 @@ export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
               (bias ? slice(bias, [starts.z], [hiddenSize]) : zero),
               (recurrentBias ? slice(recurrentBias, [starts.z], [hiddenSize]) :zero)),
           add(
-              matmul(input, transpose(slice(weight, [starts.z, 0], [hiddenSize, -1]))),
+              matmul(input, transpose(slice(weight, [starts.z, 0], [hiddenSize, inputSize]))),
               matmul(
                   hiddenState,
-                  transpose(slice(recurrentWeight, [starts.z, 0], [hiddenSize, -1]))))));
+                  transpose(slice(recurrentWeight, [starts.z, 0], [hiddenSize, hiddenSize]))))));
   // reset gate
   const r = activation0(
       add(
@@ -50,10 +51,10 @@ export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
               (bias ? slice(bias, [starts.r], [hiddenSize]) : zero),
               (recurrentBias ? slice(recurrentBias, [starts.r], [hiddenSize]) : zero)),
           add(
-              matmul(input, transpose(slice(weight, [starts.r, 0], [hiddenSize, -1]))),
+              matmul(input, transpose(slice(weight, [starts.r, 0], [hiddenSize, inputSize]))),
               matmul(
                   hiddenState,
-                  transpose(slice(recurrentWeight, [starts.r, 0], [hiddenSize, -1]))))));
+                  transpose(slice(recurrentWeight, [starts.r, 0], [hiddenSize, hiddenSize]))))));
   // new gate
   let n;
   if (resetAfter) {
@@ -61,7 +62,7 @@ export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
         add(
             (bias ? slice(bias, [starts.n], [hiddenSize]) : zero),
             add(
-                matmul(input, transpose(slice(weight, [starts.n, 0], [hiddenSize, -1]))),
+                matmul(input, transpose(slice(weight, [starts.n, 0], [hiddenSize, inputSize]))),
                 mul(
                     r,
                     add(
@@ -69,7 +70,10 @@ export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
                         matmul(
                             hiddenState,
                             transpose(
-                                slice(recurrentWeight, [starts.n, 0], [hiddenSize, -1]))))))));
+                                slice(
+                                    recurrentWeight,
+                                    [starts.n, 0],
+                                    [hiddenSize, hiddenSize]))))))));
   } else {
     n = activation1(
         add(
@@ -79,10 +83,10 @@ export function gruCell(input, weight, recurrentWeight, hiddenState, hiddenSize,
             add(
                 matmul(
                     input,
-                    transpose(slice(weight, [starts.n, 0], [hiddenSize, -1]))),
+                    transpose(slice(weight, [starts.n, 0], [hiddenSize, inputSize]))),
                 matmul(
                     mul(r, hiddenState),
-                    transpose(slice(recurrentWeight, [starts.n, 0], [hiddenSize, -1]))))));
+                    transpose(slice(recurrentWeight, [starts.n, 0], [hiddenSize, hiddenSize]))))));
   }
   // compute the new hidden state
   return add(mul(z, hiddenState), mul(n, sub(one, z)));
