@@ -144,4 +144,30 @@ describe('test instanceNormalization', function() {
         },
     );
   });
+
+  it('instanceNormalization all options', function() {
+    testInstanceNorm(
+        {
+          shape: [3, 1, 1, 2],
+          value: [
+            -1, 2, 0, 3, 1, 4,
+          ],
+        },
+        [
+          0, 1, 0, 1, 0, 1,
+        ],
+        {
+          shape: [2],
+          value: [1.0, 1.5],
+        },
+        {
+          shape: [2],
+          value: [0, 1],
+        },
+        {
+          epsilon: 0.0000125,
+          layout: 'nhwc',
+        },
+    );
+  });
 });
