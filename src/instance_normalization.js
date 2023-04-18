@@ -31,10 +31,9 @@ export function instanceNormalization(
   const shape = [1, null, 1, 1];
   const reduceOptions = {axes: [2, 3], keepDimensions: true};
   const mean = reduceMean(input, reduceOptions);
-  output = sub(input, reshape(mean, shape));
-  const variance = reduceMean(pow(output, new Scalar(2)), reduceOptions);
-  output = div(output,
-      pow(add(reshape(variance, shape), new Scalar(epsilon)), new Scalar(0.5)));
+  const variance = reduceMean(pow(sub(input, mean), new Scalar(2)), reduceOptions);
+  output = div(sub(input, mean),
+      pow(add(variance, new Scalar(epsilon)), new Scalar(0.5)));
   if (scale) {
     output = mul(output, reshape(scale, shape));
   }
