@@ -11,7 +11,7 @@ describe('test softplus', function() {
     utils.checkValue(outputTensor, expected);
   }
 
-  it.only('softplus default', function() {
+  it('softplus default', function() {
     testElu(
         [4],
         [-1, 0, 1, 2],
@@ -24,7 +24,7 @@ describe('test softplus', function() {
     );
   });
 
-  it.only('softplus', function() {
+  it('softplus', function() {
     testElu(
         [4],
         [-1, 0, 1, 2],
