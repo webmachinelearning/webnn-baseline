@@ -1,7 +1,7 @@
 'use strict';
 
 import {Tensor} from './lib/tensor.js';
-import {validateConv2dParams} from './lib/validate-input.js';
+import {validateConvTranspose2dParams} from './lib/validate-input.js';
 import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {transpose} from './transpose.js';
 
@@ -44,10 +44,10 @@ export function convTranspose2d(
     filter = transpose(filter, {permutation: [0, 3, 1, 2]});
   }
 
-  validateConv2dParams(input, filter, {groups, bias});
+  validateConvTranspose2dParams(input, filter, {groups, bias});
 
   const [batchCount, inputChannels, inputHeight, inputWidth] = input.shape;
-  const [outputChannels, , filterHeight, filterWidth] = filter.shape;
+  const [outputChannelsPerGroup, , filterHeight, filterWidth] = filter.shape;
   const [strideHeight, strideWidth] = strides;
   const [dilationHeight, dilationWidth] = dilations;
   const effectiveFilterHeight = (filterHeight - 1) * dilationHeight + 1;
@@ -76,6 +76,8 @@ export function convTranspose2d(
   let outputHeight;
   let outputWidth;
   outputShape[0] = batchCount;
+
+  const outputChannels = outputChannelsPerGroup * groups;
   outputShape[1] = outputChannels;
 
   if (outputSizes === undefined) {
@@ -104,7 +106,6 @@ export function convTranspose2d(
     dilationWidth * (filter.shape[3] - 1) - beginningPaddingWidth;
   const [realStrideHeight, realStrideWidth] = [1, 1];
 
-  const outputChannelsPerGroup = outputChannels / groups;
   const inputChannelsPerGroup = inputChannels / groups;
 
   for (let ib = 0; ib < batchCount; ++ib) {
@@ -115,8 +116,8 @@ export function convTranspose2d(
             ih += realStrideHeight, ++oh) {
             for (let iw = -realBeginningPaddingWidth, ow = 0; ow < outputWidth;
               iw += realStrideWidth, ++ow) {
-              const effectiveOutputChannel = oc + g * outputChannelsPerGroup;
-              const outputLocation = [ib, effectiveOutputChannel, oh, ow];
+              const effectiveOutputChannel = oc;
+              const outputLocation = [ib, oc + g * outputChannelsPerGroup, oh, ow];
               // make filter rotate 180
               for (let kh = filterHeight + (filterHeight - 1) * (dilationHeight - 1) - 1;
                 kh >= 0; --kh) {

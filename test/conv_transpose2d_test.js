@@ -55,6 +55,81 @@ describe('test convTranspose2d', function() {
     testConvTranspose2d(input, filter, expected);
   });
 
+  it('convTranspose2d options.groups', function() {
+    const input = {
+      shape: [1, 2, 2, 2],
+      data: [
+        2,  4,
+        0,  1,
+        2,  4,
+        0,  1,
+      ],
+    };
+    const filter = {
+      shape: [2, 1, 2, 2],
+      data: [
+        3,  1,
+        1,  5,
+        3,  1,
+        1,  5,
+      ],
+    };
+    const options = {
+      groups: 2,
+    };
+    const expected = {
+      shape: [1, 2, 3, 3],
+      data: [
+        6, 14,  4,
+        2, 17, 21,
+        0,  1,  5,
+        6, 14,  4,
+        2, 17, 21,
+        0,  1,  5,
+      ],
+    };
+    testConvTranspose2d(input, filter, expected, options);
+  });
+
+  it('convTranspose2d options.groups=2 options.strides=[2, 2]', function() {
+    const input = {
+      shape: [1, 2, 2, 2],
+      data: [
+        2,  4,
+        0,  1,
+        2,  4,
+        0,  1,
+      ],
+    };
+    const filter = {
+      shape: [2, 1, 2, 2],
+      data: [
+        3,  1,
+        1,  5,
+        3,  1,
+        1,  5,
+      ],
+    };
+    const options = {
+      groups: 2,
+      strides: [2, 2],
+    };
+    const expected = {
+      shape: [1, 2, 4, 4],
+      data: [
+        6,  2, 12,  4,
+        2, 10,  4, 20,
+        0,  0,  3,  1,
+        0,  0,  1,  5,
+        6,  2, 12,  4,
+        2, 10,  4, 20,
+        0,  0,  3,  1,
+        0,  0,  1,  5,
+      ],
+    };
+    testConvTranspose2d(input, filter, expected, options);
+  });
+
   it('convTranspose2d options.padding', function() {
     const input = {
       shape: [1, 1, 2, 2],

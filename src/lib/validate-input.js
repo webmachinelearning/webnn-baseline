@@ -99,6 +99,28 @@ export function validateConv2dParams(input, filter, {bias, groups = 1}) {
   }
 }
 
+export function validateConvTranspose2dParams(input, filter, {bias, groups = 1}) {
+  const inputChannels = input.shape[1];
+  // filter of oihw
+  const outputChannelsPerGroup = filter.shape[0];
+
+  if (input.rank !== 4) {
+    throw new Error('The input should be a 4-D tensor.');
+  }
+  if (filter.rank !== 4) {
+    throw new Error('The filter should be a 4-D tensor.');
+  }
+  if (inputChannels % groups !== 0) {
+    throw new Error('The input channels is invalid.');
+  }
+  if (inputChannels !== filter.shape[1]) {
+    throw new Error('The input channels of filter is invalid.');
+  }
+  if (bias && (bias.rank !== 1 || bias.shape[0] != outputChannelsPerGroup * groups)) {
+    throw new Error('the bias should be a 1-D tensor with the shape of [output_channels].');
+  }
+}
+
 export function validateGemmParams(a, b) {
   if (a.rank !== 2) {
     throw new Error('The input a is not a 2-D tensor.');
