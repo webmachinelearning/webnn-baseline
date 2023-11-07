@@ -116,8 +116,8 @@ export function convTranspose2d(
             ih += realStrideHeight, ++oh) {
             for (let iw = -realBeginningPaddingWidth, ow = 0; ow < outputWidth;
               iw += realStrideWidth, ++ow) {
-              const effectiveOutputChannel = oc;
-              const outputLocation = [ib, oc + g * outputChannelsPerGroup, oh, ow];
+              const effectiveOutputChannel = oc + g * outputChannelsPerGroup;
+              const outputLocation = [ib, effectiveOutputChannel, oh, ow];
               // make filter rotate 180
               for (let kh = filterHeight + (filterHeight - 1) * (dilationHeight - 1) - 1;
                 kh >= 0; --kh) {
@@ -141,7 +141,7 @@ export function convTranspose2d(
                         [ib, effectiveInputChannel, realIh, realIw]);
                     // make filter rotate 180
                     const filterValue = filter.getValueByLocation(
-                        [effectiveOutputChannel, ic, filterHeight - realKh - 1,
+                        [oc, ic, filterHeight - realKh - 1,
                           filterWidth - realKw - 1]);
                     let outputValue = output.getValueByLocation(outputLocation);
                     outputValue += inputValue * filterValue;

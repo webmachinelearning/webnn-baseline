@@ -103,6 +103,7 @@ export function validateConvTranspose2dParams(input, filter, {bias, groups = 1})
   const inputChannels = input.shape[1];
   // filter of oihw
   const outputChannelsPerGroup = filter.shape[0];
+  const outputChannels = outputChannelsPerGroup * groups;
 
   if (input.rank !== 4) {
     throw new Error('The input should be a 4-D tensor.');
@@ -116,7 +117,7 @@ export function validateConvTranspose2dParams(input, filter, {bias, groups = 1})
   if (inputChannels !== filter.shape[1]) {
     throw new Error('The input channels of filter is invalid.');
   }
-  if (bias && (bias.rank !== 1 || bias.shape[0] != outputChannelsPerGroup * groups)) {
+  if (bias && (bias.rank !== 1 || bias.shape[0] != outputChannels)) {
     throw new Error('the bias should be a 1-D tensor with the shape of [output_channels].');
   }
 }
