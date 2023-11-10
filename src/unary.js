@@ -27,3 +27,4 @@ export const log = (input) => unary(input, Math.log);
 export const neg = (input) => unary(input, (x) => -1 * x);
 export const sin = (input) => unary(input, Math.sin);
 export const tan = (input) => unary(input, Math.tan);
+export const identity = (input) => unary(input, (x) => x);
