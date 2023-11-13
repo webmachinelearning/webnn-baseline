@@ -799,6 +799,8 @@ describe('test unary', function() {
   });
 
   it('reciprocal', function() {
+    // 0D scalar
+    testUnary('reciprocal', [-4], [-0.25], []);
     testUnary(
         'reciprocal',
         [-4, -2, 8, 16],
