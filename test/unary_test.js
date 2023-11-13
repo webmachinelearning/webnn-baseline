@@ -738,6 +738,8 @@ describe('test unary', function() {
   });
 
   it('identity', function() {
+    // 0D scalar
+    testUnary('identity', [1.4124068], [1.4124068], []);
     testUnary(
         'identity',
         [1.4124068, 1.9740626, -0.06506752, 0.73539704],
