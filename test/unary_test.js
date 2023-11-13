@@ -851,6 +851,13 @@ describe('test unary', function() {
   });
 
   it('sqrt', function() {
+    // 0D scalar
+    testUnary('sqrt', [4], [2], []);
+    testUnary(
+        'sqrt',
+        [0.01, 1.44, 1.69, 2.25],
+        [0.1, 1.2, 1.3, 1.5],
+        [4]);
     testUnary(
         'sqrt',
         [0, 1, 4, 9],
