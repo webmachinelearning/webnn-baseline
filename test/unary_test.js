@@ -737,16 +737,16 @@ describe('test unary', function() {
         [3, 2, 2, 1]);
   });
 
-  it('identity', function() {
+  it('copy', function() {
     // 0D scalar
-    testUnary('identity', [1.4124068], [1.4124068], []);
+    testUnary('copy', [1.4124068], [1.4124068], []);
     testUnary(
-        'identity',
+        'copy',
         [1.4124068, 1.9740626, -0.06506752, 0.73539704],
         [1.4124068, 1.9740626, -0.06506752, 0.73539704],
         [4]);
     testUnary(
-        'identity',
+        'copy',
         [
           1.4124068,   1.9740626,  -0.06506752, 0.73539704,
           -0.56439203, 0.89806247, 0.12939146,  -0.34816208,
@@ -759,7 +759,7 @@ describe('test unary', function() {
         ],
         [3, 4]);
     testUnary(
-        'identity',
+        'copy',
         [
           1.4124068,   1.9740626,
           -0.06506752, 0.73539704,
@@ -778,7 +778,7 @@ describe('test unary', function() {
         ],
         [3, 2, 2]);
     testUnary(
-        'identity',
+        'copy',
         [
           1.4124068,   1.9740626,
           -0.06506752, 0.73539704,
