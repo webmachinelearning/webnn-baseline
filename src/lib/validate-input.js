@@ -1,5 +1,7 @@
 'use strict';
 
+import {sizeOfShape} from './tensor.js';
+
 /**
  * Check the tensor whether it is a 1-D tensor and its length is equal to `expectedSize`.
  * @param {Tensor} a
@@ -357,3 +359,15 @@ export function validateTranposeParams(input, {permutation}) {
   }
 }
 
+export function validateNotParams(input) {
+  for (let i = 0; i < sizeOfShape(input.shape); ++i) {
+    const a = input.getValueByIndex(i);
+    if (!Number.isInteger(a)) {
+      throw new Error('Invalid input value, it should be an integer in the interval [0, 255]');
+    } else {
+      if (a < 0 || a > 255) {
+        throw new Error('Invalid input value, it should be an integer in the interval [0, 255]');
+      }
+    }
+  }
+}
