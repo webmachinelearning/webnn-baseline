@@ -50,7 +50,6 @@ function getMappedLocation(location, inputShape, beginningPadding, mode) {
  * @param {Array} beginningPadding
  * @param {MLPaddingMode} mode
  * @param {Number} value
- * @return {Tensor}
  */
 function updateOutputElement(index, source, destination, beginningPadding, mode, value) {
   const sourceShape = source.shape;
@@ -78,7 +77,6 @@ function updateOutputElement(index, source, destination, beginningPadding, mode,
     result = source.getValueByLocation(inputLocation);
   }
   destination.setValueByIndex(index, result);
-  return destination;
 }
 
 /**
@@ -98,9 +96,9 @@ export function pad(
       value=0,
     } = {}) {
   const outputShape = input.shape.map((v, i) => v + beginningPadding[i] + endingPadding[i]);
-  let output = new Tensor(outputShape);
+  const output = new Tensor(outputShape);
   for (let i = 0; i < output.size; ++i) {
-    output = updateOutputElement(i, input, output, beginningPadding, mode, value);
+    updateOutputElement(i, input, output, beginningPadding, mode, value);
   }
   return output;
 }
