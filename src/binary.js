@@ -10,7 +10,7 @@ import {Tensor, sizeOfShape} from './lib/tensor.js';
  * @param {Function} binaryFunc
  * @return {Tensor}
  */
-function binary(inputA, inputB, binaryFunc) {
+export function binary(inputA, inputB, binaryFunc) {
   const outputShape = getBroadcastShape(inputA.shape, inputB.shape);
   const inputABroadcast = broadcast(inputA, outputShape);
   const inputBBroadcast = broadcast(inputB, outputShape);
