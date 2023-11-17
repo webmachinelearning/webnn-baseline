@@ -24,7 +24,7 @@ function check1DTensorWithSize(a, expectedSize, name) {
 export function validateBatchNormalizationParams(input, mean, variance,
     {axis=1, scale, bias} = {}) {
   if (!Number.isInteger(axis)) {
-    throw new Error(`Invalid axis ${axis}, axis should be an integer.`);
+    throw new Error(`Invalid axis ${axis} - axis should be an integer.`);
   }
   const dim = input.shape[axis];
   check1DTensorWithSize(mean, dim, 'mean');
@@ -59,10 +59,10 @@ export function validateInstanceNormalizationParams(
 export function validateConcatParams(inputs, axis) {
   const rank = inputs[0].rank;
   if (!Number.isInteger(axis)) {
-    throw new Error(`Invalid axis ${axis}, axis should be an integer.`);
+    throw new Error(`Invalid axis ${axis} - axis should be an integer.`);
   } else {
     if (axis < 0 || axis >= rank) {
-      throw new Error(`Invalid axis ${axis}, axis should be in the interval [0, ${rank}).`);
+      throw new Error(`Invalid axis ${axis} - axis should be in the interval [0, ${rank}).`);
     }
   }
   const inputShape = inputs[0].shape;
@@ -278,18 +278,18 @@ export function validateSliceParams(input, starts, sizes) {
     const size = input.shape[i];
     const start = starts[i];
     if (!Number.isInteger(start) || start < 0 ) {
-      throw new Error(`Invalid starts value ${start}, it should be an unsigned integer.`);
+      throw new Error(`Invalid starts value ${start} - it should be an unsigned integer.`);
     }
     if (start >= size) {
-      throw new Error(`Invalid starts value ${start}, it shoule be in the interval ` +
+      throw new Error(`Invalid starts value ${start} - it shoule be in the interval ` +
                       `[0, ${size}).`);
     } else {
       const sliceSize = sizes[i];
       if (!Number.isInteger(sliceSize) || sliceSize <= 0) {
-        throw new Error(`Invalid sizes value ${sliceSize}, it should be an unsigned integer.`);
+        throw new Error(`Invalid sizes value ${sliceSize} - it should be an unsigned integer.`);
       }
       if (start + sliceSize > size) {
-        throw new Error(`Invalid sizes value ${sliceSize}, the sum of the start ${start} ` +
+        throw new Error(`Invalid sizes value ${sliceSize} - the sum of the start ${start} ` +
           `plus the size ${sliceSize} is greater than the dimensional size ${size}`);
       }
     }
@@ -314,7 +314,7 @@ export function validateSplitParams(input, splits, {axis = 0} = {}) {
   }
   if (typeof splits === 'number') {
     if (!Number.isInteger(splits) || splits <= 0) {
-      throw new Error(`Invalid splits ${splits}, it should be a positive integer.`);
+      throw new Error(`Invalid splits ${splits} - it should be a positive integer.`);
     }
     if (input.shape[axis] % splits !== 0) {
       throw new Error(`The splits ${splits} must evenly divide the dimension size ` +
@@ -322,11 +322,11 @@ export function validateSplitParams(input, splits, {axis = 0} = {}) {
     }
   } else if (splits instanceof Array) {
     if (!splits.every((v) => Number.isInteger(v) && v > 0)) {
-      throw new Error(`Invalid splits ${splits}, it should be an Array of positive integers.`);
+      throw new Error(`Invalid splits ${splits} - it should be an Array of positive integers.`);
     }
     const sum = splits.reduce((a, b) => a + b);
     if (sum !== input.shape[axis]) {
-      throw new Error(`Invalid [${splits}], the sum of sizes ${sum} must equal ` +
+      throw new Error(`Invalid [${splits}] - the sum of sizes ${sum} must equal ` +
                       `to the dimension size ${input.shape[axis]} of input` +
                       ` along options.axis ${axis}`);
     }
@@ -362,12 +362,8 @@ export function validateTranposeParams(input, {permutation}) {
 export function validateNotParams(input) {
   for (let i = 0; i < sizeOfShape(input.shape); ++i) {
     const a = input.getValueByIndex(i);
-    if (!Number.isInteger(a)) {
-      throw new Error('Invalid input value, it should be an integer in the interval [0, 255]');
-    } else {
-      if (a < 0 || a > 255) {
-        throw new Error('Invalid input value, it should be an integer in the interval [0, 255]');
-      }
+    if (!Number.isInteger(a) || a < 0 || a > 255) {
+      throw new Error('Invalid input value - it should be an integer in the interval [0, 255]');
     }
   }
 }

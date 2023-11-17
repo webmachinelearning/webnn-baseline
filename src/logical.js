@@ -46,7 +46,7 @@ function logicalNot(input) {
 
 export const equal = (inputA, inputB) => logical(inputA, inputB, (a, b) => a == b);
 export const greater = (inputA, inputB) => logical(inputA, inputB, (a, b) => a > b);
-export const greaterOrEqual = (inputA, inputB) => logical(inputA, inputB, (a, b) => a >= b);
+export const greaterOrEqual = (inputA, inputB) => logical(inputA, inputB, (a, b) => (a >= b));
 export const lesser = (inputA, inputB) => logical(inputA, inputB, (a, b) => a < b);
-export const lesserOrEqual = (inputA, inputB) => logical(inputA, inputB, (a, b) => a <= b);
+export const lesserOrEqual = (inputA, inputB) => logical(inputA, inputB, (a, b) => (a <= b));
 export const not = (input) => logicalNot(input);
