@@ -29,3 +29,4 @@ export const sin = (input) => unary(input, Math.sin);
 export const tan = (input) => unary(input, Math.tan);
 export const copy = (input) => unary(input, (x) => x);
 export const reciprocal = (input) => unary(input, (x) => 1 / x);
+export const sqrt = (input) => unary(input, Math.sqrt);
