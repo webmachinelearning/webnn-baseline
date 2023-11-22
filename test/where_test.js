@@ -103,4 +103,65 @@ describe('test where', function() {
     };
     testWhere(condition, inputA, inputB, expected);
   });
+
+  it('where broadcast condition1d×A2d×B3d', function() {
+    const condition = {
+      shape: [3],
+      data: [
+        1, 1, 0,
+      ],
+    };
+    const inputA = {
+      shape: [2, 3],
+      data: [
+        1, 2, 3,
+        4, 5, 64,
+      ],
+    };
+    const inputB = {
+      shape: [2, 2, 3],
+      data: [
+        7, 8, 9, 10, 11, 12,
+        13, 14, 15, 16, 17, 18],
+    };
+    const expected = {
+      shape: [2, 2, 3],
+      data: [
+        1, 2, 9, 4, 5, 12,
+        1, 2, 15, 4, 5, 18,
+      ],
+    };
+    testWhere(condition, inputA, inputB, expected);
+  });
+
+  it.only('where broadcast condition3d×A2d×B1d', function() {
+    const condition = {
+      shape: [2, 2, 3],
+      data: [
+        1, 1, 0, 1, 1, 0,
+        1, 1, 0, 1, 1, 0,
+      ],
+    };
+    const inputA = {
+      shape: [2, 3],
+      data: [
+        1, 2, 3,
+        4, 5, 64,
+      ],
+    };
+    const inputB = {
+      shape: [3],
+      data: [
+        7, 8, 9,
+      ],
+    };
+    const expected = {
+      shape: [2, 2, 3],
+      data: [
+        1, 2, 9, 4, 5, 9,
+        1, 2, 9, 4, 5, 9,
+      ],
+    };
+    testWhere(condition, inputA, inputB, expected);
+  });
 });

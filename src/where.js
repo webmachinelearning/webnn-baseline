@@ -21,11 +21,9 @@ export function where(condition, inputA, inputB) {
   const outputSize = sizeOfShape(outputShape);
   const output = new Tensor(outputShape);
   for (let i = 0; i < outputSize; ++i) {
-    if (conditionBroadcast.getValueByIndex(i) === 1) {
-      output.setValueByIndex(i, inputABroadcast.getValueByIndex(i));
-    } else {
-      output.setValueByIndex(i, inputBBroadcast.getValueByIndex(i));
-    }
+    const value = conditionBroadcast.getValueByIndex(i) === 1 ?
+        inputABroadcast.getValueByIndex(i) : inputBBroadcast.getValueByIndex(i);
+    output.setValueByIndex(i, value);
   }
   return output;
 }
