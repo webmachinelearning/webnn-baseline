@@ -134,7 +134,7 @@ describe('test where', function() {
     testWhere(condition, inputA, inputB, expected);
   });
 
-  it.only('where broadcast condition3d×A2d×B1d', function() {
+  it('where broadcast condition3d×A2d×B1d', function() {
     const condition = {
       shape: [2, 2, 3],
       data: [
