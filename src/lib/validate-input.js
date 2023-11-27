@@ -390,3 +390,23 @@ export function validateNotParams(input) {
     }
   }
 }
+
+export function validateGatherParams(input, indices, {axis = 0} = {}) {
+  if (axis !== undefined) {
+    const rank = input.rank;
+    if (!Number.isInteger(axis) || axis < 0) {
+      throw new Error(`The axis ${axis} should be an unsigned integer.`);
+    }
+    if (axis >= rank) {
+      throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
+    }
+  }
+  const axisSize = input.shape[axis];
+  for (let i = 0; i < sizeOfShape(indices.shape); ++i) {
+    const index = indices.getValueByIndex(i);
+    if (!Number.isInteger(index) || index < 0 || index >= axisSize) {
+      throw new Error(
+          `Invalid indices value - it should be an integer in the interval [0, ${axisSize})`);
+    }
+  }
+}
