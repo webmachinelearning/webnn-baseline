@@ -4,7 +4,7 @@ import {broadcast, getBroadcastShape} from './lib/broadcast.js';
 import {Tensor, sizeOfShape, Scalar} from './lib/tensor.js';
 
 /**
- * Select the values from the input or the other tensor depending on
+ * Select the values from the trueValues or the other tensor depending on
  * the corresponding Boolean values of the condition tensor.
  * @param {Tensor} condition
  * @param {Tensor} trueValues
