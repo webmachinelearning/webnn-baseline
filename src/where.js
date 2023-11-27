@@ -1,7 +1,7 @@
 'use strict';
 
 import {broadcast, getBroadcastShape} from './lib/broadcast.js';
-import {Tensor, sizeOfShape} from './lib/tensor.js';
+import {Tensor, sizeOfShape, Scalar} from './lib/tensor.js';
 
 /**
  * Select the values from the input or the other tensor depending on
@@ -12,17 +12,10 @@ import {Tensor, sizeOfShape} from './lib/tensor.js';
  * @return {Tensor}
  */
 export function where(condition, trueValues, falseValues) {
-  let trueValuesReshape; let falseValuesReshape;
-  if (trueValues.shape.length === 0) {
-    trueValuesReshape = new Tensor([1], trueValues.data);
-  } else {
-    trueValuesReshape = new Tensor(trueValues.shape, trueValues.data);
-  }
-  if (falseValues.shape.length === 0) {
-    falseValuesReshape = new Tensor([1], falseValues.data);
-  } else {
-    falseValuesReshape = new Tensor(falseValues.shape, falseValues.data);
-  }
+  const trueValuesReshape = trueValues.shape.length === 0 ?
+    new Scalar(trueValues.data) :trueValues;
+  const falseValuesReshape = falseValues.shape.length === 0 ?
+    new Scalar(falseValues.data) : falseValues;
   const valueShape = getBroadcastShape(trueValuesReshape.shape, falseValuesReshape.shape);
   const outputShape = getBroadcastShape(condition.shape, valueShape);
   const trueValuesReshapeBroadcast = broadcast(trueValuesReshape, outputShape);
