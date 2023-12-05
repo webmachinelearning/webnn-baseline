@@ -8,8 +8,6 @@ import {Tensor} from './lib/tensor.js';
  * @param {Function} unaryFunc
  * @return {Tensor}
  */
-
-
 export function unary(input, unaryFunc) {
   const output = new Tensor(input.shape);
   for (let i = 0; i < input.size; ++i) {
