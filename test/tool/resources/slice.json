@@ -1,0 +1,240 @@
+{
+  "tests": [
+    {
+      "name": "slice 1D with default axes options",
+      "input": {
+        "shape": [24],
+        "data": "float64Data"
+      },
+      "starts": [12],
+      "sizes": [12],
+      "expected": {
+        "shape": [12],
+        "data": "float321DDataDefault"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 2D with default axes options",
+      "input": {
+        "shape": [4, 6],
+        "data": "float64Data"
+      },
+      "starts": [2, 2],
+      "sizes": [2, 4],
+      "expected": {
+        "shape": [2, 4],
+        "data": "float322DDataDefault"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 3D with default axes options",
+      "input": {
+        "shape": [4, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [1, 1, 1],
+      "sizes": [3, 2, 1],
+      "expected": {
+        "shape": [3, 2, 1],
+        "data": "float323DDataDefault"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 4D with default axes options",
+      "input": {
+        "shape": [2, 2, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [1, 0, 2, 1],
+      "sizes": [1, 2, 1, 1],
+      "expected": {
+        "shape": [1, 2, 1, 1],
+        "data": "float324DDataDefault"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 5D with default axes options",
+      "input": {
+        "shape": [2, 2, 3, 2, 1],
+        "data": "float64Data"
+      },
+      "starts": [1, 0, 2, 1, 0],
+      "sizes": [1, 2, 1, 1, 1],
+      "expected": {
+        "shape": [1, 2, 1, 1, 1],
+        "data": "float325DDataDefault"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 3D with negative starts",
+      "input": {
+        "shape": [4, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [-3, -2, -1], // [-3, -2, -1] is equal to [1, 1, 1]
+      "sizes": [3, 2, 1],
+      "expected": {
+        "shape": [3, 2, 1],
+        "data": "float323DDataDefault" // result is the same as float323DDataDefault
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 4D with negative starts",
+      "input": {
+        "shape": [2, 2, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [-1, -2, -1, -1], // [-1, -2, -1, -1] is equal to [1, 0, 2, 1]
+      "sizes": [1, 2, 1, 1],
+      "expected": {
+        "shape": [1, 2, 1, 1],
+        "data": "float324DDataDefault" // result is the same as float324DDataDefault
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 4D with sizes having special value of -1",
+      "input": {
+        "shape": [2, 2, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [1, 0, 2, 1],
+      "sizes": [1, -1, 1, -1], // [1, -1, 1, -1] is equal to [1, 2, 1, 1]
+      "expected": {
+        "shape": [1, 2, 1, 1],
+        "data": "float324DDataDefault" // result is the same as float324DDataDefault
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 5D with sizes having special value of -1",
+      "input": {
+        "shape": [2, 2, 3, 2, 1],
+        "data": "float64Data"
+      },
+      "starts": [1, 0, 2, 1, 0],
+      "sizes": [-1, 2, -1, 1, -1], // [-1, 2, -1, 1, -1] is equal to [1, 2, 1, 1, 1]
+      "expected": {
+        "shape": [1, 2, 1, 1, 1],
+        "data": "float325DDataDefault" // result is the same as float325DDataDefault
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 1D with options.axes=[0]",
+      "input": {
+        "shape": [24],
+        "data": "float64Data"
+      },
+      "starts": [12],
+      "sizes": [12],
+      "options": {
+        "axes": [0]
+      },
+      "expected": {
+        "shape": [12],
+        "data": "float321DDataDefault" // the result is the same as float321DDataDefault
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 2D with positive options.axes=[1]",
+      "input": {
+        "shape": [4, 6],
+        "data": "float64Data"
+      },
+      "starts": [2],
+      "sizes": [4],
+      "options": {
+        "axes": [1]
+      },
+      "expected": {
+        "shape": [4, 4],
+        "data": "float322DDataAxes1"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 3D with positive options.axes=[1, 2]",
+      "input": {
+        "shape": [4, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [1, 1],
+      "sizes": [2, 1],
+      "options": {
+        "axes": [1, 2]
+      },
+      "expected": {
+        "shape": [4, 2, 1],
+        "data": "float323DDatapositiveAxes12"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 4D with positive options.axes=[0, 2, 3]",
+      "input": {
+        "shape": [2, 2, 3, 2],
+        "data": "float64Data"
+      },
+      "options": {
+        "axes": [0, 2, 3]
+      },
+      "starts": [1, 2, 1],
+      "sizes": [1, 1, 1],
+      "expected": {
+        "shape": [1, 2, 1, 1],
+        "data": "float324DDataAxes023"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 3D with negative options.axes=[-2, -1]",
+      "input": {
+        "shape": [4, 3, 2],
+        "data": "float64Data"
+      },
+      "starts": [1, 1],
+      "sizes": [2, 1],
+      "options": {
+        "axes": [-2, -1] // [-2, -1] is equal to [1, 2]
+      },
+      "expected": {
+        "shape": [4, 2, 1],
+        "data": "float323DDatapositiveAxes12" // the result is the same as float323DDatapositiveAxes12
+      },
+      "type": "float32"
+    },
+    {
+      "name": "slice 4D with negative options.axes=[-4, -2, -1]",
+      "input": {
+        "shape": [2, 2, 3, 2],
+        "data": "float64Data"
+      },
+      "options": {
+        "axes": [-4, -2, -1] // [-4, -2, -1] is equal to [0, 2, 3]
+      },
+      "starts": [1, 2, 1],
+      "sizes": [1, 1, 1],
+      "expected": {
+        "shape": [1, 2, 1, 1],
+        "data": "float324DDataAxes023" // the result is the same as float324DDataAxes023
+      },
+      "type": "float32"
+    }
+  ],
+  "inputsData": {
+    "float64Data": {
+      "shape": [24],
+      "type": "float64"
+    }
+  },
+  "expectedData": {
+  }
+}
