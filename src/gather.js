@@ -15,6 +15,8 @@ export function gather(input, indices, {axis = 0} = {}) {
   const shapeInput = input.shape;
 
   // set outputShape following Spec Algorithm
+  //   https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-gather
+  //
   // let dimCount = 0
   // let rankOutput = 0;
   // let shapeOutput = [];
@@ -34,7 +36,6 @@ export function gather(input, indices, {axis = 0} = {}) {
   //   if (dimCount <= axis) {
   //     continue;
   //   } else {
-  // here index shoud be set to (rankOutput + dimCount - axis - 1)
   //     shapeOutput[rankOutput + dimCount - axis - 1] = shapeInput[dimCount];
   //   }
   // }
@@ -43,16 +44,16 @@ export function gather(input, indices, {axis = 0} = {}) {
   const shapeOutput = shapeInput.slice(0, axis).concat(indices.shape, shapeInput.slice(axis + 1));
   const output = new Tensor(shapeOutput);
 
-  for (let i = 0; i < sizeOfShape(shapeOutput); ++i) {
-    // output[i, j, k, ...] = input[index[i, j, k, ...], j, k, ...] // if axis == 0
-    // output[i, j, k, ...] = input[i, index[i, j, k, ...], k, ...] // if axis == 1
-    // output[i, j, k, ...] = input[i, j, index[i, j, k, ...], ...] // if axis == 2
-    const loc = output.locationFromIndex(i);
-    const indicesLoc = loc.slice(axis, axis + indices.rank);
-    const selectedInputLoc = loc.slice(0, axis)
-        .concat(indices.getValueByLocation(indicesLoc), loc.slice(axis + indices.rank));
+  for (let outputIndex = 0; outputIndex < sizeOfShape(shapeOutput); ++outputIndex) {
+    // output[i, j, k, ...] = input[indices[i, j, k, ...], j, k, ...] // if axis == 0
+    // output[i, j, k, ...] = input[i, indices[i, j, k, ...], k, ...] // if axis == 1
+    // output[i, j, k, ...] = input[i, j, indices[i, j, k, ...], ...] // if axis == 2
+    const outputLoc = output.locationFromIndex(outputIndex);
+    const indicesLoc = outputLoc.slice(axis, axis + indices.rank);
+    const selectedInputLoc = outputLoc.slice(0, axis)
+        .concat(indices.getValueByLocation(indicesLoc), outputLoc.slice(axis + indices.rank));
     const inputValue = input.getValueByLocation(selectedInputLoc);
-    output.setValueByIndex(i, inputValue);
+    output.setValueByIndex(outputIndex, inputValue);
   }
 
   return output;
