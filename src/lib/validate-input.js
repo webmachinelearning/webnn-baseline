@@ -33,6 +33,40 @@ export function validateBatchNormalizationParams(input, mean, variance,
   check1DTensorWithSize(bias, dim, 'bias');
 }
 
+export function validateLayerNormalizationParams(input, {axes, scale, bias} = {}) {
+  if (scale && axes) {
+    if (scale.rank !== axes.length) {
+      throw new Error('DataError: the rank of scale is not equal to the size of axes.');
+    }
+  }
+  if (bias && axes) {
+    if (bias.rank !== axes.length) {
+      throw new Error('DataError: the rank of bias is not equal to the size of axes.');
+    }
+  }
+  if (axes) {
+    for (let i = 0; i < axes.length; i++) {
+      const axis = axes[i];
+      if (axis >= input.rank) {
+        throw new Error('DataError: the value of axis in axes should be smaller than input.rank');
+      }
+      const dim = input.shape[axis];
+      if (scale) {
+        if (scale.shape[i] !== dim) {
+          throw new Error(`The length ${scale.shape[i]} of the scale values is not equal to the ` +
+          `size ${dim} of the input dimension denoted by options.axis.`);
+        }
+      }
+      if (bias) {
+        if (bias.shape[i] !== dim) {
+          throw new Error(`The length ${bias.shape[i]} of the bias values is not equal to the ` +
+          `size ${dim} of the input dimension denoted by options.axis.`);
+        }
+      }
+    }
+  }
+}
+
 export function validateInstanceNormalizationParams(
     input,
     {
