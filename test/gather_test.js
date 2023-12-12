@@ -29,6 +29,22 @@ describe('test gather', function() {
     testGather(input, indices, expected);
   });
 
+  it('gather 1D by 0D indices default', function() {
+    const input = {
+      shape: [4],
+      data: [1, 2, 3, 4],
+    };
+    const indices = {
+      shape: [],
+      data: [2],
+    };
+    const expected = {
+      shape: [],
+      data: [3],
+    };
+    testGather(input, indices, expected);
+  });
+
   it('gather 2D default', function() {
     const input = {
       shape: [4, 3],
@@ -103,6 +119,29 @@ describe('test gather', function() {
     testGather(input, indices, expected, {axis: 1});
   });
 
+  it('gather 2D by 0D indices axis=1', function() {
+    const input = {
+      shape: [4, 3],
+      data: [
+        0,  1,  2,
+        10, 11, 12,
+        20, 21, 22,
+        30, 31, 32,
+      ],
+    };
+    const indices = {
+      shape: [],
+      data: [1],
+    };
+    const expected = {
+      shape: [4],
+      data: [
+        1, 11, 21, 31,
+      ],
+    };
+    testGather(input, indices, expected, {axis: 1});
+  });
+
   it('gather 2D by 2D indices axis=1', function() {
     const input = {
       shape: [4, 3],
@@ -158,6 +197,36 @@ describe('test gather', function() {
         10,  11,  12,
         20,  21,  22,
         30,  31,  32,
+        100, 101, 102,
+        110, 111, 112,
+        120, 121, 122,
+        130, 131, 132,
+      ],
+    };
+    testGather(input, indices, expected, {axis: 0});
+  });
+
+  it('gather 3D by 0D indices axis=0', function() {
+    const input = {
+      shape: [2, 4, 3],
+      data: [
+        0,   1,   2,
+        10,  11,  12,
+        20,  21,  22,
+        30,  31,  32,
+        100, 101, 102,
+        110, 111, 112,
+        120, 121, 122,
+        130, 131, 132,
+      ],
+    };
+    const indices = {
+      shape: [],
+      data: [1],
+    };
+    const expected = {
+      shape: [4, 3],
+      data: [
         100, 101, 102,
         110, 111, 112,
         120, 121, 122,
