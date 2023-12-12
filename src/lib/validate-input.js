@@ -275,7 +275,7 @@ export function validatePool2dParams(input, _, {roundingType = 'floor'}) {
   }
 }
 
-export function validateReduceParams(input, _, {axes}) {
+export function validateReduceParams(input, {axes}) {
   if (axes.length > input.rank) {
     throw new Error(`The length ${axes.length} of axes is bigger` +
                     `than input rank ${input.rank}.`);
