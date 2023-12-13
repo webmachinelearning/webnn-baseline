@@ -31,10 +31,10 @@ export function cast(input, type) {
       break;
     case 'float16':
       // todo
-      break;
+      throw new Error('Unsupported output type: float16' );
     case 'uint64':
       // todo
-      break;
+      throw new Error('Unsupported output type: uint64' );
     default:
       throw new Error('Unsupported output type: ' + type);
   }
