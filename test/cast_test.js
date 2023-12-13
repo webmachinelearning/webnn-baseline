@@ -5,14 +5,30 @@ import {cast} from '../src/cast.js';
 import * as utils from './utils.js';
 
 describe('test cast', function() {
+  const InputDataType = {
+    int8: Int32Array,
+    uint8: Uint8Array,
+    int16: Int16Array,
+    uint16: Uint16Array,
+    int32: Int32Array,
+    uint32: Uint32Array,
+    int64: BigInt64Array,
+    float32: Float32Array,
+    float64: Float64Array,
+  };
   function testCast(input, type, expected) {
-    const tensorInput = new Tensor(input.shape, input.data);
+    let tensorInput;
+    if (input.type) {
+      tensorInput = new Tensor(input.shape, new InputDataType[input.type](input.data));
+    } else {
+      tensorInput = new Tensor(input.shape, input.data);
+    }
     const outputTensor = cast(tensorInput, type);
     utils.checkShape(outputTensor, expected.shape);
     utils.checkValue(outputTensor, expected.data);
   }
 
-  it('cast float64 to float32', function() {
+  it('cast float64 to int8', function() {
     const input = {
       shape: [5],
       data: [
@@ -22,10 +38,26 @@ describe('test cast', function() {
     const expected = {
       shape: [5],
       data: [
-        -0.25, 0.25, 3.2100000381469727, 1234, -1234,
+        0, 0, 3, -46, 46,
       ],
     };
-    testCast(input, 'float32', expected);
+    testCast(input, 'int8', expected);
+  });
+
+  it('cast float64 to uint8', function() {
+    const input = {
+      shape: [5],
+      data: [
+        -0.25, 0.25, 3.21, 1234, -1234,
+      ],
+    };
+    const expected = {
+      shape: [5],
+      data: [
+        0, 0, 3, 210, 46,
+      ],
+    };
+    testCast(input, 'uint8', expected);
   });
 
   it('cast float64 to int32', function() {
@@ -43,7 +75,6 @@ describe('test cast', function() {
     };
     testCast(input, 'int32', expected);
   });
-
 
   it('cast float64 to uint32', function() {
     const input = {
@@ -77,7 +108,7 @@ describe('test cast', function() {
     testCast(input, 'int64', expected);
   });
 
-  it('cast float64 to int8', function() {
+  it('cast float64 to float32', function() {
     const input = {
       shape: [5],
       data: [
@@ -87,25 +118,60 @@ describe('test cast', function() {
     const expected = {
       shape: [5],
       data: [
-        0, 0, 3, -46, 46,
+        -0.25, 0.25, 3.2100000381469727, 1234, -1234,
       ],
     };
-    testCast(input, 'int8', expected);
+    testCast(input, 'float32', expected);
   });
 
-  it('cast float64 to uint8', function() {
+  it('cast int32 to float32', function() {
     const input = {
       shape: [5],
       data: [
-        -0.25, 0.25, 3.21, 1234, -1234,
+        0, 1, 2, 3, 3,
       ],
+      type: 'int32',
     };
     const expected = {
       shape: [5],
       data: [
-        0, 0, 3, 210, 46,
+        0, 1, 2, 3, 3,
       ],
     };
-    testCast(input, 'uint8', expected);
+    testCast(input, 'float32', expected);
+  });
+
+  it('cast uint32 to float64', function() {
+    const input = {
+      shape: [5],
+      data: [
+        0, 1, 22, 33, 33,
+      ],
+      type: 'uint32',
+    };
+    const expected = {
+      shape: [5],
+      data: [
+        0, 1, 22, 33, 33,
+      ],
+    };
+    testCast(input, 'float64', expected);
+  });
+
+  it('cast float32 to float64', function() {
+    const input = {
+      shape: [5],
+      data: [
+        0, 0.1, 0.2, 3, 993,
+      ],
+      type: 'float32',
+    };
+    const expected = {
+      shape: [5],
+      data: [
+        0, 0.10000000149011612, 0.20000000298023224, 3, 993,
+      ],
+    };
+    testCast(input, 'float64', expected);
   });
 });

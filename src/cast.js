@@ -11,8 +11,11 @@ import {Tensor} from '../src/lib/tensor.js';
 export function cast(input, type) {
   let outputArray;
   switch (type) {
-    case 'float32':
-      outputArray = new Float32Array(input.data);
+    case 'int8':
+      outputArray = new Int8Array(input.data);
+      break;
+    case 'uint8':
+      outputArray = new Uint8Array(input.data);
       break;
     case 'int32':
       outputArray = new Int32Array(input.data);
@@ -23,11 +26,11 @@ export function cast(input, type) {
     case 'int64':
       outputArray = new BigInt64Array(Array.from(input.data, (num) => BigInt(Math.round(num))));
       break;
-    case 'int8':
-      outputArray = new Int8Array(input.data);
+    case 'float32':
+      outputArray = new Float32Array(input.data);
       break;
-    case 'uint8':
-      outputArray = new Uint8Array(input.data);
+    case 'float64':
+      outputArray = new Float64Array(input.data);
       break;
     case 'float16':
       // todo

@@ -27,11 +27,17 @@ function getBitwise(value) {
  *     false: The distance between a and b is far away from the given ULP distance.
  */
 assert.isAlmostEqualUlp = function(a, b, nulp, message) {
-  const aBitwise = getBitwise(a);
-  const bBitwise = getBitwise(b);
-  let distance = aBitwise - bBitwise;
-  distance = distance >= 0 ? distance : -distance;
-  return assert.isTrue(distance <= nulp, message);
+  if (typeof(a) == 'number') {
+    const aBitwise = getBitwise(a);
+    const bBitwise = getBitwise(b);
+    let distance = aBitwise - bBitwise;
+    distance = distance >= 0 ? distance : -distance;
+    return assert.isTrue(distance <= nulp, message);
+  } else {
+    let distance = a-b;
+    distance = distance >= 0n ? distance : -distance;
+    return assert.isTrue(distance <= nulp, message);
+  }
 };
 
 export function checkValue(tensor, expected, nulp = 0) {
