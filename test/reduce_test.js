@@ -58,6 +58,23 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
   });
 
+  it('reduceMax 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'Max',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [1., 100., 200., 2.],
+        },
+        {
+          shape: [1, 2],
+          values: [100., 200.],
+        });
+  });
+
   it('reduceMax axes0 keep dims', function() {
     testReduce(
         'Max', {axes: [0], keepDimensions: true}, {
@@ -130,6 +147,23 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
+  it('reduceMean 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'Mean',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [5., 1., 20., 2.],
+        },
+        {
+          shape: [1, 2],
+          values: [3., 11.],
+        });
+  });
+
   it('reduceMean axes0 keep dims', function() {
     testReduce(
         'Mean', {axes: [0], keepDimensions: true}, {
@@ -200,6 +234,23 @@ describe('test reduce', function() {
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
         },
         {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
+  });
+
+  it('reduceMin 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'Min',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [1., 100., 200., 2.],
+        },
+        {
+          shape: [1, 2],
+          values: [1., 2.],
+        });
   });
 
   it('reduceMin axes0 keep dims', function() {
@@ -280,6 +331,23 @@ describe('test reduce', function() {
         {
           shape: [3, 2],
           values: [0., 6., 20., 42., 72., 110.],
+        });
+  });
+
+  it('reduceProduct 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'Product',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., 1., 2., 3.],
+        },
+        {
+          shape: [1, 2],
+          values: [0., 6.],
         });
   });
 
@@ -370,6 +438,23 @@ describe('test reduce', function() {
         {
           shape: [3, 2],
           values: [1., 5., 9., 13., 17., 21.],
+        });
+  });
+
+  it('reduceSum 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'Sum',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., 1., 2., 3.],
+        },
+        {
+          shape: [1, 2],
+          values: [1., 5.],
         });
   });
 
@@ -480,6 +565,23 @@ describe('test reduce', function() {
         {
           shape: [3, 2],
           values: [1, 13, 41, 85, 145, 221],
+        });
+  });
+
+  it('reduceSumSquare 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'SumSquare',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., 1., 2., 3.],
+        },
+        {
+          shape: [1, 2],
+          values: [1, 13],
         });
   });
 
@@ -602,6 +704,23 @@ describe('test reduce', function() {
         {
           shape: [3, 2],
           values: [1., 5., 9., 13., 17., 21.],
+        });
+  });
+
+  it('reduceL1 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'L1',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., -1., 2., -3.],
+        },
+        {
+          shape: [1, 2],
+          values: [1., 5.],
         });
   });
 
@@ -743,6 +862,23 @@ describe('test reduce', function() {
             12.041594578792296,
             14.866068747318506,
           ],
+        });
+  });
+
+  it('reduceL2 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'L2',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., 1., 2., 3.],
+        },
+        {
+          shape: [1, 2],
+          values: [1, 3.605551275463989],
         });
   });
 
@@ -906,6 +1042,23 @@ describe('test reduce', function() {
         });
   });
 
+  it('reduceLogSum 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'LogSum',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., 1., 2., 3.],
+        },
+        {
+          shape: [1, 2],
+          values: [0, 1.6094379124341003],
+        });
+  });
+
   it('reduceLogSum axes0 keep dims', function() {
     testReduce(
         'LogSum', {axes: [0], keepDimensions: true}, {
@@ -1063,6 +1216,23 @@ describe('test reduce', function() {
             9.313261687518223,
             11.313261687518223,
           ],
+        });
+  });
+
+  it('reduceLogSumExp 3D of shape [1, 2, 2] axes2 do not keep dims', function() {
+    testReduce(
+        'LogSumExp',
+        {
+          axes: [2],
+          keepDimensions: false,
+        },
+        {
+          shape: [1, 2, 2],
+          values: [0., 1., 2., 3.],
+        },
+        {
+          shape: [1, 2],
+          values: [1.3132616875182228, 3.313261687518223],
         });
   });
 

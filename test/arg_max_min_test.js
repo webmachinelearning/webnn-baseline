@@ -69,6 +69,22 @@ describe('test argMax and argMin', function() {
         });
   });
 
+  it('argMax 2D of shape [1, 3] axes=[1]', function() {
+    testArgMaxMin(
+        {
+          shape: [1, 3],
+          value: [1, 2, 3],
+        },
+        {
+          shape: [1],
+          value: [2],
+        },
+        argMax,
+        {
+          axes: [1],
+        });
+  });
+
   it('argMax axes=[0, 1]', function() {
     testArgMaxMin(
         {
@@ -220,6 +236,48 @@ describe('test argMax and argMin', function() {
         });
   });
 
+  it('argMax 3D of shape [1, 3, 4] axes=[1] keepDimensions=false', function() {
+    testArgMaxMin(
+        {
+          shape: [1, 3, 4],
+          value: [
+            1, 2, 3, 3,
+            3, 4, 4, 3,
+            5, 4, 5, 0,
+          ],
+        },
+        {
+          shape: [1, 4],
+          value: [2, 1, 2, 0],
+        },
+        argMax,
+        {
+          axes: [1],
+          keepDimensions: false,
+        });
+  });
+
+  it('argMax 3D of shape [1, 3, 4] axes=[1] selectLastIndex=true', function() {
+    testArgMaxMin(
+        {
+          shape: [1, 3, 4],
+          value: [
+            1, 2, 3, 3,
+            3, 4, 4, 3,
+            5, 4, 5, 0,
+          ],
+        },
+        {
+          shape: [1, 4],
+          value: [2, 2, 2, 1],
+        },
+        argMax,
+        {
+          axes: [1],
+          selectLastIndex: true,
+        });
+  });
+
   it('argMin default', function() {
     testArgMaxMin(
         {
@@ -270,6 +328,22 @@ describe('test argMax and argMin', function() {
         {
           shape: [3],
           value: [0, 1, 0],
+        },
+        argMin,
+        {
+          axes: [1],
+        });
+  });
+
+  it('argMin 2D of shape [1, 3] axes=[1]', function() {
+    testArgMaxMin(
+        {
+          shape: [1, 3],
+          value: [1, 2, 3],
+        },
+        {
+          shape: [1],
+          value: [0],
         },
         argMin,
         {
@@ -377,6 +451,28 @@ describe('test argMax and argMin', function() {
         {
           axes: [1],
           keepDimensions: true,
+          selectLastIndex: true,
+        });
+  });
+
+  it('argMin 3D of shape [1, 3, 4] axes=[1] keepDimensions=false selectLastIndex=true', function() {
+    testArgMaxMin(
+        {
+          shape: [1, 3, 4],
+          value: [
+            1, 2, 1, 0,
+            3, 4, 2, 2,
+            5, 0, 5, 0,
+          ],
+        },
+        {
+          shape: [1, 4],
+          value: [0, 2, 0, 2],
+        },
+        argMin,
+        {
+          axes: [1],
+          keepDimensions: false,
           selectLastIndex: true,
         });
   });

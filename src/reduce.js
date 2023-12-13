@@ -63,7 +63,7 @@ function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
   }
 
   if (!keepDimensions) {
-    output = squeeze(output);
+    output = squeeze(output, {axes});
   }
   return output;
 }

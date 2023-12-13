@@ -39,7 +39,7 @@ export function argMaxMin(
   }
 
   if (!keepDimensions) {
-    output = squeeze(output);
+    output = squeeze(output, {axes});
   }
 
   return output;
