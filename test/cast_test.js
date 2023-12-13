@@ -8,7 +8,6 @@ describe('test cast', function() {
   function testCast(input, type, expected) {
     const tensorInput = new Tensor(input.shape, input.data);
     const outputTensor = cast(tensorInput, type);
-    console.log('output', outputTensor);
     utils.checkShape(outputTensor, expected.shape);
     utils.checkValue(outputTensor, expected.data);
   }
