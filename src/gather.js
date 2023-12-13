@@ -40,7 +40,7 @@ export function gather(input, indices, {axis = 0} = {}) {
   //   }
   // }
 
-  // optimized set outputShape using JavaScipt slice and concat
+  // optimized set outputShape using JavaScript slice and concat
   const shapeOutput = shapeInput.slice(0, axis).concat(indices.shape, shapeInput.slice(axis + 1));
   const output = new Tensor(shapeOutput);
 
