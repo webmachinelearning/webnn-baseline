@@ -32,12 +32,9 @@ export function cast(input, type) {
     case 'float16':
       // todo
       throw new Error('Unsupported output type: float16' );
-    // case 'uint64':
-    //   // todo
-    //   throw new Error('Unsupported output type: uint64' );
-    // case 'uint64':
-    //   outputArray = new BigUint64Array(Array.from(input.data, (num) => BigInt(Math.round(num))));
-    //   break;
+    case 'uint64':
+      // todo
+      throw new Error('Unsupported output type: uint64' );
     default:
       throw new Error('Unsupported output type: ' + type);
   }

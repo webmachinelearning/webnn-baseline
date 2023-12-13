@@ -12,7 +12,7 @@ describe('test cast', function() {
     utils.checkValue(outputTensor, expected.data);
   }
 
-  it('cast float32', function() {
+  it('cast float64 to float32', function() {
     const input = {
       shape: [5],
       data: [
@@ -28,7 +28,7 @@ describe('test cast', function() {
     testCast(input, 'float32', expected);
   });
 
-  it('cast int32', function() {
+  it('cast float64 to int32', function() {
     const input = {
       shape: [5],
       data: [
@@ -45,7 +45,7 @@ describe('test cast', function() {
   });
 
 
-  it('cast uint32', function() {
+  it('cast float64 to uint32', function() {
     const input = {
       shape: [5],
       data: [
@@ -61,7 +61,7 @@ describe('test cast', function() {
     testCast(input, 'uint32', expected);
   });
 
-  it('cast int64', function() {
+  it('cast float64 to int64', function() {
     const input = {
       shape: [5],
       data: [
@@ -77,7 +77,7 @@ describe('test cast', function() {
     testCast(input, 'int64', expected);
   });
 
-  it('cast int8', function() {
+  it('cast float64 to int8', function() {
     const input = {
       shape: [5],
       data: [
@@ -93,7 +93,7 @@ describe('test cast', function() {
     testCast(input, 'int8', expected);
   });
 
-  it('cast uint8', function() {
+  it('cast float64 to uint8', function() {
     const input = {
       shape: [5],
       data: [
