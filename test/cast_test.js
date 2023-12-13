@@ -6,10 +6,8 @@ import * as utils from './utils.js';
 
 describe('test cast', function() {
   const InputDataType = {
-    int8: Int32Array,
+    int8: Int8Array,
     uint8: Uint8Array,
-    int16: Int16Array,
-    uint16: Uint16Array,
     int32: Int32Array,
     uint32: Uint32Array,
     int64: BigInt64Array,
