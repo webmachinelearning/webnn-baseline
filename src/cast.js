@@ -29,6 +29,12 @@ export function cast(input, type) {
     case 'uint8':
       outputArray = new Uint8Array(input.data);
       break;
+    case 'float16':
+      // todo
+      break;
+    case 'uint64':
+      // todo
+      break;
     default:
       throw new Error('Unsupported output type: ' + type);
   }
