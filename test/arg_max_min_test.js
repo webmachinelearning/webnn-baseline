@@ -212,6 +212,53 @@ describe('test argMax and argMin', function() {
         });
   });
 
+  it('argMax 3D discontinuous axes=[0, 2]', function() {
+    testArgMaxMin(
+        {
+          shape: [2, 3, 4],
+          value: [
+            1, 2, 3, 3,
+            3, 4, 4, 9,
+            5, 9, 5, 0,
+            8, 7, 8, 6,
+            9, 4, 5, 2,
+            1, 9, 4, 3,
+          ],
+        },
+        {
+          shape: [3],
+          value: [4, 3, 1],
+        },
+        argMax,
+        {
+          axes: [0, 2],
+        });
+  });
+
+  it('argMax 3D discontinuous axes=[2, 0] selectLastIndex=true', function() {
+    testArgMaxMin(
+        {
+          shape: [2, 3, 4],
+          value: [
+            1, 2, 3, 3,
+            3, 4, 4, 9,
+            5, 9, 5, 0,
+            8, 7, 8, 6,
+            9, 4, 5, 2,
+            1, 9, 4, 3,
+          ],
+        },
+        {
+          shape: [3],
+          value: [6, 4, 5],
+        },
+        argMax,
+        {
+          axes: [2, 0],
+          selectLastIndex: true,
+        });
+  });
+
   it('argMax 3D axes=[2, 1] selectLastIndex=true', function() {
     testArgMaxMin(
         {
@@ -473,6 +520,53 @@ describe('test argMax and argMin', function() {
         {
           axes: [1],
           keepDimensions: false,
+          selectLastIndex: true,
+        });
+  });
+
+  it('argMin 3D discontinuous axes=[0, 2]', function() {
+    testArgMaxMin(
+        {
+          shape: [2, 3, 4],
+          value: [
+            1, 2, 3, 3,
+            3, 4, 2, 9,
+            5, 9, 5, 0,
+            8, 7, 1, 6,
+            9, 3, 5, 2,
+            1, 9, 0, 4,
+          ],
+        },
+        {
+          shape: [3],
+          value: [0, 2, 3],
+        },
+        argMin,
+        {
+          axes: [0, 2],
+        });
+  });
+
+  it('argMin 3D discontinuous axes=[2, 0] selectLastIndex=true', function() {
+    testArgMaxMin(
+        {
+          shape: [2, 3, 4],
+          value: [
+            1, 2, 3, 3,
+            3, 4, 2, 9,
+            5, 9, 5, 0,
+            8, 7, 1, 6,
+            9, 3, 5, 2,
+            1, 9, 0, 4,
+          ],
+        },
+        {
+          shape: [3],
+          value: [6, 7, 6],
+        },
+        argMin,
+        {
+          axes: [2, 0],
           selectLastIndex: true,
         });
   });

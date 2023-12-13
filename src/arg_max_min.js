@@ -19,6 +19,8 @@ export function argMaxMin(
       keepDimensions = false,
       selectLastIndex = false,
     } = {}) {
+  // If axes doesn't present (defaulting to null), all dimensions are reduced.
+  // See https://webmachinelearning.github.io/webnn/#dom-mlargminmaxoptions-axes.
   const inpAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
   const outputShape = input.shape.slice();
 
