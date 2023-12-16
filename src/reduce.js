@@ -15,7 +15,7 @@ export function selectValuesToReduce(input, axes, inputLocation) {
   }
 
   // Calculate the "strides" across the reduction dimensions given in axes.
-  axes.sort();
+  axes.sort((a, b) => a - b);
   const reduceDims = axes.map((axis) => input.shape[axis]);
   const reducedElementCount = sizeOfShape(reduceDims);
   const reduceStrides = new Array(axes.length);
