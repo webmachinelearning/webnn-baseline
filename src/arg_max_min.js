@@ -19,22 +19,22 @@ export function argMaxMin(
       keepDimensions = false,
       selectLastIndex = false,
     } = {}) {
-  // If axes doesn't present (defaulting to null), all dimensions are reduced.
+  // If axes aren't present (defaulting to null), all dimensions are reduced.
   // See https://webmachinelearning.github.io/webnn/#dom-mlargminmaxoptions-axes.
-  const inpAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
+  const inputAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
   const outputShape = input.shape.slice();
 
-  for (let i = 0; i < inpAxes.length; ++i) {
-    outputShape[inpAxes[i]] = 1;
+  for (let i = 0; i < inputAxes.length; ++i) {
+    outputShape[inputAxes[i]] = 1;
   }
 
   let output = new Tensor(outputShape);
-  const tensor = reduceFunc(input, {axes: inpAxes, keepDimensions: true});
+  const tensor = reduceFunc(input, {axes: inputAxes, keepDimensions: true});
 
   for (let outputIndex = 0; outputIndex < sizeOfShape(outputShape); ++outputIndex) {
     const value = tensor.getValueByIndex(outputIndex);
     const inputLocation = output.locationFromIndex(outputIndex);
-    const selectedArray = selectValuesToReduce(input, inpAxes, inputLocation);
+    const selectedArray = selectValuesToReduce(input, inputAxes, inputLocation);
     const index =
         selectLastIndex ? selectedArray.lastIndexOf(value) : selectedArray.indexOf(value);
     output.setValueByIndex(outputIndex, index);

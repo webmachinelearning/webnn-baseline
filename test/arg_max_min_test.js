@@ -29,6 +29,65 @@ describe('test argMax and argMin', function() {
         argMax);
   });
 
+  it('argMax axes=[]', function() {
+    testArgMaxMin(
+        {
+          shape: [3, 3],
+          value: [
+            1, 2, 3,
+            3, 0, 4,
+            2, 5, 2,
+          ],
+        },
+        {
+          shape: [3, 3],
+          value: [
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+          ],
+        },
+        argMax,
+        {
+          axes: [],
+        });
+  });
+
+  it('argMax scalar axes=[]', function() {
+    testArgMaxMin(
+        {
+          shape: [],
+          value: [3],
+        },
+        {
+          shape: [],
+          value: [0],
+        },
+        argMax,
+        {
+          axes: [],
+        });
+  });
+
+  it('argMax scalar axes=[] none effect by both keepDimensions and selectLastIndex being true',
+      function() {
+        testArgMaxMin(
+            {
+              shape: [],
+              value: [3],
+            },
+            {
+              shape: [],
+              value: [0],
+            },
+            argMax,
+            {
+              axes: [],
+              keepDimensions: true,
+              selectLastIndex: true,
+            });
+      });
+
   it('argMax axes=[0]', function() {
     testArgMaxMin(
         {

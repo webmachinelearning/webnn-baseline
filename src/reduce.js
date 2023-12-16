@@ -15,9 +15,9 @@ export function selectValuesToReduce(input, axes, inputLocation) {
   }
 
   // Calculate the "strides" across the reduction dimensions given in axes.
-  axes.sort((a, b) => a - b);
+  axes.sort();
   const reduceDims = axes.map((axis) => input.shape[axis]);
-  const reduceElements = sizeOfShape(reduceDims);
+  const reducedElementCount = sizeOfShape(reduceDims);
   const reduceStrides = new Array(axes.length);
   reduceStrides[reduceStrides.length - 1] = 1;
   for (let i = reduceStrides.length - 2; i >= 0; --i) {
@@ -26,7 +26,7 @@ export function selectValuesToReduce(input, axes, inputLocation) {
 
   const valuesToReduce = [];
   // Find all values to reduce.
-  for (let reduceIndex = 0; reduceIndex < reduceElements; ++reduceIndex) {
+  for (let reduceIndex = 0; reduceIndex < reducedElementCount; ++reduceIndex) {
     // Calculate the input location given index of elements to reduce.
     let remainingReduceIndex = reduceIndex;
     for (let i = 0; i < axes.length; ++i) {
@@ -48,16 +48,21 @@ export function selectValuesToReduce(input, axes, inputLocation) {
  * @return {Tensor}
  */
 function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
-  const inpAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
+  const inputAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
+
+  if (inputAxes.length === 0) {
+    return input;
+  }
+
   const outputShape = input.shape.slice();
-  for (let i = 0; i < inpAxes.length; ++i) {
-    outputShape[inpAxes[i]] = 1;
+  for (let i = 0; i < inputAxes.length; ++i) {
+    outputShape[inputAxes[i]] = 1;
   }
 
   let output = new Tensor(outputShape);
   for (let outputIndex = 0; outputIndex < sizeOfShape(outputShape); ++outputIndex) {
     const inputLocation = output.locationFromIndex(outputIndex);
-    const valuesToReduce = selectValuesToReduce(input, inpAxes, inputLocation);
+    const valuesToReduce = selectValuesToReduce(input, inputAxes, inputLocation);
     const outputValue = valuesToReduce.reduce(reduceFunc);
     output.setValueByIndex(outputIndex, outputValue);
   }

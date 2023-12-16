@@ -494,6 +494,18 @@ describe('test reduce', function() {
         });
   });
 
+  it('reduceSum axes []', function() {
+    testReduce(
+        'Sum', {axes: []}, {
+          shape: [3, 2, 2],
+          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
+        },
+        {
+          shape: [3, 2, 2],
+          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
+        });
+  });
+
   it('reduceSumSquare default', function() {
     testReduce(
         'SumSquare', {}, {
