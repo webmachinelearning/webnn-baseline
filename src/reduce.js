@@ -19,9 +19,15 @@ export function selectValuesToReduce(input, axes, inputLocation) {
   const reduceDims = axes.map((axis) => input.shape[axis]);
   const reducedElementCount = sizeOfShape(reduceDims);
   const reduceStrides = new Array(axes.length);
-  reduceStrides[reduceStrides.length - 1] = 1;
-  for (let i = reduceStrides.length - 2; i >= 0; --i) {
-    reduceStrides[i] = reduceStrides[i + 1] * reduceDims[i + 1];
+
+  if (reduceStrides.length > 0) {
+    reduceStrides[reduceStrides.length - 1] = 1;
+  }
+
+  if (reduceStrides.length > 1) {
+    for (let i = reduceStrides.length - 2; i >= 0; --i) {
+      reduceStrides[i] = reduceStrides[i + 1] * reduceDims[i + 1];
+    }
   }
 
   const valuesToReduce = [];

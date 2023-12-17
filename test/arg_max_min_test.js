@@ -69,7 +69,7 @@ describe('test argMax and argMin', function() {
         });
   });
 
-  it('argMax scalar axes=[] none effect by both keepDimensions and selectLastIndex being true',
+  it('argMax scalar axes=[] no effect by both keepDimensions and selectLastIndex being true',
       function() {
         testArgMaxMin(
             {
