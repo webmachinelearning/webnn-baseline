@@ -6,6 +6,46 @@ import {abs, exp, log} from './unary.js';
 import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
 import {validateReduceParams} from './lib/validate-input.js';
 
+export function selectValuesToReduce(input, axes, inputLocation) {
+  validateReduceParams(input, {axes});
+
+  const outputShape = input.shape.slice();
+  for (let i = 0; i < axes.length; ++i) {
+    outputShape[axes[i]] = 1;
+  }
+
+  // Calculate the "strides" across the reduction dimensions given in axes.
+  axes.sort((a, b) => a - b);
+  const reduceDims = axes.map((axis) => input.shape[axis]);
+  const reducedElementCount = sizeOfShape(reduceDims);
+  const reduceStrides = new Array(axes.length);
+
+  if (reduceStrides.length > 0) {
+    reduceStrides[reduceStrides.length - 1] = 1;
+  }
+
+  if (reduceStrides.length > 1) {
+    for (let i = reduceStrides.length - 2; i >= 0; --i) {
+      reduceStrides[i] = reduceStrides[i + 1] * reduceDims[i + 1];
+    }
+  }
+
+  const valuesToReduce = [];
+  // Find all values to reduce.
+  for (let reduceIndex = 0; reduceIndex < reducedElementCount; ++reduceIndex) {
+    // Calculate the input location given index of elements to reduce.
+    let remainingReduceIndex = reduceIndex;
+    for (let i = 0; i < axes.length; ++i) {
+      const axis = axes[i];
+      inputLocation[axis] = Math.floor(remainingReduceIndex / reduceStrides[i]);
+      remainingReduceIndex -= inputLocation[axis] * reduceStrides[i];
+    }
+    valuesToReduce.push(input.getValueByLocation(inputLocation));
+  }
+
+  return valuesToReduce;
+}
+
 /**
  * Reduce the input along the dimensions given in axes.
  * @param {Tensor} input
@@ -14,46 +54,27 @@ import {validateReduceParams} from './lib/validate-input.js';
  * @return {Tensor}
  */
 function reduce(input, reduceFunc, {keepDimensions = false, axes} = {}) {
-  const inpAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
+  const inputAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
 
-  const outputShape = input.shape.slice();
-  for (let i = 0; i < inpAxes.length; ++i) {
-    outputShape[inpAxes[i]] = 1;
+  if (inputAxes.length === 0) {
+    return input;
   }
 
-  validateReduceParams(input, reduceFunc, {keepDimensions, axes: inpAxes});
-
-  // Calculate the "strides" across the reduction dimensions given in axes.
-  inpAxes.sort((a, b) => a - b);
-  const reduceDims = inpAxes.map((axis) => input.shape[axis]);
-  const reduceElements = sizeOfShape(reduceDims);
-  const reduceStrides = new Array(inpAxes.length);
-  reduceStrides[reduceStrides.length - 1] = 1;
-  for (let i = reduceStrides.length - 2; i >= 0; --i) {
-    reduceStrides[i] = reduceStrides[i + 1] * reduceDims[i + 1];
+  const outputShape = input.shape.slice();
+  for (let i = 0; i < inputAxes.length; ++i) {
+    outputShape[inputAxes[i]] = 1;
   }
 
   let output = new Tensor(outputShape);
   for (let outputIndex = 0; outputIndex < sizeOfShape(outputShape); ++outputIndex) {
-    const valuesToReduce = [];
-    // Find all values to reduce.
-    for (let reduceIndex = 0; reduceIndex < reduceElements; ++reduceIndex) {
-      // Calculate the input location given index of elements to reduce.
-      const inputLocation = output.locationFromIndex(outputIndex);
-      let remainingReduceIndex = reduceIndex;
-      for (let i = 0; i < inpAxes.length; ++i) {
-        const axis = inpAxes[i];
-        inputLocation[axis] = Math.floor(remainingReduceIndex / reduceStrides[i]);
-        remainingReduceIndex -= inputLocation[axis] * reduceStrides[i];
-      }
-      valuesToReduce.push(input.getValueByLocation(inputLocation));
-    }
+    const inputLocation = output.locationFromIndex(outputIndex);
+    const valuesToReduce = selectValuesToReduce(input, inputAxes, inputLocation);
     const outputValue = valuesToReduce.reduce(reduceFunc);
     output.setValueByIndex(outputIndex, outputValue);
   }
 
   if (!keepDimensions) {
-    output = squeeze(output);
+    output = squeeze(output, {axes});
   }
   return output;
 }
