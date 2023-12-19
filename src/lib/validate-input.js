@@ -454,7 +454,7 @@ export function validateTriangularParams(input, {diagonal = 0} = {}) {
   if (i !== j) {
     throw new Error('The input should be a 2-D tensor of [N, N] shape.');
   }
-  if (!Number.isInteger(diagonal) || diagonal >= i || diagonal <= -i) {
-    throw new Error(`The diagonal should be an integer in the interval [${1 - i}, ${i - 1}].`);
+  if (!Number.isInteger(diagonal)) {
+    throw new Error(`The diagonal should be an integer.`);
   }
 }

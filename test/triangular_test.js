@@ -57,6 +57,30 @@ describe('test triangular', function() {
     );
   });
 
+  it('triangular fully zero diagonal=4', function() {
+    testTriangular(
+        {
+          shape: [3, 3],
+          data: [
+            7, 1, 2,
+            9, 4, 8,
+            2, 6, 3,
+          ],
+        },
+        {
+          shape: [3, 3],
+          data: [
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+          ],
+        },
+        {
+          diagonal: 4,
+        },
+    );
+  });
+
   it('triangular diagonal=-1', function() {
     testTriangular(
         {
@@ -77,6 +101,30 @@ describe('test triangular', function() {
         },
         {
           diagonal: -1,
+        },
+    );
+  });
+
+  it('triangular fully copied diagonal=-4', function() {
+    testTriangular(
+        {
+          shape: [3, 3],
+          data: [
+            7, 1, 2,
+            9, 4, 8,
+            2, 6, 3,
+          ],
+        },
+        {
+          shape: [3, 3],
+          data: [
+            7, 1, 2,
+            9, 4, 8,
+            2, 6, 3,
+          ],
+        },
+        {
+          diagonal: -4,
         },
     );
   });
@@ -130,6 +178,31 @@ describe('test triangular', function() {
     );
   });
 
+  it('triangular fully copied upper=false diagonal=4 ', function() {
+    testTriangular(
+        {
+          shape: [3, 3],
+          data: [
+            7, 1, 2,
+            9, 4, 8,
+            2, 6, 3,
+          ],
+        },
+        {
+          shape: [3, 3],
+          data: [
+            7, 1, 2,
+            9, 4, 8,
+            2, 6, 3,
+          ],
+        },
+        {
+          upper: false,
+          diagonal: 4,
+        },
+    );
+  });
+
   it('triangular upper=false diagonal=-1', function() {
     testTriangular(
         {
@@ -151,6 +224,31 @@ describe('test triangular', function() {
         {
           upper: false,
           diagonal: -1,
+        },
+    );
+  });
+
+  it('triangular fully zero upper=false diagonal=-4', function() {
+    testTriangular(
+        {
+          shape: [3, 3],
+          data: [
+            7, 1, 2,
+            9, 4, 8,
+            2, 6, 3,
+          ],
+        },
+        {
+          shape: [3, 3],
+          data: [
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+          ],
+        },
+        {
+          upper: false,
+          diagonal: -4,
         },
     );
   });
