@@ -36,7 +36,7 @@ describe('test cast', function() {
     const expected = {
       shape: [5],
       data: [
-        0, 0, 4, 14, -14,
+        0, 0, 3, 14, -14,
       ],
     };
     testCast(input, 'int8', expected);
@@ -52,7 +52,7 @@ describe('test cast', function() {
     const expected = {
       shape: [5],
       data: [
-        0, 1, 4, 14, 15,
+        0, 0, 3, 14, 15,
       ],
     };
     testCast(input, 'uint8', expected);
@@ -62,7 +62,7 @@ describe('test cast', function() {
     const input = {
       shape: [5],
       data: [
-        -0.25, 0.25, 3.21, 1234, -1234,
+        -0.25, 0.75, 3.21, 1234, -1234,
       ],
     };
     const expected = {
@@ -84,7 +84,7 @@ describe('test cast', function() {
     const expected = {
       shape: [5],
       data: [
-        1, 0, 3, 14, 15,
+        0, 0, 3, 14, 15,
       ],
     };
     testCast(input, 'uint32', expected);
@@ -94,7 +94,7 @@ describe('test cast', function() {
     const input = {
       shape: [5],
       data: [
-        -0.25, 0.25, 3.21, 1234, -1234,
+        -0.25, 0.75, 3.21, 1234, -1234,
       ],
     };
     const expected = {
