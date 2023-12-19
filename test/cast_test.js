@@ -160,14 +160,14 @@ describe('test cast', function() {
     const input = {
       shape: [5],
       data: [
-        0, 0.1, 0.2, -3, 993,
+        0, 0.1, 0.2, -300, 993,
       ],
       type: 'float32',
     };
     const expected = {
       shape: [5],
       data: [
-        0, 0.10000000149011612, 0.20000000298023224, -3, 993,
+        0, 0.10000000149011612, 0.20000000298023224, -300, 993,
       ],
     };
     testCast(input, 'float64', expected);
