@@ -4,8 +4,8 @@ import {cast} from './cast.js';
 import {Tensor, sizeOfShape} from '../src/lib/tensor.js';
 
 /**
- * Create a constant array of the specified data type and
- * shape that contains the data as specified by the range.
+ * Create a constant array of specified data type and shape,
+ * which contains data incrementing by step.
  * @param {Array} outputShape
  * @return {Tensor}
  */
