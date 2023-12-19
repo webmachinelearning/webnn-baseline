@@ -34,7 +34,7 @@ assert.isAlmostEqualUlp = function(a, b, nulp, message) {
     distance = distance >= 0 ? distance : -distance;
     return assert.isTrue(distance <= nulp, message);
   } else {
-    let distance = a-b;
+    let distance = a - b;
     distance = distance >= 0n ? distance : -distance;
     return assert.isTrue(distance <= nulp, message);
   }

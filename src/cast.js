@@ -12,16 +12,16 @@ export function cast(input, type) {
   let outputArray;
   switch (type) {
     case 'int8':
-      outputArray = new Int8Array(input.data);
+      outputArray = new Int8Array(Array.from(input.data, (num) => (Math.round(num))));
       break;
     case 'uint8':
-      outputArray = new Uint8Array(input.data);
+      outputArray = new Uint8Array(Array.from(input.data, (num) => (Math.round(num))));
       break;
     case 'int32':
-      outputArray = new Int32Array(input.data);
+      outputArray = new Int32Array(Array.from(input.data, (num) => (Math.round(num))));
       break;
     case 'uint32':
-      outputArray = new Uint32Array(input.data);
+      outputArray = new Uint32Array(Array.from(input.data, (num) => (Math.round(num))));
       break;
     case 'int64':
       outputArray = new BigInt64Array(Array.from(input.data, (num) => BigInt(Math.round(num))));
