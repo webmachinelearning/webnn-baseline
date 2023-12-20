@@ -17,7 +17,6 @@ export function constant(start, step, outputShape, type = 'float32') {
     resultArray.push(start + i * step);
   }
   const resultToTensor = new Tensor([resultArray.length], resultArray);
-
   const transformTensorType = cast(resultToTensor, type);
   const output = new Tensor(outputShape, transformTensorType.data);
   return output;

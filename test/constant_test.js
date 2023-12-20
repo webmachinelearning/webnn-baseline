@@ -7,8 +7,6 @@ import * as utils from './utils.js';
 describe('test constant', function() {
   function testConstant(start, step, outputShape, type, expected) {
     const outputTensor = constant(start, step, outputShape, type);
-    console.log('outputTensor', outputTensor);
-    console.log('expected', expected);
     utils.checkShape(outputTensor, expected.shape);
     utils.checkValue(outputTensor, expected.data);
   }
