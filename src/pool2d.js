@@ -3,7 +3,7 @@
 import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {Tensor} from './lib/tensor.js';
 import {transpose} from './transpose.js';
-import {meanReducer, maxReducer, l2Reducer} from './reduce.js';
+import {l2Reducer, meanReducer, maxReducer} from './reduce.js';
 import {validatePool2dParams} from './lib/validate-input.js';
 
 /**
