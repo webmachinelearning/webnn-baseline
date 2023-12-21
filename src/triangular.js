@@ -11,7 +11,8 @@ import {validateTriangularParams} from './lib/validate-input.js';
  * @return {Boolean}
  */
 function isRetainedValue(location, upper, diagonal) {
-  const [i, j] = location;
+  const i = location[location.length - 2];
+  const j = location[location.length - 1];
   return upper ? j >= i + diagonal : j <= i + diagonal;
 }
 

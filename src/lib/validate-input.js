@@ -447,12 +447,8 @@ export function validateGatherParams(input, indices, {axis = 0} = {}) {
 
 export function validateTriangularParams(input, {diagonal = 0} = {}) {
   const inputRank = input.rank;
-  if (inputRank !== 2) {
-    throw new Error('The input should be a 2-D tensor.');
-  }
-  const [i, j] = input.shape;
-  if (i !== j) {
-    throw new Error('The input should be a 2-D tensor of [N, N] shape.');
+  if (inputRank < 2) {
+    throw new Error('The input should be at least a 2-D tensor.');
   }
   if (!Number.isInteger(diagonal)) {
     throw new Error(`The diagonal should be an integer.`);
