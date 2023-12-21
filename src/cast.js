@@ -33,10 +33,10 @@ export function cast(input, type) {
       outputArray = new Float64Array(input.data);
       break;
     case 'float16':
-      // todo
+      // TODO: https://github.com/webmachinelearning/webnn-baseline/issues/66
       throw new Error('Unsupported output type: float16' );
     case 'uint64':
-      // todo
+      // TODO: https://github.com/webmachinelearning/webnn-baseline/issues/67
       throw new Error('Unsupported output type: uint64' );
     default:
       throw new Error('Unsupported output type: ' + type);
