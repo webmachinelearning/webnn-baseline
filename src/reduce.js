@@ -2,7 +2,7 @@
 
 import {pow} from './binary.js';
 import {squeeze} from './squeeze.js';
-import {abs, exp, log} from './unary.js';
+import {abs, exp, log, sqrt} from './unary.js';
 import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
 import {validateReduceParams} from './lib/validate-input.js';
 
@@ -141,6 +141,17 @@ export function reduceSumSquare(input, options = {}) {
  */
 export function reduceL1(input, options = {}) {
   return reduceSum(abs(input), options);
+}
+
+/* The l2 reducer */
+export function l2Reducer(previousValue, currentValue, currentIndex, array) {
+  if (currentIndex === array.length - 1) {
+    const sumOfSquares = previousValue + currentValue * currentValue;
+    return sqrt(sumOfSquares);
+  } else {
+    const sumOfSquares = previousValue + currentValue * currentValue;
+    return sumOfSquares;
+  }
 }
 
 /**
