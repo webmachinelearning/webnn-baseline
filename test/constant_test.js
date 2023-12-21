@@ -49,4 +49,12 @@ describe('test constant', function() {
     testConstant(
         1, 0, [3, 3], 'float64', expected);
   });
+
+  it('constant scalar', function() {
+    const expected ={
+      shape: [],
+      data: [42],
+    };
+    testConstant(42, 0, [], 'float64', expected);
+  });
 });
