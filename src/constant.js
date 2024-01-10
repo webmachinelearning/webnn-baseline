@@ -2,21 +2,21 @@
 
 import {cast} from './cast.js';
 import {Tensor, sizeOfShape} from '../src/lib/tensor.js';
-
 /**
  * Create a constant array of specified data type and shape,
  * which contains data incrementing by step.
+ * @param {Number} start
+ * @param {Number} step
  * @param {Array} outputShape
+ * @param {string} type
  * @return {Tensor}
  */
-
 export function constant(start, step, outputShape, type = 'float32') {
   const outputElementCount = sizeOfShape(outputShape);
-  const resultArray = [];
+  const data = [];
   for (let i = 0; i < outputElementCount; i++) {
-    resultArray.push(start + i * step);
+    data.push(start + i * step);
   }
-  const resultToTensor = new Tensor(outputShape, resultArray);
-  const output = cast(resultToTensor, type);
-  return output;
+  const tensor = new Tensor(outputShape, data);
+  return cast(tensor, type);
 }
