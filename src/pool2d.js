@@ -26,7 +26,6 @@ function pool2d(input, reductionFunc,
     }= {}) {
   validatePool2dParams(...arguments);
   const roundingFunc = roundingType === 'floor' ? Math.floor : Math.ceil;
-
   if (layout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
