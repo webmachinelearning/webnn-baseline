@@ -145,15 +145,12 @@ export function reduceL1(input, options = {}) {
 
 /* The l2 reducer */
 export function l2Reducer(previousValue, currentValue, currentIndex, array) {
-  if (currentIndex== 1) {
-    const sumOfSquares = previousValue*previousValue + currentValue * currentValue;
+  if (currentIndex == 1) {
+    const sumOfSquares = previousValue * previousValue + currentValue * currentValue;
     return sumOfSquares;
-  } else if (currentIndex === array.length - 1) {
-    const sumOfSquares = previousValue + currentValue * currentValue;
-    return Math.sqrt(sumOfSquares);
   } else {
     const sumOfSquares = previousValue + currentValue * currentValue;
-    return sumOfSquares;
+    return (currentIndex === array.length - 1) ? Math.sqrt(sumOfSquares) :sumOfSquares;
   }
 }
 
