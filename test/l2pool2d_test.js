@@ -6,6 +6,14 @@ import * as utils from './utils.js';
 
 describe('test pool2d', function() {
   it('l2Pool2d default', function() {
+    const x = new Tensor([1, 1, 1, 1], [2]);
+    const windowDimensions = [1, 1];
+    const y = l2Pool2d(x, {windowDimensions});
+    utils.checkShape(y, [1, 1, 1, 1]);
+    utils.checkValue(y, [2]);
+  });
+
+  it('l2Pool2d default', function() {
     const x = new Tensor([1, 1, 4, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
     const windowDimensions = [3, 3];
     const y = l2Pool2d(x, {windowDimensions});
