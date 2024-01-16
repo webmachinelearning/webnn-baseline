@@ -26,6 +26,19 @@ describe('test pool2d', function() {
     ]);
   });
 
+  it('l2Pool2d default: start not from 1 ', function() {
+    const x = new Tensor([1, 1, 4, 4], [16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    const windowDimensions = [3, 3];
+    const y = l2Pool2d(x, {windowDimensions});
+    utils.checkShape(y, [1, 1, 2, 2]);
+    utils.checkValue(y, [
+      34.51086785347479,
+      31.654383582688826,
+      23.302360395462088,
+      20.639767440550294,
+    ]);
+  });
+
   it('l2Pool2d nhwc', function() {
     const x = new Tensor([1, 4, 4, 1], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
     const windowDimensions = [3, 3];
