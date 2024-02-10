@@ -1,0 +1,404 @@
+{
+  "tests": [
+    {
+      "name": "gemm with default options",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    // options.c
+    {
+      "name": "gemm with specified options.c",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": {          
+          "shape": [3, 5],
+          "data": "float64DataOptionsC"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32OptionsC"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified broadcast options.c [1, 5] => [3, 5]",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": {          
+          "shape": [1, 5],
+          "data": "float64DataOptionsCBroadcast1"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32BroadcastOptionsC1"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified broadcast options.c [3, 1] => [3, 5]",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": {
+          "shape": [3, 1],
+          "data": "float64DataOptionsCBroadcast2"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32BroadcastOptionsC2"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified broadcast options.c [1, 1] => [3, 5]",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": {
+          "shape": [1, 1],
+          "data": "float64DataOptionsCBroadcast3"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32BroadcastOptionsC3"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified broadcast options.c [1] => [3, 5]",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": {
+          "shape": [1],
+          "data": "float64DataOptionsCBroadcast3"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32BroadcastOptionsC3"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.c being a scalar",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": { // scalar doesn't have shape, reuses float64DataOptionsCBroadcast3[0] being scalar's data
+          "data": "float64DataOptionsCBroadcast3"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32BroadcastOptionsC3"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.alpha scalar",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "alpha": {
+          "data": "float64DataOptionsAlpha"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32OptionsAlpha"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.beta scalar",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "beta": {
+          "data": "float64DataOptionsBeta"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32OptionsBeta"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.c and options.beta",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "c": {          
+          "shape": [3, 5],
+          "data": "float64DataOptionsC"
+        },
+        "beta": {
+          "data": "float64DataOptionsBeta"
+        }
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32OptionsCBeta"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.aTranspose being true",
+      "inputs": {
+        "a": {
+          "shape": [4, 3],
+          "data": "float64DataAT"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "aTranspose": true
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.aTranspose being explicit false",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "aTranspose": false
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.bTranspose being true",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [5, 4],
+          "data": "float64DataBT"
+        }
+      },
+      "options": {
+        "bTranspose": true
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified options.bTranspose being explicit false",
+      "inputs": {
+        "a": {
+          "shape": [3, 4],
+          "data": "float64DataA"
+        },
+        "b": {
+          "shape": [4, 5],
+          "data": "float64DataB"
+        }
+      },
+      "options": {
+        "bTranspose": false
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32DefaultOptions"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "gemm with specified all options",
+      "inputs": {
+        "a": {
+          "shape": [4, 3],
+          "data": "float64DataAT"
+        },
+        "b": {
+          "shape": [5, 4],
+          "data": "float64DataBT"
+        }
+      },
+      "options": {
+        "c": {          
+          "shape": [3, 5],
+          "data": "float64DataOptionsC"
+        },
+        "alpha": {
+          "data": "float64DataOptionsAlpha"
+        },
+        "beta": {
+          "data": "float64DataOptionsBeta"
+        },
+        "aTranspose": true,
+        "bTranspose": true
+      },
+      "expected": {
+        "shape": [3, 5],
+        "data": "float32AllOptions"
+      },
+      "type": "float32"
+    }
+  ],
+  "inputsData": {
+    "float64DataA": {
+      "shape": [3, 4],
+      "type": "float64"
+    },
+    "float64DataB": {
+      "shape": [4, 5],
+      "type": "float64"
+    },
+    "float64DataOptionsC": {
+      "shape": [15],
+      "type": "float64"
+    },
+    "float64DataOptionsCBroadcast1": {
+      "shape": [1, 5],
+      "type": "float64"
+    },
+    "float64DataOptionsCBroadcast2": {
+      "shape": [3, 1],
+      "type": "float64"
+    },
+    "float64DataOptionsCBroadcast3": {
+      "shape": [1, 1],
+      "type": "float64"
+    },
+    "float64DataOptionsAlpha": {
+      "shape": [1],
+      "type": "float64"
+    },
+    "float64DataOptionsBeta": {
+      "shape": [1],
+      "type": "float64"
+    },
+    "float64DataAT": {
+      "data": "float64DataA",
+      "transpose": [1, 0],
+      "shape": [4, 3],
+      "type": "float64"
+    },
+    "float64DataBT": {
+      "data": "float64DataB",
+      "transpose": [1, 0],
+      "shape": [5, 4],
+      "type": "float64"
+    }
+  },
+  "expectedData": {
+
+  }
+}

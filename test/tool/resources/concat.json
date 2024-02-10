@@ -1,0 +1,303 @@
+{
+  "tests": [
+    // concat 1D tensors
+    {
+      "name": "concat two 1D tensors of same shape along axis 0",
+      "inputs": {
+        "shape": [[12], [12]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [24],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "concat three 1D tensors of different 1st dimension along axis 0",
+      "inputs": {
+        "shape": [[4], [8], [12]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [24],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "concat four 1D tensors of same 1st dimension along axis 0",
+      "inputs": {
+        "shape": [[6], [6], [6], [6]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [24],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name": "concat four 1D tensors of different 1st dimension along axis 0",
+      "inputs": {
+        "shape": [[2], [4], [8], [10]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [24],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    // concat 2D tensors
+    {
+      "name": "concat two 2D tensors of same shape along axis 0",
+      "inputs": {
+        "shape": [[2, 6], [2, 6]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [4, 6],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat two 2D tensors of same others dimensions except different 1st dimension along axis 0",
+      "inputs": {
+        "shape": [[1, 6], [3, 6]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [4, 6],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat four 2D tensors of same shape along axis 0",
+      "inputs": {
+        "shape": [[3, 2], [3, 2], [3, 2], [3, 2]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [12, 2],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat two 2D tensors of same others dimensions except different 2nd dimension along axis 1",
+      "inputs": {
+        "shape": [[2, 10], [2, 2]],
+        "data": "float64Data"
+      },
+      "axis": 1,
+      "expected": {
+        "shape": [2, 12],
+        "data": "float32Axis1Two2D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat three 2D tensors of same shape along axis 1",
+      "inputs": {
+        "shape": [[4, 2], [4, 2], [4, 2]],
+        "data": "float64Data"
+      },
+      "axis": 1,
+      "expected": {
+        "shape": [4, 6],
+        "data": "float32Axis1Three2D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat four 2D tensors of same others dimensions except different 2nd dimension along axis 1",
+      "inputs": {
+        "shape": [[3, 1], [3, 2], [3, 2], [3, 3]],
+        "data": "float64Data"
+      },
+      "axis": 1,
+      "expected": {
+        "shape": [3, 8],
+        "data": "float32Axis1Four2D"
+      },
+      "type": "float32"
+    },
+    // concat 3D tensors
+    {
+      "name":"concat two 3D tensors of same others dimensions except different 1st dimension along axis 0",
+      "inputs": {
+        "shape": [[2, 1, 3], [6, 1, 3]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [8, 1, 3],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat four 3D tensors of same others dimensions except different 2nd dimension along axis 1",
+      "inputs": {
+        "shape": [[3, 1, 1], [3, 2, 1], [3, 2, 1], [3, 3, 1]],
+        "data": "float64Data"
+      },
+      "axis": 1,
+      "expected": {
+        "shape": [3, 8, 1],
+        "data": "float32Axis1Four3D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat three 3D tensors of same shape along axis 2",
+      "inputs": {
+        "shape": [[2, 2, 2], [2, 2, 2], [2, 2, 2]],
+        "data": "float64Data"
+      },
+      "axis": 2,
+      "expected": {
+        "shape": [2, 2, 6],
+        "data": "float32Axis2Three3D"
+      },
+      "type": "float32"
+    },
+    // concat 4D tensors
+    {
+      "name":"concat two 4D tensors of same others dimensions except different 1st dimension along axis 0",
+      "inputs": {
+        "shape": [[1, 3, 1, 2], [3, 3, 1, 2]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [4, 3, 1, 2],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat three 4D tensors of same shape along axis 1",
+      "inputs": {
+        "shape": [[2, 2, 1, 2], [2, 2, 1, 2], [2, 2, 1, 2]],
+        "data": "float64Data"
+      },
+      "axis": 1,
+      "expected": {
+        "shape": [2, 6, 1, 2],
+        "data": "float32Axis1Three4D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat three 4D tensors of same others dimensions except different 3rd dimension along axis 2",
+      "inputs": {
+        "shape": [[1, 2, 2, 1], [1, 2, 8, 1], [1, 2, 2, 1]],
+        "data": "float64Data"
+      },
+      "axis": 2,
+      "expected": {
+        "shape": [1, 2, 12, 1],
+        "data": "float32Axis2Three4D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat four 4D tensors of same others dimensions except different 4th dimension along axis 3",
+      "inputs": {
+        "shape": [[1, 3, 1, 1], [1, 3, 1, 1], [1, 3, 1, 2], [1, 3, 1, 4]],
+        "data": "float64Data"
+      },
+      "axis": 3,
+      "expected": {
+        "shape": [1, 3, 1, 8],
+        "data": "float32Axis3Four4D"
+      },
+      "type": "float32"
+    },
+    // concat 5D tensors
+    {
+      "name":"concat four 5D tensors of same shape along axis 0",
+      "inputs": {
+        "shape": [[1, 2, 1, 1, 3], [1, 2, 1, 1, 3], [1, 2, 1, 1, 3], [1, 2, 1, 1, 3]],
+        "data": "float64Data"
+      },
+      "axis": 0,
+      "expected": {
+        "shape": [4, 2, 1, 1, 3],
+        "data": "float32Axis0"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat two 5D tensors of same others dimensions except different 2nd dimension along axis 1",
+      "inputs": {
+        "shape": [[1, 2, 3, 1, 1], [1, 6, 3, 1, 1]],
+        "data": "float64Data"
+      },
+      "axis": 1,
+      "expected": {
+        "shape": [1, 8, 3, 1, 1],
+        "data": "float32Axis1Two5D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat three 5D tensors of same others dimensions except different 3rd dimension along axis 2",
+      "inputs": {
+        "shape": [[1, 2, 1, 1, 2], [1, 2, 2, 1, 2], [1, 2, 3, 1, 2]],
+        "data": "float64Data"
+      },
+      "axis": 2,
+      "expected": {
+        "shape": [1, 2, 6, 1, 2],
+        "data": "float32Axis2Three5D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat two 5D tensors of same others dimensions except different 4th dimension along axis 3",
+      "inputs": {
+        "shape": [[3, 1, 1, 1, 2], [3, 1, 1, 3, 2]],
+        "data": "float64Data"
+      },
+      "axis": 3,
+      "expected": {
+        "shape": [3, 1, 1, 4, 2],
+        "data": "float32Axis3Two5D"
+      },
+      "type": "float32"
+    },
+    {
+      "name":"concat two 5D tensors of same others dimensions except different 5th dimension along axis 4",
+      "inputs": {
+        "shape": [[1, 2, 1, 1, 4], [1, 2, 1, 1, 8]],
+        "data": "float64Data"
+      },
+      "axis": 4,
+      "expected": {
+        "shape": [1, 2, 1, 1, 12],
+        "data": "float32Axis4Two5D"
+      },
+      "type": "float32"
+    }
+  ],
+  "inputsData": {
+    "float64Data": {
+      "shape": [24],
+      "type": "float64"
+    }
+  },
+  "expectedData": {
+  }
+}
