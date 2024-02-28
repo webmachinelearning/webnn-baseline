@@ -6,7 +6,7 @@ import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test lstmCell', function() {
-  it.only('lstmCell lstmCell activations=[relu, relu, relu]', function() {
+  it('lstmCell lstmCell activations=[relu, relu, relu]', function() {
     const batchSize = 2;
     const inputSize = 2;
     const hiddenSize = 2;
