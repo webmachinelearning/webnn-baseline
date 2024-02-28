@@ -133,6 +133,73 @@ export function validateGemmParams(a, b) {
   }
 }
 
+export function validateLstmCellParams(input, weight, recurrentWeight,
+    hiddenState, cellState, hiddenSize,
+    {bias, recurrentBias, peepholeWeight, layout = 'iofg'} = {}) {
+  if (!Number.isInteger(hiddenSize) || hiddenSize <= 0) {
+    throw new Error(`The hiddenSize ${hiddenSize} is invalid.`);
+  }
+  if (input.rank !== 2) {
+    throw new Error(`The input (rank ${input.rank}) is not a 2-D tensor.`);
+  }
+  const batchSize = input.shape[0];
+  const inputSize = input.shape[1];
+  if (weight.rank !== 2) {
+    throw new Error(`The weight (rank ${weight.rank}) is not a 2-D tensor.`);
+  }
+  if (weight.shape[0] !== 4 * hiddenSize || weight.shape[1] !== inputSize) {
+    throw new Error(`The shape of weight [${weight.shape[0]}, ${weight.shape[1]}] is invalid.`);
+  }
+  if (recurrentWeight.rank !== 2) {
+    throw new Error(`The recurrentWeight (rank ${recurrentWeight.rank}) is not a 2-D tensor.`);
+  }
+  if (recurrentWeight.shape[0] !== 4 * hiddenSize || recurrentWeight.shape[1] !== hiddenSize) {
+    throw new Error(`The shape of recurrentWeight ` +
+    `[${recurrentWeight.shape[0]}, ${recurrentWeight.shape[1]}] is invalid.`);
+  }
+  if (hiddenState.rank !== 2) {
+    throw new Error(`The hiddenState (rank ${hiddenState.rank}) is not a 2-D tensor.`);
+  }
+  if (hiddenState.shape[0] !== batchSize || hiddenState.shape[1] !== hiddenSize) {
+    throw new Error(`The shape of hiddenState
+    [${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
+  }
+  if (cellState.rank !== 2) {
+    throw new Error(`The cellState (rank ${cellState.rank}) is not a 2-D tensor.`);
+  }
+  if (cellState.shape[0] !== batchSize || cellState.shape[1] !== hiddenSize) {
+    throw new Error(`The shape of cellState
+    [${cellState.shape[0]}, ${cellState.shape[1]}] is invalid.`);
+  }
+  if (bias) {
+    if (bias.rank !== 1) {
+      throw new Error(`The bias (rank ${bias.rank}) is not a 1-D tensor.`);
+    }
+    if (bias.shape[0] !== 4 * hiddenSize) {
+      throw new Error(`The shape of bias [${bias.shape[0]}] is invalid.`);
+    }
+  }
+  if (recurrentBias) {
+    if (recurrentBias.rank !== 1) {
+      throw new Error(`The recurrentBias (rank ${bias.rank}) is not a 1-D tensor.`);
+    }
+    if (recurrentBias.shape[0] !== 4 * hiddenSize) {
+      throw new Error(`The shape of recurrentBias [${recurrentBias.shape[0]}] is invalid.`);
+    }
+  }
+  if (peepholeWeight) {
+    if (peepholeWeight.rank !== 1) {
+      throw new Error(`The peepholeWeight (rank ${bias.rank}) is not a 1-D tensor.`);
+    }
+    if (peepholeWeight.shape[0] !== 3 * hiddenSize) {
+      throw new Error(`The shape of peepholeWeight [${peepholeWeight.shape[0]}] is invalid.`);
+    }
+  }
+  if (layout !== 'iofg' && layout !== 'ifgo') {
+    throw new Error(`The layout ${layout} is invalid.`);
+  }
+}
+
 export function validateGruCellParams(input, weight, recurrentWeight, hiddenState, hiddenSize,
     {bias, recurrentBias, layout = 'zrn'} = {}) {
   if (!Number.isInteger(hiddenSize) || hiddenSize <= 0) {
