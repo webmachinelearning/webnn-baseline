@@ -22,11 +22,10 @@ import {validateLstmParams} from './lib/validate-input.js';
  * @param {MLLstmOptions} options
  * @return {Array.<Tensor>}
  */
-
 export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
     {bias, recurrentBias, peepholeWeight, initialHiddenState,
       initialCellState, returnSequence = false, direction = 'forward', layout = 'iofg',
-      activations = [sigmoid, tanh, tanh]}={}) {
+      activations = [sigmoid, tanh, tanh]} = {}) {
   validateLstmParams(...arguments);
   const numDirections = (direction == 'both' ? 2 : 1);
   const batchSize = input.shape[1];

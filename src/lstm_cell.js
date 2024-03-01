@@ -29,8 +29,8 @@ export function lstmCell(input, weight, recurrentWeight, hiddenState, cellState,
   validateLstmCellParams(...arguments);
   const zero = new Scalar(0);
   const inputSize = input.shape[1];
-  const starts = layout === 'iofg' ? {i: 0, o: hiddenSize, f: 2 * hiddenSize, g: 3 *hiddenSize} :
-  {i: 0, f: hiddenSize, g: 2 * hiddenSize, o: 3 * hiddenSize};
+  const starts = (layout === 'iofg') ? {i: 0, o: hiddenSize, f: 2 * hiddenSize, g: 3 * hiddenSize} :
+                                       {i: 0, f: hiddenSize, g: 2 * hiddenSize, o: 3 * hiddenSize};
   const activation0 = activations[0];
   const activation1 = activations[1];
   const activation2 = activations[2];

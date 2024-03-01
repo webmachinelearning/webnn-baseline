@@ -168,8 +168,7 @@ export function validateLstmCellParams(input, weight, recurrentWeight,
     throw new Error(`The cellState (rank ${cellState.rank}) is not a 2-D tensor.`);
   }
   if (cellState.shape[0] !== batchSize || cellState.shape[1] !== hiddenSize) {
-    throw new Error(`The shape of cellState
-    [${cellState.shape[0]}, ${cellState.shape[1]}] is invalid.`);
+    throw new Error(`The shape of cellState [${cellState.shape[0]}, ${cellState.shape[1]}] is invalid.`);
   }
   if (bias) {
     if (bias.rank !== 1) {
@@ -322,8 +321,7 @@ export function validateGruCellParams(input, weight, recurrentWeight, hiddenStat
     throw new Error(`The hiddenState (rank ${hiddenState.rank}) is not a 2-D tensor.`);
   }
   if (hiddenState.shape[0] !== batchSize || hiddenState.shape[1] !== hiddenSize) {
-    throw new Error(`The shape of hiddenState
-      [${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
+    throw new Error(`The shape of hiddenState [${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
   }
   if (bias) {
     if (bias.rank !== 1) {
