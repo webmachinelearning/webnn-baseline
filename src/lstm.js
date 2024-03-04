@@ -2,11 +2,10 @@
 
 import {concat} from './concat.js';
 import {lstmCell} from './lstm_cell.js';
-import {reshape} from './reshape.js';
+import {reshape, squeeze} from './reshape.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
 import {sigmoid} from './sigmoid.js';
 import {slice} from './slice.js';
-import {squeeze} from './squeeze.js';
 import {tanh} from './tanh.js';
 import {validateLstmParams} from './lib/validate-input.js';
 

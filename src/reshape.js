@@ -1,6 +1,7 @@
 'use strict';
 
 import {Tensor, sizeOfShape} from './lib/tensor.js';
+import {validateSqueezeParams} from './lib/validate-input.js';
 
 /**
  * Alter the shape of a tensor to a new shape.
@@ -29,5 +30,21 @@ export function reshape(input, newShape) {
         element size of old shape ${sizeOfShape(input.shape)} invalid.`);
   }
   const output = new Tensor(outputShape, input.data);
+  return output;
+}
+
+/**
+ * Reduce the rank of a tensor by eliminating dimensions with size 1 of the tensor shape.
+ * @param {Tensor} input
+ * @param {MLSqueezeOptions} options
+ * @return {Tensor}
+ */
+export function squeeze(input, {axes} = {}) {
+  validateSqueezeParams(...arguments);
+  const inpAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
+
+  const outputShape = input.shape.filter((dim, axis) =>
+    !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+  const output = reshape(input, outputShape);
   return output;
 }
