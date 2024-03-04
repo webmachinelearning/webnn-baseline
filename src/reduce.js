@@ -1,7 +1,7 @@
 'use strict';
 
 import {pow} from './binary.js';
-import {squeeze} from './squeeze.js';
+import {squeeze} from './reshape.js';
 import {abs, exp, log} from './unary.js';
 import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
 import {validateReduceParams} from './lib/validate-input.js';
