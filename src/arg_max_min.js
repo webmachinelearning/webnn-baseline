@@ -4,6 +4,7 @@ import {Tensor, sizeOfShape} from './lib/tensor.js';
 import {reduceMax, reduceMin, selectValuesToReduce} from './reduce.js';
 import {squeeze} from './reshape.js';
 
+
 /**
  * Get the index location of the minimum or maxmium values of all the input values along the axes.
  * @param {Tensor} input
