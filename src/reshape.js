@@ -41,8 +41,7 @@ export function reshape(input, newShape) {
  */
 export function squeeze(input, {axes} = {}) {
   validateSqueezeParams(...arguments);
-  const inputAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
-
+  const inputAxes = axes ?? Array.from({length: input.rank}, (_, i) => i);
   const outputShape = input.shape.filter((dim, axis) =>
     !(dim === 1 && inputAxes.indexOf(axis) !== -1));
   const output = reshape(input, outputShape);
