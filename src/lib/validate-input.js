@@ -33,6 +33,40 @@ export function validateBatchNormalizationParams(input, mean, variance,
   check1DTensorWithSize(bias, dim, 'bias');
 }
 
+export function validateLayerNormalizationParams(input, {axes, scale, bias} = {}) {
+  if (scale && axes) {
+    if (scale.rank !== axes.length) {
+      throw new Error('DataError: the rank of scale is not equal to the size of axes.');
+    }
+  }
+  if (bias && axes) {
+    if (bias.rank !== axes.length) {
+      throw new Error('DataError: the rank of bias is not equal to the size of axes.');
+    }
+  }
+  if (axes) {
+    for (let i = 0; i < axes.length; i++) {
+      const axis = axes[i];
+      if (axis >= input.rank) {
+        throw new Error('DataError: the value of axis in axes should be smaller than input.rank');
+      }
+      const dim = input.shape[axis];
+      if (scale) {
+        if (scale.shape[i] !== dim) {
+          throw new Error(`The length ${scale.shape[i]} of the scale values is not equal to the ` +
+          `size ${dim} of the input dimension denoted by options.axis.`);
+        }
+      }
+      if (bias) {
+        if (bias.shape[i] !== dim) {
+          throw new Error(`The length ${bias.shape[i]} of the bias values is not equal to the ` +
+          `size ${dim} of the input dimension denoted by options.axis.`);
+        }
+      }
+    }
+  }
+}
+
 export function validateInstanceNormalizationParams(
     input,
     {
@@ -437,7 +471,7 @@ export function validatePool2dParams(input, _, {roundingType = 'floor'}) {
   }
 }
 
-export function validateReduceParams(input, _, {axes}) {
+export function validateReduceParams(input, {axes}) {
   if (axes.length > input.rank) {
     throw new Error(`The length ${axes.length} of axes is bigger` +
                     `than input rank ${input.rank}.`);
@@ -550,5 +584,35 @@ export function validateNotParams(input) {
     if (!Number.isInteger(a) || a < 0 || a > 255) {
       throw new Error('Invalid input value - it should be an integer in the interval [0, 255]');
     }
+  }
+}
+
+export function validateGatherParams(input, indices, {axis = 0} = {}) {
+  if (axis !== undefined) {
+    const rank = input.rank;
+    if (!Number.isInteger(axis) || axis < 0) {
+      throw new Error(`The axis ${axis} should be an unsigned integer.`);
+    }
+    if (axis >= rank) {
+      throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
+    }
+  }
+  const axisSize = input.shape[axis];
+  for (let i = 0; i < sizeOfShape(indices.shape); ++i) {
+    const index = indices.getValueByIndex(i);
+    if (!Number.isInteger(index) || index < 0 || index >= axisSize) {
+      throw new Error(
+          `Invalid indices value - it should be an integer in the interval [0, ${axisSize})`);
+    }
+  }
+}
+
+export function validateTriangularParams(input, {diagonal = 0} = {}) {
+  const inputRank = input.rank;
+  if (inputRank < 2) {
+    throw new Error('The input should be at least a 2-D tensor.');
+  }
+  if (!Number.isInteger(diagonal)) {
+    throw new Error(`The diagonal should be an integer.`);
   }
 }

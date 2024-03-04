@@ -7,6 +7,7 @@ module.exports = {
     'chai': 'readonly',
     'BigInt': 'readonly',
     'BigInt64Array': 'readonly',
+    'BigUint64Array': 'readonly',
   },
   rules: {
     'semi': 'error',
