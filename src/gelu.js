@@ -1,6 +1,6 @@
 'use strict';
 
-import {erfKernal, unary} from './unary.js';
+import {erfKernel, unary} from './unary.js';
 
 /**
  * Compute the gaussian error linear unit function (GELU) of the input tensor.
@@ -9,5 +9,5 @@ import {erfKernal, unary} from './unary.js';
  * @return {Tensor}
  */
 export function gelu(input) {
-  return unary(input, (x) => 0.5 * x * (1 + erfKernal(x / Math.sqrt(2))));
+  return unary(input, (x) => 0.5 * x * (1 + erfKernel(x / Math.sqrt(2))));
 }

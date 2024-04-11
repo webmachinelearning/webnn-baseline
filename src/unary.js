@@ -18,7 +18,7 @@ export function unary(input, unaryFunc) {
   return output;
 }
 
-export function erfKernal(x) {
+export function erfKernel(x) {
   // reference 1: https://en.wikipedia.org/wiki/Error_function
   // reference 2: https://github.com/tensorflow/tfjs/blob/master/tfjs-backend-cpu/src/kernels/Erf.ts
   const a1 = 0.254829592;
@@ -48,4 +48,4 @@ export const tan = (input) => unary(input, Math.tan);
 export const copy = (input) => unary(input, (x) => x);
 export const reciprocal = (input) => unary(input, (x) => 1 / x);
 export const sqrt = (input) => unary(input, Math.sqrt);
-export const erf = (input) => unary(input, erfKernal);
+export const erf = (input) => unary(input, erfKernel);
