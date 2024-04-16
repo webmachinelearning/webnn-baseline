@@ -164,6 +164,17 @@ export function reduceL1(input, options = {}) {
   return reduceSum(abs(input), options);
 }
 
+/* The l2 reducer */
+export function l2Reducer(previousValue, currentValue, currentIndex, array) {
+  if (currentIndex == 1) {
+    const sumOfSquares = previousValue * previousValue + currentValue * currentValue;
+    return sumOfSquares;
+  } else {
+    const sumOfSquares = previousValue + currentValue * currentValue;
+    return (currentIndex === array.length - 1) ? Math.sqrt(sumOfSquares) :sumOfSquares;
+  }
+}
+
 /**
  * Compute the L2 norm of all the input values along the axes.
  * @param {Tensor} input
