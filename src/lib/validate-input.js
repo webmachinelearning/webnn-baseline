@@ -195,8 +195,8 @@ export function validateLstmCellParams(input, weight, recurrentWeight,
     throw new Error(`The hiddenState (rank ${hiddenState.rank}) is not a 2-D tensor.`);
   }
   if (hiddenState.shape[0] !== batchSize || hiddenState.shape[1] !== hiddenSize) {
-    throw new Error(`The shape of hiddenState
-    [${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
+    throw new Error(`The shape of hiddenState` +
+                    `[${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
   }
   if (cellState.rank !== 2) {
     throw new Error(`The cellState (rank ${cellState.rank}) is not a 2-D tensor.`);

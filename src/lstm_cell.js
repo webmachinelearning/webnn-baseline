@@ -136,10 +136,10 @@ export function lstmCell(input, weight, recurrentWeight, hiddenState, cellState,
   );
 
   // output cell state (ct)
-  const ct = add(mul(f, cellState), mul(i, g));
+  const cellStateNew = add(mul(f, cellState), mul(i, g));
 
   // output hidden state (ht)
-  const ht = mul(o, activation2(ct));
+  const hiddenStateNew = mul(o, activation2(cellStateNew));
 
-  return [ht, ct];
+  return [hiddenStateNew, cellStateNew];
 }
