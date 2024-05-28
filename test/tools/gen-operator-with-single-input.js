@@ -4,12 +4,14 @@
 
 import path from 'path';
 import {softsign} from '../../src/softsign.js';
+import {gelu} from '../../src/gelu.js';
 import {Tensor} from '../../src/lib/tensor.js';
 import {utils} from './utils.js';
 
 (() => {
   function computeBySingleInput(operatorName, input, options = {}) {
     const operatorMappingDict = {
+      'gelu': gelu,
       'softsign': softsign,
     };
     const inputTensor = new Tensor(input.shape, input.data);
@@ -55,7 +57,9 @@ import {utils} from './utils.js';
           (typeof test.inputs[inputName].data === 'object' &&
            typeof test.inputs[inputName].data[0] === 'number') ?
           test.inputs[inputName].data :
-          toSaveDataDict['inputsData'][test.inputs[inputName].data];
+          utils.getPrecisionDataFromDataDict(
+              toSaveDataDict['inputsData'], test.inputs[inputName].data,
+              test.inputs[inputName].type);
     }
     // update weights (scale, bias, and etc.) data of options
     if (test.options) {
