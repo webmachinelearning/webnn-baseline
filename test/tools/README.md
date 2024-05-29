@@ -6,7 +6,12 @@ data.
 
 Step 2: Implement generate test-data scripts
 
-Step 3: Execute command for generating test-data files for WPT tests
+Step 3: Execute command for generating test-data files for WPT tests.
+```shell
+node gen-operator-with-single-input.js resources\<operator>.json
+```
+
+Take an example for softsign operator tests:
 
 ```shell
 node gen-operator-with-single-input.js resources\softsign.json
