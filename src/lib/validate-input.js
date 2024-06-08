@@ -515,9 +515,13 @@ export function validateSliceParams(input, starts, sizes) {
   }
 }
 
-export function validateSoftmaxParams(x) {
-  if (x.rank !== 2) {
-    throw new Error('The input is not a 2-D tensor.');
+export function validateSoftmaxParams(input, axis) {
+  const rank = input.rank;
+  if (!Number.isInteger(axis) || axis < 0) {
+    throw new Error(`The axis ${axis} should be an unsigned integer.`);
+  }
+  if (axis >= rank) {
+    throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
   }
 }
 
