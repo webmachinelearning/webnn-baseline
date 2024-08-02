@@ -40,7 +40,7 @@ export function lstmCell(input, weight, recurrentWeight, hiddenState, cellState,
       add(
           mul(
               cellState,
-              (peepholeWeight ? slice(peepholeWeight, [starts.i], [hiddenSize]) : zero),
+              (peepholeWeight ? slice(peepholeWeight, [0], [hiddenSize]) : zero),
           ),
           add(
               add(
@@ -66,7 +66,7 @@ export function lstmCell(input, weight, recurrentWeight, hiddenState, cellState,
       add(
           mul(
               cellState,
-              (peepholeWeight ? slice(peepholeWeight, [starts.f], [hiddenSize]) : zero),
+              (peepholeWeight ? slice(peepholeWeight, [2 * hiddenSize], [hiddenSize]) : zero),
           ),
           add(
               add(
@@ -114,7 +114,7 @@ export function lstmCell(input, weight, recurrentWeight, hiddenState, cellState,
       add(
           mul(
               cellState,
-              (peepholeWeight ? slice(peepholeWeight, [starts.o], [hiddenSize]) : zero),
+              (peepholeWeight ? slice(peepholeWeight, [hiddenSize], [hiddenSize]) : zero),
           ),
           add(
               add(
