@@ -74,23 +74,8 @@ describe('test pool2d', function() {
     utils.checkValue(y, expected);
   });
 
-  it('maxPool2d autoPad same-upper default', function() {
-    const x = new Tensor([1, 1, 5, 5], [
-      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-      14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-    ]);
-    const windowDimensions = [5, 5];
-    const autoPad = 'same-upper';
-    const y = maxPool2d(x, {windowDimensions, autoPad});
-    utils.checkShape(y, [1, 1, 5, 5]);
-    const expected = [
-      13, 14, 15, 15, 15, 18, 19, 20, 20, 20, 23, 24, 25,
-      25, 25, 23, 24, 25, 25, 25, 23, 24, 25, 25, 25,
-    ];
-    utils.checkValue(y, expected);
-  });
 
-  it('maxPool2d autoPad explicit nhwc', function() {
+  it('maxPool2d pad nhwc', function() {
     const x = new Tensor([1, 7, 7, 1], [
       1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
       18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
@@ -99,10 +84,9 @@ describe('test pool2d', function() {
     const windowDimensions = [4, 4];
     const padding = [2, 1, 2, 1];
     const strides = [2, 2];
-    const autoPad = 'explicit';
     const layout = 'nhwc';
     const y = maxPool2d(
-        x, {windowDimensions, autoPad, padding, strides, layout});
+        x, {windowDimensions, padding, strides, layout});
     utils.checkShape(y, [1, 4, 4, 1]);
     const expected = [
       9,
@@ -121,57 +105,6 @@ describe('test pool2d', function() {
       46,
       48,
       49,
-    ];
-    utils.checkValue(y, expected);
-  });
-
-  it('maxPool2d autoPad same-lower nhwc', function() {
-    const x = new Tensor([1, 7, 7, 1], [
-      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
-      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-    ]);
-    const windowDimensions = [4, 4];
-    const strides = [2, 2];
-    const autoPad = 'same-lower';
-    const layout = 'nhwc';
-    const y =
-        maxPool2d(x, {windowDimensions, autoPad, strides, layout});
-    utils.checkShape(y, [1, 4, 4, 1]);
-    const expected = [
-      9,
-      11,
-      13,
-      14,
-      23,
-      25,
-      27,
-      28,
-      37,
-      39,
-      41,
-      42,
-      44,
-      46,
-      48,
-      49,
-    ];
-    utils.checkValue(y, expected);
-  });
-
-  it('maxPool2d autoPad same-upper nhwc', function() {
-    const x = new Tensor([1, 5, 5, 1], [
-      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-      14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-    ]);
-    const windowDimensions = [5, 5];
-    const autoPad = 'same-upper';
-    const layout = 'nhwc';
-    const y = maxPool2d(x, {windowDimensions, autoPad, layout});
-    utils.checkShape(y, [1, 5, 5, 1]);
-    const expected = [
-      13, 14, 15, 15, 15, 18, 19, 20, 20, 20, 23, 24, 25,
-      25, 25, 23, 24, 25, 25, 25, 23, 24, 25, 25, 25,
     ];
     utils.checkValue(y, expected);
   });
@@ -256,40 +189,8 @@ describe('test pool2d', function() {
     utils.checkValue(y, expected);
   });
 
-  it('averagePool2d autoPad same-upper default', function() {
-    const x = new Tensor([1, 1, 5, 5], [
-      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-      14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-    ]);
-    const windowDimensions = [5, 5];
-    const autoPad = 'same-upper';
-    const y = averagePool2d(x, {windowDimensions, autoPad});
-    utils.checkShape(y, [1, 1, 5, 5]);
-    const expected = [
-      7,    7.5, 8,    8.5, 9,    9.5, 10,   10.5, 11,   11.5, 12,   12.5, 13,
-      13.5, 14,  14.5, 15,  15.5, 16,  16.5, 17,   17.5, 18,   18.5, 19,
-    ];
-    utils.checkValue(y, expected);
-  });
 
-  it('averagePool2d autoPad same-upper nhwc', function() {
-    const x = new Tensor([1, 5, 5, 1], [
-      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-      14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-    ]);
-    const windowDimensions = [5, 5];
-    const autoPad = 'same-upper';
-    const layout = 'nhwc';
-    const y = averagePool2d(x, {windowDimensions, autoPad, layout});
-    utils.checkShape(y, [1, 5, 5, 1]);
-    const expected = [
-      7,    7.5, 8,    8.5, 9,    9.5, 10,   10.5, 11,   11.5, 12,   12.5, 13,
-      13.5, 14,  14.5, 15,  15.5, 16,  16.5, 17,   17.5, 18,   18.5, 19,
-    ];
-    utils.checkValue(y, expected);
-  });
-
-  it('averagePool2d autoPad explicit nhwc', function() {
+  it('averagePool2d Pad nhwc', function() {
     const x = new Tensor([1, 7, 7, 1], [
       1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
       18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
@@ -298,44 +199,9 @@ describe('test pool2d', function() {
     const windowDimensions = [4, 4];
     const padding = [2, 1, 2, 1];
     const strides = [2, 2];
-    const autoPad = 'explicit';
     const layout = 'nhwc';
     const y = averagePool2d(
-        x, {windowDimensions, autoPad, padding, strides, layout});
-    utils.checkShape(y, [1, 4, 4, 1]);
-    const expected = [
-      5,
-      6,
-      8,
-      9.5,
-      12,
-      13,
-      15,
-      16.5,
-      26,
-      27,
-      29,
-      30.5,
-      36.5,
-      37.5,
-      39.5,
-      41,
-    ];
-    utils.checkValue(y, expected);
-  });
-
-  it('averagePool2d autoPad same-lower nhwc', function() {
-    const x = new Tensor([1, 7, 7, 1], [
-      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
-      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-    ]);
-    const windowDimensions = [4, 4];
-    const strides = [2, 2];
-    const autoPad = 'same-lower';
-    const layout = 'nhwc';
-    const y =
-        averagePool2d(x, {windowDimensions, autoPad, strides, layout});
+        x, {windowDimensions, padding, strides, layout});
     utils.checkShape(y, [1, 4, 4, 1]);
     const expected = [
       5,
