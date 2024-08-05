@@ -5,9 +5,8 @@ import {Tensor, sizeOfShape} from './lib/tensor.js';
 import {reduceMax, reduceMin, selectValuesToReduce} from './reduce.js';
 import {squeeze} from './reshape.js';
 
-
 /**
- * Get the index location of the minimum or maxmium values of all the input values along the axes.
+ * Get the index location of the minimum or maxmium values of all the input values along the axis.
  * @param {Tensor} input
  * @param {Number} axis
  * @param {Function} reduceFunc
@@ -22,36 +21,29 @@ export function argMaxMin(
       keepDimensions = false,
       outputDatatype = 'int32',
     } = {}) {
-  // If axes aren't present (defaulting to null), all dimensions are reduced.
-  // See https://webmachinelearning.github.io/webnn/#dom-mlargminmaxoptions-axes.
-  const axes=[axis];
-  const inputAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
   const outputShape = input.shape.slice();
-
-  for (let i = 0; i < inputAxes.length; ++i) {
-    outputShape[inputAxes[i]] = 1;
-  }
+  outputShape[axis] = 1;
 
   let output = new Tensor(outputShape);
-  const tensor = reduceFunc(input, {axes: inputAxes, keepDimensions: true});
+  const tensor = reduceFunc(input, {axes: [axis], keepDimensions: true});
 
   for (let outputIndex = 0; outputIndex < sizeOfShape(outputShape); ++outputIndex) {
     const value = tensor.getValueByIndex(outputIndex);
     const inputLocation = output.locationFromIndex(outputIndex);
-    const selectedArray = selectValuesToReduce(input, inputAxes, inputLocation);
+    const selectedArray = selectValuesToReduce(input, [axis], inputLocation);
     const index =selectedArray.indexOf(value);
     output.setValueByIndex(outputIndex, index);
   }
 
   if (!keepDimensions) {
-    output = squeeze(output, {axes});
+    output = squeeze(output, {axes: [axis]});
   }
 
   return cast(output, outputDatatype);
 }
 
 /**
- * Get the index location of the maxmium values of all the input values along the axes.
+ * Get the index location of the maxmium values of all the input values along the axis.
  * @param {Tensor} input
  * @param {Number} axis
  * @param {MLArgMinMaxOptions} [options]
@@ -62,7 +54,7 @@ export function argMax(input, axis, options = {}) {
 }
 
 /**
- * Get the index location of the minimum values of all the input values along the axes.
+ * Get the index location of the minimum values of all the input values along the axis.
  * @param {Tensor} input
  * @param {Number} axis
  * @param {MLArgMinMaxOptions} [options]
