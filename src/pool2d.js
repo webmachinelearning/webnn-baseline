@@ -2,7 +2,7 @@
 
 import {Tensor} from './lib/tensor.js';
 import {transpose} from './transpose.js';
-import {meanReducer, maxReducer} from './reduce.js';
+import {l2Reducer, meanReducer, maxReducer} from './reduce.js';
 import {validatePool2dParams} from './lib/validate-input.js';
 
 /**
@@ -24,7 +24,6 @@ function pool2d(input, reductionFunc,
     }= {}) {
   validatePool2dParams(...arguments);
   const roundingFunc = roundingType === 'floor' ? Math.floor : Math.ceil;
-
   if (layout === 'nhwc') {
     // nhwc -> nchw
     input = transpose(input, {permutation: [0, 3, 1, 2]});
@@ -111,4 +110,15 @@ export function averagePool2d(input, options = {}) {
  */
 export function maxPool2d(input, options = {}) {
   return pool2d(input, maxReducer, options);
+}
+
+/**
+ * Compute a L2 reduction operation across all the elements within the moving window over
+ * the input tensor.
+ * @param {Tensor} input
+ * @param {MLPool2dOptions} options
+ * @return {Tensor}
+ */
+export function l2Pool2d(input, options = {}) {
+  return pool2d(input, l2Reducer, options);
 }

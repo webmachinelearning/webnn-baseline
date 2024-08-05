@@ -167,6 +167,168 @@ export function validateGemmParams(a, b) {
   }
 }
 
+export function validateLstmCellParams(input, weight, recurrentWeight,
+    hiddenState, cellState, hiddenSize,
+    {bias, recurrentBias, peepholeWeight, layout = 'iofg'} = {}) {
+  if (!Number.isInteger(hiddenSize) || hiddenSize <= 0) {
+    throw new Error(`The hiddenSize ${hiddenSize} is invalid.`);
+  }
+  if (input.rank !== 2) {
+    throw new Error(`The input (rank ${input.rank}) is not a 2-D tensor.`);
+  }
+  const batchSize = input.shape[0];
+  const inputSize = input.shape[1];
+  if (weight.rank !== 2) {
+    throw new Error(`The weight (rank ${weight.rank}) is not a 2-D tensor.`);
+  }
+  if (weight.shape[0] !== 4 * hiddenSize || weight.shape[1] !== inputSize) {
+    throw new Error(`The shape of weight [${weight.shape[0]}, ${weight.shape[1]}] is invalid.`);
+  }
+  if (recurrentWeight.rank !== 2) {
+    throw new Error(`The recurrentWeight (rank ${recurrentWeight.rank}) is not a 2-D tensor.`);
+  }
+  if (recurrentWeight.shape[0] !== 4 * hiddenSize || recurrentWeight.shape[1] !== hiddenSize) {
+    throw new Error(`The shape of recurrentWeight ` +
+    `[${recurrentWeight.shape[0]}, ${recurrentWeight.shape[1]}] is invalid.`);
+  }
+  if (hiddenState.rank !== 2) {
+    throw new Error(`The hiddenState (rank ${hiddenState.rank}) is not a 2-D tensor.`);
+  }
+  if (hiddenState.shape[0] !== batchSize || hiddenState.shape[1] !== hiddenSize) {
+    throw new Error(`The shape of hiddenState` +
+                    `[${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
+  }
+  if (cellState.rank !== 2) {
+    throw new Error(`The cellState (rank ${cellState.rank}) is not a 2-D tensor.`);
+  }
+  if (cellState.shape[0] !== batchSize || cellState.shape[1] !== hiddenSize) {
+    throw new Error(`The shape of cellState [${cellState.shape[0]},
+     ${cellState.shape[1]}] is invalid.`);
+  }
+  if (bias) {
+    if (bias.rank !== 1) {
+      throw new Error(`The bias (rank ${bias.rank}) is not a 1-D tensor.`);
+    }
+    if (bias.shape[0] !== 4 * hiddenSize) {
+      throw new Error(`The shape of bias [${bias.shape[0]}] is invalid.`);
+    }
+  }
+  if (recurrentBias) {
+    if (recurrentBias.rank !== 1) {
+      throw new Error(`The recurrentBias (rank ${bias.rank}) is not a 1-D tensor.`);
+    }
+    if (recurrentBias.shape[0] !== 4 * hiddenSize) {
+      throw new Error(`The shape of recurrentBias [${recurrentBias.shape[0]}] is invalid.`);
+    }
+  }
+  if (peepholeWeight) {
+    if (peepholeWeight.rank !== 1) {
+      throw new Error(`The peepholeWeight (rank ${bias.rank}) is not a 1-D tensor.`);
+    }
+    if (peepholeWeight.shape[0] !== 3 * hiddenSize) {
+      throw new Error(`The shape of peepholeWeight [${peepholeWeight.shape[0]}] is invalid.`);
+    }
+  }
+  if (layout !== 'iofg' && layout !== 'ifgo') {
+    throw new Error(`The layout ${layout} is invalid.`);
+  }
+}
+
+export function validateLstmParams(input, weight, recurrentWeight, steps, hiddenSize,
+    {bias, recurrentBias, peepholeWeight, initialHiddenState, initialCellState,
+      direction = 'forward', layout = 'iofg'}) {
+  if (!Number.isInteger(steps) || steps <= 0) {
+    throw new Error(`The steps ${steps} is invalid.`);
+  }
+  if (!Number.isInteger(hiddenSize) || hiddenSize <= 0) {
+    throw new Error(`The hiddenSize ${hiddenSize} is invalid.`);
+  }
+  if (input.rank !== 3) {
+    throw new Error(`The input (rank ${input.rank}) is not a 3-D tensor.`);
+  }
+  if (input.shape[0] !== steps) {
+    throw new Error(`The input.shape[0] ${input.shape[0]} is not equal to steps ${steps}.`);
+  }
+  const batchSize = input.shape[1];
+  const inputSize = input.shape[2];
+  if (direction !== 'forward' && direction !== 'backward' && direction !== 'both') {
+    throw new Error(`The direction ${direction} is invalid.`);
+  }
+  const numDirections = (direction === 'both' ? 2 : 1);
+  if (weight.rank !== 3) {
+    throw new Error(`The weight (rank ${weight.rank}) is not a 3-D tensor.`);
+  }
+  if (weight.shape[0] !== numDirections || weight.shape[1] !== 4 * hiddenSize ||
+    weight.shape[2] !== inputSize) {
+    throw new Error(`The shape of weight [${weight.shape[0]}, ${weight.shape[1]},
+      ${weight.shape[2]}] is invalid.`);
+  }
+  if (recurrentWeight.rank !== 3) {
+    throw new Error(`The recurrentWeight (rank ${recurrentWeight.rank}) is not a 3-D tensor.`);
+  }
+  if (recurrentWeight.shape[0] !== numDirections ||
+    recurrentWeight.shape[1] !== 4 * hiddenSize ||
+    recurrentWeight.shape[2] !== hiddenSize) {
+    throw new Error(`The shape of recurrentWeight ` +
+                  `[${recurrentWeight.shape[0]}, ${recurrentWeight.shape[1]}, ` +
+                  `${recurrentWeight.shape[2]}] is invalid.`);
+  }
+  if (bias) {
+    if (bias.rank !== 2) {
+      throw new Error(`The bias (rank ${bias.rank}) is not a 2-D tensor.`);
+    }
+    if (bias.shape[0] !== numDirections || bias.shape[1] !== 4 * hiddenSize) {
+      throw new Error(`The shape of bias [${bias.shape[0]}, ${bias.shape[1]}] is invalid.`);
+    }
+  }
+  if (recurrentBias) {
+    if (recurrentBias.rank !== 2) {
+      throw new Error(`The recurrentBias (rank ${recurrentBias.rank}) is not a 2-D tensor.`);
+    }
+    if (recurrentBias.shape[0] !== numDirections || recurrentBias.shape[1] !== 4 * hiddenSize) {
+      throw new Error(`The shape of recurrentBias [${recurrentBias.shape[0]},
+        ${recurrentBias.shape[1]}] is invalid.`);
+    }
+  }
+  if (peepholeWeight) {
+    if (peepholeWeight.rank !== 2) {
+      throw new Error(`The peepholeWeight (rank ${peepholeWeight.rank}) is not a 2-D tensor.`);
+    }
+    if (peepholeWeight.shape[0] !== numDirections || peepholeWeight.shape[1] !== 3 * hiddenSize) {
+      throw new Error(`The shape of peepholeWeight [${peepholeWeight.shape[0]},
+        ${peepholeWeight.shape[1]}] is invalid.`);
+    }
+  }
+  if (initialHiddenState) {
+    if (initialHiddenState.rank !== 3) {
+      throw new Error(
+          `The initialHiddenState (rank ${initialHiddenState.rank}) is not a 3-D tensor.`);
+    }
+    if (initialHiddenState.shape[0] !== numDirections ||
+      initialHiddenState.shape[1] !== batchSize ||
+      initialHiddenState.shape[2] !== hiddenSize) {
+      throw new Error(`The shape of initialHiddenState [${initialHiddenState.shape[0]},
+        ${initialHiddenState.shape[1]}, ${initialHiddenState.shape[2]}] is invalid.`);
+    }
+  }
+  if (initialCellState) {
+    if (initialCellState.rank !== 3) {
+      throw new Error(
+          `The initialCellState (rank ${initialCellState.rank}) is not a 3-D tensor.`);
+    }
+    if (initialCellState.shape[0] !== numDirections ||
+      initialCellState.shape[1] !== batchSize ||
+      initialCellState.shape[2] !== hiddenSize) {
+      throw new Error(`The shape of initialCellState [${initialCellState.shape[0]},
+        ${initialCellState.shape[1]}, ${initialCellState.shape[2]}] is invalid.`);
+    }
+  }
+  if (layout !== 'iofg' && layout !== 'ifgo') {
+    throw new Error(`The layout ${layout} is invalid.`);
+  }
+}
+
+
 export function validateGruCellParams(input, weight, recurrentWeight, hiddenState, hiddenSize,
     {bias, recurrentBias, layout = 'zrn'} = {}) {
   if (!Number.isInteger(hiddenSize) || hiddenSize <= 0) {
@@ -194,8 +356,8 @@ export function validateGruCellParams(input, weight, recurrentWeight, hiddenStat
     throw new Error(`The hiddenState (rank ${hiddenState.rank}) is not a 2-D tensor.`);
   }
   if (hiddenState.shape[0] !== batchSize || hiddenState.shape[1] !== hiddenSize) {
-    throw new Error(`The shape of hiddenState
-      [${hiddenState.shape[0]}, ${hiddenState.shape[1]}] is invalid.`);
+    throw new Error(`The shape of hiddenState [${hiddenState.shape[0]}, 
+    ${hiddenState.shape[1]}] is invalid.`);
   }
   if (bias) {
     if (bias.rank !== 1) {
@@ -353,9 +515,13 @@ export function validateSliceParams(input, starts, sizes) {
   }
 }
 
-export function validateSoftmaxParams(x) {
-  if (x.rank !== 2) {
-    throw new Error('The input is not a 2-D tensor.');
+export function validateSoftmaxParams(input, axis) {
+  const rank = input.rank;
+  if (!Number.isInteger(axis) || axis < 0) {
+    throw new Error(`The axis ${axis} should be an unsigned integer.`);
+  }
+  if (axis >= rank) {
+    throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
   }
 }
 
