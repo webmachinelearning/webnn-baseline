@@ -31,7 +31,7 @@ export function argMaxMin(
     const value = tensor.getValueByIndex(outputIndex);
     const inputLocation = output.locationFromIndex(outputIndex);
     const selectedArray = selectValuesToReduce(input, [axis], inputLocation);
-    const index =selectedArray.indexOf(value);
+    const index = selectedArray.indexOf(value);
     output.setValueByIndex(outputIndex, index);
   }
 
