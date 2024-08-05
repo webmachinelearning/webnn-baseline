@@ -16,7 +16,7 @@ import {squeeze} from './squeeze.js';
  */
 export function argMaxMin(
     input,
-    axis = 0,
+    axis,
     reduceFunc,
     {
       keepDimensions = false,
