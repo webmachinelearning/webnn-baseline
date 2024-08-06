@@ -9,7 +9,7 @@ import {unary} from './unary.js';
  * @param {MLSoftplusOptions} [options]
  * @return {Tensor}
  */
-export function softplus(input, {steepness=1} = {}) {
+export function softplus(input) {
   return unary(
-      input, (x) => Math.log(1 + Math.exp(steepness * x)) / steepness);
+      input, (x) => Math.log(1 + Math.exp(x)));
 }
