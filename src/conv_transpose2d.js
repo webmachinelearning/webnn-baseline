@@ -2,7 +2,6 @@
 
 import {Tensor} from './lib/tensor.js';
 import {validateConvTranspose2dParams} from './lib/validate-input.js';
-import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {transpose} from './transpose.js';
 
 /**
@@ -26,7 +25,6 @@ export function convTranspose2d(
       inputLayout = 'nchw',
       filterLayout = 'iohw',
       bias,
-      autoPad = 'explicit',
     } = {}) {
   // Below codes are using conv2d logic to compute convTranspose2d
   if (inputLayout === 'nhwc') {
@@ -53,24 +51,8 @@ export function convTranspose2d(
   const effectiveFilterHeight = (filterHeight - 1) * dilationHeight + 1;
   const effectiveFilterWidth = (filterWidth - 1) * dilationWidth + 1;
 
-  let beginningPaddingHeight;
-  let endingPaddingHeight;
-  let beginningPaddingWidth;
-  let endingPaddingWidth;
-
-  if (autoPad === 'explicit') {
-    [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
-      padding;
-  } else {
-    // If outputSizes was given, there's no need to compute beginningPaddingHeight
-    // and endingPaddingHeight for same-upper or same-lower autoPad
-    if (outputSizes === undefined) {
-      [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
-          autoPad, inputHeight, effectiveFilterHeight, strideHeight, outputPadding[0]);
-      [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
-          autoPad, inputWidth, effectiveFilterWidth, strideWidth, outputPadding[1]);
-    }
-  }
+  const [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
+ padding;
 
   const outputShape = new Array(4);
   let outputHeight;

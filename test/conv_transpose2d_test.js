@@ -415,7 +415,7 @@ describe('test convTranspose2d', function() {
     testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d options.autoPad=explicit options.padding', function() {
+  it('convTranspose2d with padding', function() {
     const input = {
       shape: [1, 1, 2, 2],
       data: [
@@ -430,139 +430,10 @@ describe('test convTranspose2d', function() {
     };
     const options = {
       padding: [1, 1, 1, 1],
-      autoPad: 'explicit',
     };
     const expected = {
       shape: [1, 1, 1, 1],
       data: [4],
-    };
-    testConvTranspose2d(input, filter, expected, options);
-  });
-
-  it('convTranspose2d options.autoPad=same-upper', function() {
-    const input = {
-      shape: [1, 1, 3, 3],
-      data: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
-      ],
-    };
-    const filter = {
-      shape: [1, 2, 3, 3],
-      data: new Array(18).fill(1),
-    };
-    const options = {
-      strides: [2, 2],
-      autoPad: 'same-upper',
-    };
-    const expected = {
-      shape: [1, 2, 6, 6],
-      data: [
-        0., 0.,  1.,  1.,  3.,  2.,  0., 0.,  1.,  1., 3.,  2.,  3.,  3.,  8.,
-        5., 12., 7.,  3.,  3.,  7.,  4., 9.,  5.,  9., 9.,  20., 11., 24., 13.,
-        6., 6.,  13., 7.,  15., 8.,  0., 0.,  1.,  1., 3.,  2.,  0.,  0.,  1.,
-        1., 3.,  2.,  3.,  3.,  8.,  5., 12., 7.,  3., 3.,  7.,  4.,  9.,  5.,
-        9., 9.,  20., 11., 24., 13., 6., 6.,  13., 7., 15., 8.,
-      ],
-    };
-    testConvTranspose2d(input, filter, expected, options);
-  });
-
-  it('convTranspose2d options.autoPad=same-upper ignored options.padding', function() {
-    const input = {
-      shape: [1, 1, 3, 3],
-      data: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
-      ],
-    };
-    const filter = {
-      shape: [1, 2, 3, 3],
-      data: new Array(18).fill(1),
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      strides: [2, 2],
-      autoPad: 'same-upper',
-    };
-    const expected = {
-      shape: [1, 2, 6, 6],
-      data: [
-        0., 0.,  1.,  1.,  3.,  2.,  0., 0.,  1.,  1., 3.,  2.,  3.,  3.,  8.,
-        5., 12., 7.,  3.,  3.,  7.,  4., 9.,  5.,  9., 9.,  20., 11., 24., 13.,
-        6., 6.,  13., 7.,  15., 8.,  0., 0.,  1.,  1., 3.,  2.,  0.,  0.,  1.,
-        1., 3.,  2.,  3.,  3.,  8.,  5., 12., 7.,  3., 3.,  7.,  4.,  9.,  5.,
-        9., 9.,  20., 11., 24., 13., 6., 6.,  13., 7., 15., 8.,
-      ],
-    };
-    testConvTranspose2d(input, filter, expected, options);
-  });
-
-  it('convTranspose2d options.autoPad=same-lower', function() {
-    const input = {
-      shape: [1, 1, 3, 3],
-      data: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
-      ],
-    };
-    const filter = {
-      shape: [1, 2, 3, 3],
-      data: new Array(18).fill(1),
-    };
-    const options = {
-      strides: [2, 2],
-      autoPad: 'same-lower',
-    };
-    const expected = {
-      shape: [1, 2, 6, 6],
-      data: [
-        0, 1, 1, 3, 2, 2,
-        3, 8, 5, 12, 7, 7,
-        3, 7, 4, 9, 5, 5,
-        9, 20, 11, 24, 13, 13,
-        6, 13, 7, 15, 8, 8,
-        6, 13, 7, 15, 8, 8,
-        0, 1, 1, 3, 2, 2,
-        3, 8, 5, 12, 7, 7,
-        3, 7, 4, 9, 5, 5,
-        9, 20, 11, 24, 13, 13,
-        6, 13, 7, 15, 8, 8,
-        6, 13, 7, 15, 8, 8,
-      ],
-    };
-    testConvTranspose2d(input, filter, expected, options);
-  });
-
-  it('convTranspose2d options.autoPad=same-lower ignored options.padding', function() {
-    const input = {
-      shape: [1, 1, 3, 3],
-      data: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
-      ],
-    };
-    const filter = {
-      shape: [1, 2, 3, 3],
-      data: new Array(18).fill(1),
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      strides: [2, 2],
-      autoPad: 'same-lower',
-    };
-    const expected = {
-      shape: [1, 2, 6, 6],
-      data: [
-        0, 1, 1, 3, 2, 2,
-        3, 8, 5, 12, 7, 7,
-        3, 7, 4, 9, 5, 5,
-        9, 20, 11, 24, 13, 13,
-        6, 13, 7, 15, 8, 8,
-        6, 13, 7, 15, 8, 8,
-        0, 1, 1, 3, 2, 2,
-        3, 8, 5, 12, 7, 7,
-        3, 7, 4, 9, 5, 5,
-        9, 20, 11, 24, 13, 13,
-        6, 13, 7, 15, 8, 8,
-        6, 13, 7, 15, 8, 8,
-      ],
     };
     testConvTranspose2d(input, filter, expected, options);
   });

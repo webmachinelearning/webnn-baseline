@@ -1,6 +1,5 @@
 'use strict';
 
-import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {Tensor} from './lib/tensor.js';
 import {transpose} from './transpose.js';
 import {l2Reducer, meanReducer, maxReducer} from './reduce.js';
@@ -21,7 +20,6 @@ function pool2d(input, reductionFunc,
       roundingType = 'floor',
       layout = 'nchw',
       windowDimensions,
-      autoPad = 'explicit',
       outputSizes,
     }= {}) {
   validatePool2dParams(...arguments);
@@ -38,19 +36,8 @@ function pool2d(input, reductionFunc,
   const effectiveWindowHeight = windowHeight + (windowHeight - 1) * (dilationHeight - 1);
   const effectiveWindowWidth = windowWidth + (windowWidth - 1) * (dilationWidth - 1);
 
-  let beginningPaddingHeight;
-  let endingPaddingHeight;
-  let beginningPaddingWidth;
-  let endingPaddingWidth;
-  if (autoPad === 'explicit') {
-    [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
-      padding;
-  } else {
-    [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
-        autoPad, inputHeight, effectiveWindowHeight, strideHeight);
-    [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
-        autoPad, inputWidth, effectiveWindowWidth, strideWidth);
-  }
+  const [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
+  padding;
 
   const outputShape = new Array(4);
   outputShape[0] = batchCount;

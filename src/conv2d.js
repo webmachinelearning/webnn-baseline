@@ -2,7 +2,6 @@
 
 import {Tensor} from './lib/tensor.js';
 import {validateConv2dParams} from './lib/validate-input.js';
-import {computePaddingForAutoPad} from './lib/compute-padding.js';
 import {transpose} from './transpose.js';
 
 /**
@@ -24,7 +23,6 @@ export function conv2d(
       inputLayout = 'nchw',
       filterLayout = 'oihw',
       bias,
-      autoPad = 'explicit',
     } = {}) {
   if (inputLayout === 'nhwc') {
     // nhwc -> nchw
@@ -48,20 +46,8 @@ export function conv2d(
   const [dilationHeight, dilationWidth] = dilations;
   const effectiveFilterHeight = (filterHeight - 1) * dilationHeight + 1;
   const effectiveFilterWidth = (filterWidth - 1) * dilationWidth + 1;
-
-  let beginningPaddingHeight;
-  let endingPaddingHeight;
-  let beginningPaddingWidth;
-  let endingPaddingWidth;
-  if (autoPad === 'explicit') {
-    [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
-      padding;
-  } else {
-    [beginningPaddingHeight, endingPaddingHeight] = computePaddingForAutoPad(
-        autoPad, inputHeight, effectiveFilterHeight, strideHeight);
-    [beginningPaddingWidth, endingPaddingWidth] = computePaddingForAutoPad(
-        autoPad, inputWidth, effectiveFilterWidth, strideWidth);
-  }
+  const [beginningPaddingHeight, endingPaddingHeight, beginningPaddingWidth, endingPaddingWidth] =
+  padding;
 
   const outputShape = new Array(4);
   outputShape[0] = batchCount;
