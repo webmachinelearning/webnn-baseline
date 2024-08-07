@@ -884,6 +884,604 @@ describe('test conv2d', function() {
     testConv2d(input, filter, expected, options);
   });
 
+  it('fused depthwise conv2d default', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 4, 2, 2],
+      data: [
+        10,
+        10,
+        10,
+        10,
+        21,
+        22,
+        23,
+        24,
+        10,
+        20,
+        30,
+        40,
+        0,
+        0,
+        0,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [4, 1, 2, 2],
+      data: [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        10.0,
+        20.0,
+        30.0,
+        40.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 4, 1, 1],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {groups: 4};
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nchw hwio', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 4, 2, 2],
+      data: [
+        10,
+        10,
+        10,
+        10,
+        21,
+        22,
+        23,
+        24,
+        10,
+        20,
+        30,
+        40,
+        0,
+        0,
+        0,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [2, 2, 1, 4],
+      data: [
+        0.25,
+        0.0,
+        10.0,
+        50.0,
+        0.25,
+        1.0,
+        20.0,
+        50.0,
+        0.25,
+        0.0,
+        30.0,
+        50.0,
+        0.25,
+        1.0,
+        40.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 4, 1, 1],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nchw',
+      filterLayout: 'hwio',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nchw ohwi', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 4, 2, 2],
+      data: [
+        10,
+        10,
+        10,
+        10,
+        21,
+        22,
+        23,
+        24,
+        10,
+        20,
+        30,
+        40,
+        0,
+        0,
+        0,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [4, 2, 2, 1],
+      data: [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        10.0,
+        20.0,
+        30.0,
+        40.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 4, 1, 1],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nchw',
+      filterLayout: 'ohwi',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nchw ihwo', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 4, 2, 2],
+      data: [
+        10,
+        10,
+        10,
+        10,
+        21,
+        22,
+        23,
+        24,
+        10,
+        20,
+        30,
+        40,
+        0,
+        0,
+        0,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [1, 2, 2, 4],
+      data: [
+        0.25,
+        0.0,
+        10.0,
+        50.0,
+        0.25,
+        1.0,
+        20.0,
+        50.0,
+        0.25,
+        0.0,
+        30.0,
+        50.0,
+        0.25,
+        1.0,
+        40.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 4, 1, 1],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nchw',
+      filterLayout: 'ihwo',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nhwc oihw', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 2, 2, 4],
+      data: [
+        10,
+        21,
+        10,
+        0,
+        10,
+        22,
+        20,
+        0,
+        10,
+        23,
+        30,
+        0,
+        10,
+        24,
+        40,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [4, 1, 2, 2],
+      data: [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        10.0,
+        20.0,
+        30.0,
+        40.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 1, 1, 4],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nhwc',
+      filterLayout: 'oihw',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nhwc hwio', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 2, 2, 4],
+      data: [
+        10,
+        21,
+        10,
+        0,
+        10,
+        22,
+        20,
+        0,
+        10,
+        23,
+        30,
+        0,
+        10,
+        24,
+        40,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [2, 2, 1, 4],
+      data: [
+        0.25,
+        0.0,
+        10.0,
+        50.0,
+        0.25,
+        1.0,
+        20.0,
+        50.0,
+        0.25,
+        0.0,
+        30.0,
+        50.0,
+        0.25,
+        1.0,
+        40.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 1, 1, 4],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nhwc',
+      filterLayout: 'hwio',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nhwc ohwi', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 2, 2, 4],
+      data: [
+        10,
+        21,
+        10,
+        0,
+        10,
+        22,
+        20,
+        0,
+        10,
+        23,
+        30,
+        0,
+        10,
+        24,
+        40,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [4, 2, 2, 1],
+      data: [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        10.0,
+        20.0,
+        30.0,
+        40.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 1, 1, 4],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nhwc',
+      filterLayout: 'ohwi',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('fused depthwise conv2d nhwc ihwo', function() {
+    // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
+    const input = {
+      shape: [1, 2, 2, 4],
+      data: [
+        10,
+        21,
+        10,
+        0,
+        10,
+        22,
+        20,
+        0,
+        10,
+        23,
+        30,
+        0,
+        10,
+        24,
+        40,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [1, 2, 2, 4],
+      data: [
+        0.25,
+        0.0,
+        10.0,
+        50.0,
+        0.25,
+        1.0,
+        20.0,
+        50.0,
+        0.25,
+        0.0,
+        30.0,
+        50.0,
+        0.25,
+        1.0,
+        40.0,
+        50.0,
+      ],
+    };
+    const bias = {
+      shape: [4],
+      data: [6000, 7000, 8000, 9000],
+    };
+    const expected = {
+      shape: [1, 1, 1, 4],
+      data: [6010, 7046, 11000, 9000],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nhwc',
+      filterLayout: 'ihwo',
+    };
+    testConv2d(input, filter, expected, options, bias);
+  });
+
+  it('depthwise conv2d nchw oihw', function() {
+    const input = {
+      shape: [1, 4, 2, 2],
+      data: [
+        10,
+        10,
+        10,
+        10,
+        21,
+        22,
+        23,
+        24,
+        10,
+        20,
+        30,
+        40,
+        0,
+        0,
+        0,
+        0,
+      ],
+    };
+    const filter = {
+      shape: [4, 1, 2, 2],
+      data: [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        10.0,
+        20.0,
+        30.0,
+        40.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+      ],
+    };
+    const expected = {
+      shape: [1, 4, 1, 1],
+      data: [10, 46, 3000, 0],
+    };
+    const options = {
+      groups: 4,
+      inputLayout: 'nchw',
+      filterLayout: 'oihw',
+    };
+    testConv2d(input, filter, expected, options);
+  });
+
+  it('fused depthwise conv2d', function() {
+    const input = {
+      shape: [1, 2, 3, 3],
+      data: [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+      ],
+    };
+    const filter = {
+      shape: [2, 1, 2, 2],
+      data: [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+      ],
+    };
+    const expected = {
+      shape: [1, 2, 3, 3],
+      data: [
+        10,
+        10,
+        5,
+        10,
+        10,
+        5,
+        5,
+        5,
+        2.5,
+        47,
+        49,
+        0,
+        53,
+        55,
+        0,
+        28,
+        29,
+        0,
+      ],
+    };
+    const options = {
+      groups: 2,
+      padding: [0, 1, 0, 1],
+    };
+    testConv2d(input, filter, expected, options);
+  });
+
   it('conv2d input=1x1x5x5 dilations=2', function() {
     const input = {
       shape: [1, 1, 5, 5],
