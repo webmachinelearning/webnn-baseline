@@ -19,7 +19,6 @@ export function conv2d(
       strides = [1, 1],
       groups = 1,
       dilations = [1, 1],
-      activation = (x) => x,
       inputLayout = 'nchw',
       filterLayout = 'oihw',
       bias,
@@ -117,8 +116,6 @@ export function conv2d(
       }
     }
   }
-
-  output = activation(output);
 
   if (inputLayout === 'nhwc') {
     // nchw -> nhwc

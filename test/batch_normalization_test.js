@@ -1,17 +1,13 @@
 'use strict';
 
 import {batchNormalization} from '../src/batch_normalization.js';
-import {clamp} from '../src/clamp.js';
-import {leakyRelu} from '../src/leaky_relu.js';
-import {relu} from '../src/relu.js';
-import {sigmoid} from '../src/sigmoid.js';
 import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
 describe('test batchNormalization', function() {
   function testBatchNorm(
       input, mean, variance, expected, scale = undefined, bias = undefined,
-      options = {}, activation = undefined, activationOptions = {}) {
+      options = {}) {
     const inputTensor = new Tensor(input.shape, input.data);
     const meanTensor = new Tensor(mean.shape, mean.data);
     const varianceTensor = new Tensor(variance.shape, variance.data);
@@ -20,15 +16,6 @@ describe('test batchNormalization', function() {
     }
     if (bias) {
       options.bias = new Tensor(bias.shape, bias.data);
-    }
-    if (activation === 'relu') {
-      options.activation = relu;
-    } else if (activation === 'relu6') {
-      options.activation = utils.bindTrailingArgs(clamp, {minValue: 0, maxValue: 6});
-    } else if (activation === 'sigmoid') {
-      options.activation = sigmoid;
-    } else if (activation === 'leakyRelu') {
-      options.activation = utils.bindTrailingArgs(leakyRelu, activationOptions);
     }
     const outputTensor = batchNormalization(inputTensor, meanTensor, varianceTensor, options);
     utils.checkShape(outputTensor, input.shape);
@@ -120,7 +107,7 @@ describe('test batchNormalization', function() {
       shape: [2],
       data: [0, 1],
     };
-    let expected = [
+    const expected = [
       -0.9999950000374997,
       0,
       0.9999950000374997,
@@ -130,17 +117,7 @@ describe('test batchNormalization', function() {
     ];
     testBatchNorm(input, mean, variance, expected, scale, bias);
 
-    expected = [
-      0,
-      0,
-      0.9999950000374997,
-      0,
-      1,
-      2.224740788929097,
-    ];
-    testBatchNorm(input, mean, variance, expected, scale, bias, {}, 'relu');
-
-    let expectedScale = [
+    const expectedScale = [
       -0.9999950000374997,
       0,
       0.9999950000374997,
@@ -150,18 +127,7 @@ describe('test batchNormalization', function() {
     ];
     testBatchNorm(input, mean, variance, expectedScale, scale);
 
-    expectedScale = [
-      0,
-      0,
-      0.9999950000374997,
-      0,
-      0,
-      1.2247407889290967,
-    ];
-    testBatchNorm(
-        input, mean, variance, expectedScale, scale, undefined, {}, 'relu');
-
-    let expectedBias = [
+    const expectedBias = [
       -0.9999950000374997,
       0,
       0.9999950000374997,
@@ -170,17 +136,6 @@ describe('test batchNormalization', function() {
       1.8164938592860644,
     ];
     testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
-
-    expectedBias = [
-      0,
-      0,
-      0.9999950000374997,
-      0.18350614071393556,
-      1,
-      1.8164938592860644,
-    ];
-    testBatchNorm(
-        input, mean, variance, expectedBias, undefined, bias, {}, 'relu');
   });
 
   it('batchNormalization nhwc', function() {
@@ -204,7 +159,7 @@ describe('test batchNormalization', function() {
       shape: [2],
       data: [0, 1],
     };
-    let expected = [
+    const expected = [
       -0.9999950000374997,
       -0.22474078892909666,
       0,
@@ -214,18 +169,7 @@ describe('test batchNormalization', function() {
     ];
     testBatchNorm(input, mean, variance, expected, scale, bias, {axis: 3});
 
-    expected = [
-      0,
-      0,
-      0,
-      1,
-      0.9999950000374997,
-      2.224740788929097,
-    ];
-    testBatchNorm(
-        input, mean, variance, expected, scale, bias, {axis: 3}, 'relu');
-
-    let expectedScale = [
+    const expectedScale = [
       -0.9999950000374997,
       -1.2247407889290967,
       0,
@@ -236,19 +180,7 @@ describe('test batchNormalization', function() {
     testBatchNorm(
         input, mean, variance, expectedScale, scale, undefined, {axis: 3});
 
-    expectedScale = [
-      0,
-      0,
-      0,
-      0,
-      0.9999950000374997,
-      1.2247407889290967,
-    ];
-    testBatchNorm(
-        input, mean, variance, expectedScale, scale, undefined, {axis: 3},
-        'relu');
-
-    let expectedBias = [
+    const expectedBias = [
       -0.9999950000374997,
       0.18350614071393556,
       0,
@@ -258,18 +190,6 @@ describe('test batchNormalization', function() {
     ];
     testBatchNorm(
         input, mean, variance, expectedBias, undefined, bias, {axis: 3});
-
-    expectedBias = [
-      0,
-      0.18350614071393556,
-      0,
-      1,
-      0.9999950000374997,
-      1.8164938592860644,
-    ];
-    testBatchNorm(
-        input, mean, variance, expectedBias, undefined, bias, {axis: 3},
-        'relu');
   });
 
   it('batchNormalization without options', function() {

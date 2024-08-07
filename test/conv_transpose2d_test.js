@@ -1,31 +1,17 @@
 'use strict';
 
 import {convTranspose2d} from '../src/conv_transpose2d.js';
-import {clamp} from '../src/clamp.js';
-import {leakyRelu} from '../src/leaky_relu.js';
-import {relu} from '../src/relu.js';
-import {sigmoid} from '../src/sigmoid.js';
 import {Tensor} from '../src/lib/tensor.js';
 
 import * as utils from './utils.js';
 
 describe('test convTranspose2d', function() {
   function testConvTranspose2d(
-      input, filter, expected, options = {}, bias = undefined,
-      activation = undefined, fusion = false, activationOptions = {}) {
+      input, filter, expected, options = {}, bias = undefined, fusion = false) {
     const inputTensor = new Tensor(input.shape, input.data);
     const filterTensor = new Tensor(filter.shape, filter.data);
     if (bias) {
       options.bias = new Tensor(bias.shape, bias.data);
-    }
-    if (activation === 'relu') {
-      options.activation = relu;
-    } else if (activation === 'relu6') {
-      options.activation = utils.bindTrailingArgs(clamp, {minValue: 0, maxValue: 6});
-    } else if (activation === 'sigmoid') {
-      options.activation = sigmoid;
-    } else if (activation === 'leakyRelu') {
-      options.activation = utils.bindTrailingArgs(leakyRelu, activationOptions);
     }
 
     const outputTensor = convTranspose2d(inputTensor, filterTensor, options);
@@ -501,31 +487,5 @@ describe('test convTranspose2d', function() {
       ],
     };
     testConvTranspose2d(input, filter, expected, options, bias);
-  });
-
-  it('convTranspose2d activation', function() {
-    const input = {
-      shape: [1, 1, 3, 3],
-      data: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
-      ],
-    };
-    const filter = {
-      shape: [3, 3, 1, 1],
-      data: new Array(9).fill(1),
-    };
-    const options = {
-      inputLayout: 'nchw',
-      filterLayout: 'hwoi',
-    };
-    const expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0, 1, 3, 3, 2, 3, 8, 15, 12, 7,
-        9, 21, 36, 27, 15, 9, 20, 33, 24, 13,
-        6, 13, 21, 15, 8,
-      ],
-    };
-    testConvTranspose2d(input, filter, expected, options, undefined, 'relu');
   });
 });

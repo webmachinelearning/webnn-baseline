@@ -21,7 +21,6 @@ export function convTranspose2d(
       dilations = [1, 1],
       outputPadding = [0, 0],
       outputSizes,
-      activation = (x) => x,
       inputLayout = 'nchw',
       filterLayout = 'iohw',
       bias,
@@ -153,8 +152,6 @@ export function convTranspose2d(
       }
     }
   }
-
-  output = activation(output);
 
   if (inputLayout === 'nhwc') {
     // nchw -> nhwc
