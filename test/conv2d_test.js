@@ -1,31 +1,17 @@
 'use strict';
 
 import {conv2d} from '../src/conv2d.js';
-import {clamp} from '../src/clamp.js';
-import {leakyRelu} from '../src/leaky_relu.js';
-import {relu} from '../src/relu.js';
-import {sigmoid} from '../src/sigmoid.js';
 import {Tensor} from '../src/lib/tensor.js';
 
 import * as utils from './utils.js';
 
 describe('test conv2d', function() {
   function testConv2d(
-      input, filter, expected, options = {}, bias = undefined,
-      activation = undefined, fusion = false, activationOptions = {}) {
+      input, filter, expected, options = {}, bias = undefined, fusion = false) {
     const inputTensor = new Tensor(input.shape, input.data);
     const filterTensor = new Tensor(filter.shape, filter.data);
     if (bias) {
       options.bias = new Tensor(bias.shape, bias.data);
-    }
-    if (activation === 'relu') {
-      options.activation = relu;
-    } else if (activation === 'relu6') {
-      options.activation = utils.bindTrailingArgs(clamp, {minValue: 0, maxValue: 6});
-    } else if (activation === 'sigmoid') {
-      options.activation = sigmoid;
-    } else if (activation === 'leakyRelu') {
-      options.activation = utils.bindTrailingArgs(leakyRelu, activationOptions);
     }
 
     const outputTensor = conv2d(inputTensor, filterTensor, options);
@@ -946,18 +932,12 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 4, 1, 1],
       data: [6010, 7046, 11000, 9000],
     };
     const options = {groups: 4};
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 4, 1, 1],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nchw hwio', function() {
@@ -1008,7 +988,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 4, 1, 1],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1018,12 +998,6 @@ describe('test conv2d', function() {
       filterLayout: 'hwio',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 4, 1, 1],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nchw ohwi', function() {
@@ -1074,7 +1048,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 4, 1, 1],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1084,12 +1058,6 @@ describe('test conv2d', function() {
       filterLayout: 'ohwi',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 4, 1, 1],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nchw ihwo', function() {
@@ -1140,7 +1108,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 4, 1, 1],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1150,12 +1118,6 @@ describe('test conv2d', function() {
       filterLayout: 'ihwo',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 4, 1, 1],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nhwc oihw', function() {
@@ -1206,7 +1168,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 1, 1, 4],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1216,12 +1178,6 @@ describe('test conv2d', function() {
       filterLayout: 'oihw',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 1, 4],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nhwc hwio', function() {
@@ -1272,7 +1228,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 1, 1, 4],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1282,12 +1238,6 @@ describe('test conv2d', function() {
       filterLayout: 'hwio',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 1, 4],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nhwc ohwi', function() {
@@ -1338,7 +1288,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 1, 1, 4],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1348,12 +1298,6 @@ describe('test conv2d', function() {
       filterLayout: 'ohwi',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 1, 4],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('fused depthwise conv2d nhwc ihwo', function() {
@@ -1404,7 +1348,7 @@ describe('test conv2d', function() {
       shape: [4],
       data: [6000, 7000, 8000, 9000],
     };
-    let expected = {
+    const expected = {
       shape: [1, 1, 1, 4],
       data: [6010, 7046, 11000, 9000],
     };
@@ -1414,12 +1358,6 @@ describe('test conv2d', function() {
       filterLayout: 'ihwo',
     };
     testConv2d(input, filter, expected, options, bias);
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 1, 4],
-      data: [6, 6, 6, 6],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('depthwise conv2d nchw oihw', function() {
@@ -1465,7 +1403,7 @@ describe('test conv2d', function() {
         50.0,
       ],
     };
-    let expected = {
+    const expected = {
       shape: [1, 4, 1, 1],
       data: [10, 46, 3000, 0],
     };
@@ -1475,12 +1413,6 @@ describe('test conv2d', function() {
       filterLayout: 'oihw',
     };
     testConv2d(input, filter, expected, options);
-    testConv2d(input, filter, expected, options, undefined, 'relu', true);
-    expected = {
-      shape: [1, 4, 1, 1],
-      data: [6, 6, 6, 0],
-    };
-    testConv2d(input, filter, expected, options, undefined, 'relu6', true);
   });
 
   it('fused depthwise conv2d', function() {
@@ -1520,7 +1452,7 @@ describe('test conv2d', function() {
         1.0,
       ],
     };
-    let expected = {
+    const expected = {
       shape: [1, 2, 3, 3],
       data: [
         10,
@@ -1548,477 +1480,6 @@ describe('test conv2d', function() {
       padding: [0, 1, 0, 1],
     };
     testConv2d(input, filter, expected, options);
-    testConv2d(input, filter, expected, options, undefined, 'relu', true);
-    expected = {
-      shape: [1, 2, 3, 3],
-      data: [
-        6,
-        6,
-        5,
-        6,
-        6,
-        5,
-        5,
-        5,
-        2.5,
-        6,
-        6,
-        0,
-        6,
-        6,
-        0,
-        6,
-        6,
-        0,
-      ],
-    };
-    testConv2d(input, filter, expected, options, undefined, 'relu6', true);
-  });
-
-  it('fused conv2d with padding default', function() {
-    const input = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [1, 1, 3, 3],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-    };
-    let expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-    expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        -8.800000131130219,
-        -7.900000117719173,
-        -7.300000108778477,
-        -6.70000009983778,
-        -7.600000113248825,
-        -6.70000009983778,
-        -4.6000000685453415,
-        -3.7000000551342964,
-        -2.8000000417232513,
-        -4.90000007301569,
-        -3.7000000551342964,
-        -0.10000000149011612,
-        8,
-        17,
-        -1.9000000283122063,
-        -0.7000000104308128,
-        44,
-        53,
-        62,
-        11,
-        -2.8000000417232513,
-        11,
-        17,
-        23,
-        -1.600000023841858,
-      ],
-    };
-    testConv2d(
-        input, filter, expected, options, bias, 'leakyRelu', true,
-        {alpha: 0.10000000149011612});
-    expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        6.054601895401186e-39,
-        4.906094730649281e-35,
-        1.9792598779469048e-32,
-        7.984904245686979e-30,
-        9.854154686111257e-34,
-        7.984904245686979e-30,
-        1.0530617357553813e-20,
-        8.533047625744066e-17,
-        6.914400106935423e-13,
-        5.242885663363465e-22,
-        8.533047625744066e-17,
-        0.2689414213699951,
-        0.9996646498695336,
-        0.9999999586006244,
-        5.602796406145939e-9,
-        0.0009110511944006454,
-        1,
-        1,
-        1,
-        0.999983298578152,
-        6.914400106935423e-13,
-        0.999983298578152,
-        0.9999999586006244,
-        0.9999999998973812,
-        1.12535162055095e-7,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'sigmoid', true);
-  });
-
-  it('fused conv2d with padding nchw hwio', function() {
-    const input = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [3, 3, 1, 1],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nchw',
-      filterLayout: 'hwio',
-    };
-    let expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-  });
-
-  it('fused conv2d with padding nchw ohwi', function() {
-    const input = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [1, 3, 3, 1],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nchw',
-      filterLayout: 'ohwi',
-    };
-    let expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-  });
-
-  it('fused conv2d with padding nchw ihwo', function() {
-    const input = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [1, 3, 3, 1],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nchw',
-      filterLayout: 'ihwo',
-    };
-    let expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 1, 5, 5],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-  });
-
-  it('fused conv2d with padding nhwc oihw', function() {
-    const input = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [1, 1, 3, 3],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nhwc',
-      filterLayout: 'oihw',
-    };
-    let expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-    expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        -8.800000131130219,
-        -7.900000117719173,
-        -7.300000108778477,
-        -6.70000009983778,
-        -7.600000113248825,
-        -6.70000009983778,
-        -4.6000000685453415,
-        -3.7000000551342964,
-        -2.8000000417232513,
-        -4.90000007301569,
-        -3.7000000551342964,
-        -0.10000000149011612,
-        8,
-        17,
-        -1.9000000283122063,
-        -0.7000000104308128,
-        44,
-        53,
-        62,
-        11,
-        -2.8000000417232513,
-        11,
-        17,
-        23,
-        -1.600000023841858,
-      ],
-    };
-    testConv2d(
-        input, filter, expected, options, bias, 'leakyRelu', true,
-        {alpha: 0.10000000149011612});
-    expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        6.054601895401186e-39,
-        4.906094730649281e-35,
-        1.9792598779469048e-32,
-        7.984904245686979e-30,
-        9.854154686111257e-34,
-        7.984904245686979e-30,
-        1.0530617357553813e-20,
-        8.533047625744066e-17,
-        6.914400106935423e-13,
-        5.242885663363465e-22,
-        8.533047625744066e-17,
-        0.2689414213699951,
-        0.9996646498695336,
-        0.9999999586006244,
-        5.602796406145939e-9,
-        0.0009110511944006454,
-        1,
-        1,
-        1,
-        0.999983298578152,
-        6.914400106935423e-13,
-        0.999983298578152,
-        0.9999999586006244,
-        0.9999999998973812,
-        1.12535162055095e-7,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'sigmoid', true);
-  });
-
-  it('fused conv2d with padding nhwc hwio', function() {
-    const input = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [3, 3, 1, 1],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nhwc',
-      filterLayout: 'hwio',
-    };
-    let expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-  });
-
-  it('fused conv2d with padding nhwc ohwi', function() {
-    const input = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [1, 3, 3, 1],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nhwc',
-      filterLayout: 'ohwi',
-    };
-    let expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
-  });
-
-  it('fused conv2d with padding nhwc ihwo', function() {
-    const input = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ],
-    };
-    const filter = {
-      shape: [1, 3, 3, 1],
-      data: new Array(9).fill(1),
-    };
-    const bias = {
-      shape: [1],
-      data: [-100],
-    };
-    const options = {
-      padding: [1, 1, 1, 1],
-      inputLayout: 'nhwc',
-      filterLayout: 'ihwo',
-    };
-    let expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu');
-    testConv2d(input, filter, expected, options, bias, 'relu', true);
-    expected = {
-      shape: [1, 5, 5, 1],
-      data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
-      ],
-    };
-    testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
   it('conv2d input=1x1x5x5 dilations=2', function() {
