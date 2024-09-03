@@ -49,3 +49,4 @@ export const copy = (input) => unary(input, (x) => x);
 export const reciprocal = (input) => unary(input, (x) => 1 / x);
 export const sqrt = (input) => unary(input, Math.sqrt);
 export const erf = (input) => unary(input, erfKernel);
+export const sign = (input) => unary(input, Math.sign);
