@@ -12,7 +12,7 @@ describe('test tile', function() {
     utils.checkValue(outputTensor, expected.data);
   }
 
-  it.only('tile 1D', function() {
+  it('tile 1D', function() {
     const input = {
       shape: [4],
       data: [
@@ -29,7 +29,7 @@ describe('test tile', function() {
     testTile(input, repetitions, expected);
   });
 
-  it.only('tile 2D', function() {
+  it('tile 2D', function() {
     const input = {
       shape: [2, 2],
       data: [
