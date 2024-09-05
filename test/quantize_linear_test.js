@@ -14,6 +14,28 @@ describe('test quantizeLinear', function() {
     utils.checkValue(outputTensor, expected.value);
   }
 
+  it('quantizeLinear 0D', function() {
+    testQuantizeLinear(
+        { // input
+          shape: [],
+          value: [1000],
+        },
+        { // scale
+          shape: [],
+          value: [2],
+        },
+        { // zeroPoint
+          shape: [],
+          value: [128],
+        },
+        'uint8',
+        { // expected
+          shape: [],
+          value: [255],
+        },
+    );
+  });
+
   it('quantizeLinear 1D to uint8 broadcasting scale and zeroPoint', function() {
     testQuantizeLinear(
         { // input

@@ -19,8 +19,9 @@ function roundToNearestEvens(x) {
  * @return {Tensor}
  */
 export function quantizeLinear(input, scale, zeroPoint, dataType) {
-  const addOutput = add(div(input, scale), zeroPoint);
-  const roundOutput = unary(addOutput, (x) => roundToNearestEvens(x));
+  const dividedOutput = div(input, scale);
+  const roundedOutput = unary(dividedOutput, (x) => roundToNearestEvens(x));
+  const addedOutput = add(roundedOutput, zeroPoint);
 
   let maxValue; let minValue;
   switch (dataType) {
@@ -47,5 +48,5 @@ export function quantizeLinear(input, scale, zeroPoint, dataType) {
     default:
       throw new Error(`Unsupported ${dataType} data type`);
   }
-  return clamp(roundOutput, {minValue, maxValue});
+  return clamp(addedOutput, {minValue, maxValue});
 }
