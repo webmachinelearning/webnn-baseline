@@ -14,6 +14,26 @@ describe('test dequantizeLinear', function() {
     utils.checkValue(outputTensor, expected.value);
   }
 
+  it('dequantizeLinear 0D', function() {
+    testDequantizeLinear(
+        { // input
+          shape: [],
+          value: [255],
+        },
+        { // scale
+          shape: [],
+          value: [2],
+        },
+        { // zeroPoint of uint8
+          shape: [],
+          value: [128],
+        },
+        { // expected
+          shape: [],
+          value: [254],
+        },
+    );
+  });
 
   it('dequantizeLinear 1D broadcasting scale and zeroPoint', function() {
     testDequantizeLinear(
@@ -94,17 +114,17 @@ describe('test dequantizeLinear', function() {
         { // zeroPoint
           shape: [3, 1],
           value: [
-            0,
-            0,
-            0,
+            1,
+            2,
+            3,
           ],
         },
         { // expected
           shape: [3, 4],
           value: [
-            0, 1,  2,  3,
-            0, 2,  4,  6,
-            0, 40, 80, 120,
+            -1,  0,  1,  2,
+            -4,  -2, 0,  2,
+            -12, 28, 68, 108,
           ],
         },
     );
