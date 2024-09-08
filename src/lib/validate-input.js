@@ -620,3 +620,16 @@ export function validateTriangularParams(input, {diagonal = 0} = {}) {
     throw new Error(`The diagonal should be an integer.`);
   }
 }
+
+export function validateTileParams(input, repetitions) {
+  const inputRank = input.rank;
+  const repetitionsLength = repetitions.length;
+  if (repetitionsLength != inputRank ) {
+    throw new Error(
+        `The repetitions length ${repetitionsLength} is not equal to rank ${inputRank}.`);
+  }
+  if (!repetitions.every((v) => Number.isInteger(v) && v > 0)) {
+    throw new Error(
+        `Invalid repetitions ${repetitions} - it should be an Array of positive integers.`);
+  }
+}
