@@ -10,7 +10,7 @@ import {validateCumulativeSumParams} from './lib/validate-input.js';
  * @param {MLCumulativeSumOptions} options
  * @return {Tensor}
  */
-export function cumulativeSum(input, axis, {exclusive = 0, reverse = 0} = {}) {
+export function cumulativeSum(input, axis, {exclusive = false, reverse = false} = {}) {
   validateCumulativeSumParams(...arguments);
   const inputShape = input.shape;
   const outputShape = [...inputShape];
