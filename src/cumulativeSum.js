@@ -13,34 +13,26 @@ import {validateCumulativeSumParams} from './lib/validate-input.js';
 export function cumulativeSum(input, axis, {exclusive = false, reverse = false} = {}) {
   validateCumulativeSumParams(...arguments);
   const inputShape = input.shape;
-  const outputShape = [...inputShape];
+  const outputShape = inputShape;
   const output = new Tensor(outputShape);
-  const numElementsAlongAxis = inputShape[axis];
-
+  const elementCountAlongAxis = inputShape[axis];
   const totalElements = sizeOfShape(outputShape);
-
+  const inputElementStart = reverse ? elementCountAlongAxis - 1 : 0;
+  const inputElementStep = reverse ? -1 : 1;
+  const cumulativeSums = new Array(elementCountAlongAxis).fill(0);
   for (let outputIndex = 0; outputIndex < totalElements; outputIndex++) {
-    const loc = output.locationFromIndex(outputIndex);
-    let cumulativeSumValue = 0;
-
-    const start = reverse ? numElementsAlongAxis - 1 : 0;
-    const step = reverse ? -1 : 1;
-    const end = reverse ? -1 : numElementsAlongAxis;
-
-    for (let i = start; reverse ? i > end : i < end; i += step) {
-      const inputLoc = [...loc];
-      inputLoc[axis] = exclusive ? (reverse ? i + 1 : i - 1) : i;
-
-      if (!exclusive || (exclusive && inputLoc[axis] >= 0 &&
-        inputLoc[axis] < numElementsAlongAxis)) {
-        cumulativeSumValue += input.getValueByLocation(inputLoc);
-      }
-
-      const outputLoc = [...loc];
-      outputLoc[axis] = i;
-      output.setValueByLocation(outputLoc, cumulativeSumValue);
+    const location = output.locationFromIndex(outputIndex);
+    const inputLocation = [...location];
+    const outputLocation = [...location];
+    for (let i = 0; i < elementCountAlongAxis; ++i) {
+      const idx = inputElementStart + i * inputElementStep;
+      inputLocation[axis]=idx
+      outputLocation[axis] = idx
+      const inputValue = input.getValueByLocation(inputLocation);
+      cumulativeSums[i] = (i === 0 ? 0 : cumulativeSums[i-1]) + inputValue;   
+      const outputValue = exclusive ? (i === 0 ? 0 : cumulativeSums[i-1]) : cumulativeSums[i];
+      output.setValueByLocation(outputLocation, outputValue);
     }
   }
-
   return output;
 }

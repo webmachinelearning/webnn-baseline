@@ -614,11 +614,8 @@ export function validateGatherParams(input, indices, {axis = 0} = {}) {
 export function validateCumulativeSumParams(input, axis) {
   if (axis !== undefined) {
     const rank = input.rank;
-    if (!Number.isInteger(axis) || axis < 0) {
-      throw new Error(`The axis ${axis} should be an unsigned integer.`);
-    }
-    if (axis >= rank) {
-      throw new Error(`The axis ${axis} should be in the interval [0, ${rank}).`);
+    if (!Number.isInteger(axis) || axis < 0 || axis >= rank) {
+      throw new Error(`The axis ${axis} must be an unsigned integer in the interval [0, ${rank}).`);
     }
   }
 }
