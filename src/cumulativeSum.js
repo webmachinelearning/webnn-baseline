@@ -26,10 +26,10 @@ export function cumulativeSum(input, axis, {exclusive = false, reverse = false} 
     const outputLocation = [...location];
     for (let i = 0; i < elementCountAlongAxis; ++i) {
       const idx = inputElementStart + i * inputElementStep;
-      inputLocation[axis]=idx
-      outputLocation[axis] = idx
+      inputLocation[axis]=idx;
+      outputLocation[axis] = idx;
       const inputValue = input.getValueByLocation(inputLocation);
-      cumulativeSums[i] = (i === 0 ? 0 : cumulativeSums[i-1]) + inputValue;   
+      cumulativeSums[i] = (i === 0 ? 0 : cumulativeSums[i-1]) + inputValue;
       const outputValue = exclusive ? (i === 0 ? 0 : cumulativeSums[i-1]) : cumulativeSums[i];
       output.setValueByLocation(outputLocation, outputValue);
     }
