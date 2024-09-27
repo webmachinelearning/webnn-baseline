@@ -32,11 +32,6 @@ export function cumulativeSum(input, axis, {exclusive = false, reverse = false} 
       location[axis] = index;
       const inputValue = input.getValueByLocation(location);
       cumulativeSums[i] = (i === 0 ? 0 : cumulativeSums[i - 1]) + inputValue;
-    }
-
-    for (let i = 0; i < elementCountAlongAxis; ++i) {
-      const index = inputElementStart + i * inputElementStep;
-      location[axis] = index;
       const outputValue = exclusive ? (i === 0 ? 0 : cumulativeSums[i - 1]) : cumulativeSums[i];
       output.setValueByLocation(location, outputValue);
     }
