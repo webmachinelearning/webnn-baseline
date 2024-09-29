@@ -50,8 +50,10 @@ export function gather(input, indices, {axis = 0} = {}) {
     // output[i, j, k, ...] = input[i, j, indices[i, j, k, ...], ...] // if axis == 2
     const outputLoc = output.locationFromIndex(outputIndex);
     const indicesLoc = outputLoc.slice(axis, axis + indices.rank);
-    const selectedInputLoc = outputLoc.slice(0, axis)
-        .concat(indices.getValueByLocation(indicesLoc), outputLoc.slice(axis + indices.rank));
+    let indiceValue = indices.getValueByLocation(indicesLoc);
+    indiceValue = indiceValue < 0 ? indiceValue + input.shape[axis] : indiceValue;
+    const selectedInputLoc =
+        [...outputLoc.slice(0, axis), indiceValue, ...outputLoc.slice(axis + indices.rank)];
     const inputValue = input.getValueByLocation(selectedInputLoc);
     output.setValueByIndex(outputIndex, inputValue);
   }

@@ -604,9 +604,9 @@ export function validateGatherParams(input, indices, {axis = 0} = {}) {
   const axisSize = input.shape[axis];
   for (let i = 0; i < sizeOfShape(indices.shape); ++i) {
     const index = indices.getValueByIndex(i);
-    if (!Number.isInteger(index) || index < 0 || index >= axisSize) {
-      throw new Error(
-          `Invalid indices value - it should be an integer in the interval [0, ${axisSize})`);
+    if (!Number.isInteger(index) || index < -axisSize || index >= axisSize) {
+      throw new Error(`Invalid indices value - it should be an integer in the interval ` +
+          `[${-axisSize}, ${axisSize - 1}]`);
     }
   }
 }
