@@ -45,7 +45,7 @@ export const log = (input) => unary(input, Math.log);
 export const neg = (input) => unary(input, (x) => -1 * x);
 export const sin = (input) => unary(input, Math.sin);
 export const tan = (input) => unary(input, Math.tan);
-export const copy = (input) => unary(input, (x) => x);
+export const identity = (input) => unary(input, (x) => x);
 export const reciprocal = (input) => unary(input, (x) => 1 / x);
 export const sqrt = (input) => unary(input, Math.sqrt);
 export const erf = (input) => unary(input, erfKernel);
