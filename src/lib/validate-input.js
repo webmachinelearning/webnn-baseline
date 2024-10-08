@@ -647,6 +647,32 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
   }
 }
 
+export function validateGatherElementsParams(input, indices, {axis = 0} = {}) {
+  const inputRank = input.rank;
+  const indicesRank = indices.rank;
+  if (inputRank < 1) {
+    throw new Error(`The input should be at least a 1-D tensor.`);
+  }
+  if (indicesRank < 1) {
+    throw new Error(`The indices should be at least a 1-D tensor.`);
+  }
+  if (indicesRank !== inputRank) {
+    throw new Error(`Invalid indices value - indices rank should be equal to input rank`);
+  }
+  if (!Number.isInteger(axis) || axis < 0 || axis >= inputRank) {
+    throw new Error(
+        `The axis ${axis} should be an unsigned integer in the interval [0, ${inputRank}).`);
+  }
+  const axisSize = input.shape[axis];
+  for (let i = 0; i < sizeOfShape(indices.shape); ++i) {
+    const index = indices.getValueByIndex(i);
+    if (!Number.isInteger(index) || index < -axisSize || index >= axisSize) {
+      throw new Error(`Invalid indices value - it should be an integer in the interval ` +
+          `[${-axisSize}, ${axisSize - 1}]`);
+    }
+  }
+}
+
 export function validateTriangularParams(input, {diagonal = 0} = {}) {
   const inputRank = input.rank;
   if (inputRank < 2) {
