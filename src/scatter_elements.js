@@ -21,12 +21,12 @@ export function scatterElements(input, indices, updates, {axis = 0} = {}) {
     // output[indices[i, j, k, ...], j, k, ...] = updates[i, j, k, ...] // if axis == 0
     // output[i, indices[i, j, k, ...], k, ...] = updates[i, j, k, ...] // if axis == 1
     // output[i, j, indices[i, j, k, ...], ...] = updates[i, j, k, ...] // if axis == 2
-    const indicesLoc = indices.locationFromIndex(indicesIndex);
+    const indicesLocation = indices.locationFromIndex(indicesIndex);
     let indiceValue = indices.getValueByIndex(indicesIndex);
     indiceValue = indiceValue < 0 ? indiceValue + input.shape[axis] : indiceValue;
-    const outputLoc = indicesLoc.slice();
-    outputLoc[axis] = indiceValue;
-    output.setValueByLocation(outputLoc, updates.getValueByIndex(indicesIndex));
+    const outputLocation = indicesLocation.slice();
+    outputLocation[axis] = indiceValue;
+    output.setValueByLocation(outputLocation, updates.getValueByIndex(indicesIndex));
   }
 
   return output;

@@ -634,11 +634,9 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
     throw new Error(`Invalid updates value - updates shape should be same as indices shape.`);
   }
   if (axis !== undefined) {
-    if (!Number.isInteger(axis) || axis < 0) {
-      throw new Error(`The axis ${axis} should be an unsigned integer.`);
-    }
-    if (axis >= inputRank) {
-      throw new Error(`The axis ${axis} should be in the interval [0, ${inputRank}).`);
+    if (!Number.isInteger(axis) || axis < 0 || axis >= inputRank) {
+      throw new Error(
+          `The axis ${axis} should be an unsigned integer in the interval [0, ${inputRank}).`);
     }
   }
   const axisSize = input.shape[axis];
