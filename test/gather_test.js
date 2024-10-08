@@ -29,6 +29,22 @@ describe('test gather', function() {
     testGather(input, indices, expected);
   });
 
+  it('gather 1D by negative 1D indices default', function() {
+    const input = {
+      shape: [10],
+      data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    };
+    const indices = {
+      shape: [3],
+      data: [0, -9, -10],
+    };
+    const expected = {
+      shape: [3],
+      data: [0, 1, 0],
+    };
+    testGather(input, indices, expected);
+  });
+
   it('gather 1D by 0D indices default', function() {
     const input = {
       shape: [4],
