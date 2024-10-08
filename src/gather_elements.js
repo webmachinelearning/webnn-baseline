@@ -19,11 +19,11 @@ export function gatherElements(input, indices, {axis = 0} = {}) {
   for (let outputIndex = 0; outputIndex < count; ++outputIndex) {
     const outputLocation = output.locationFromIndex(outputIndex);
     const indicesLocation = outputLocation.slice();
-    let indicesVlaue = indices.getValueByLocation(indicesLocation);
-    indicesVlaue = indicesVlaue < 0 ? indicesVlaue + input.shape[axis] : indicesVlaue;
-    const selectedInputLoc =
-        [...outputLocation.slice(0, axis), indicesVlaue, ...outputLocation.slice(axis + 1)];
-    const inputValue = input.getValueByLocation(selectedInputLoc);
+    let indicesValue = indices.getValueByLocation(indicesLocation);
+    indicesValue = indicesValue < 0 ? indicesValue + input.shape[axis] : indicesValue;
+    const selectedInputLocation =
+        [...outputLocation.slice(0, axis), indicesValue, ...outputLocation.slice(axis + 1)];
+    const inputValue = input.getValueByLocation(selectedInputLocation);
     output.setValueByIndex(outputIndex, inputValue);
   }
 
