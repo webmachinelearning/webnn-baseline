@@ -14,7 +14,7 @@ describe('test scatterElements', function() {
     utils.checkValue(outputTensor, expected.data);
   }
 
-  it.only('scatterElements 2D default', function() {
+  it('scatterElements 2D default', function() {
     const input = {
       shape: [3, 3],
       data: [
@@ -48,7 +48,7 @@ describe('test scatterElements', function() {
     testScatterElements(input, indices, updates, expected);
   });
 
-  it.only('scatterElements 2D, explicit axis=0', function() {
+  it('scatterElements 2D, explicit axis=0', function() {
     const input = {
       shape: [3, 3],
       data: [
@@ -82,7 +82,7 @@ describe('test scatterElements', function() {
     testScatterElements(input, indices, updates, expected, {axis: 0});
   });
 
-  it.only('scatterElements 2D, axis=1', function() {
+  it('scatterElements 2D, axis=1', function() {
     const input = {
       shape: [1, 5],
       data: [1, 2, 3, 4, 5],
@@ -102,7 +102,7 @@ describe('test scatterElements', function() {
     testScatterElements(input, indices, updates, expected, {axis: 1});
   });
 
-  it.only('scatterElements 2D negative indices, axis=1', function() {
+  it('scatterElements 2D negative indices, axis=1', function() {
     const input = {
       shape: [1, 5],
       data: [1, 2, 3, 4, 5],
