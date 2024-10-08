@@ -22,10 +22,10 @@ export function scatterElements(input, indices, updates, {axis = 0} = {}) {
     // output[i, indices[i, j, k, ...], k, ...] = updates[i, j, k, ...] // if axis == 1
     // output[i, j, indices[i, j, k, ...], ...] = updates[i, j, k, ...] // if axis == 2
     const indicesLocation = indices.locationFromIndex(indicesIndex);
-    let indiceValue = indices.getValueByIndex(indicesIndex);
-    indiceValue = indiceValue < 0 ? indiceValue + input.shape[axis] : indiceValue;
-    const outputLocation = indicesLocation.slice();
-    outputLocation[axis] = indiceValue;
+    let indicesValue = indices.getValueByIndex(indicesIndex);
+    indicesValue = indicesValue < 0 ? indicesValue + input.shape[axis] : indicesValue;
+    const outputLocation =
+        [...indicesLocation.slice(0, axis), indicesValue, ...indicesLocation .slice(axis + 1)];
     output.setValueByLocation(outputLocation, updates.getValueByIndex(indicesIndex));
   }
 
