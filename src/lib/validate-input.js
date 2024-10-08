@@ -624,11 +624,9 @@ export function validateGatherElementsParams(input, indices, {axis = 0} = {}) {
     throw new Error(`Invalid indices value - indices rank should be equal to input rank`);
   }
   if (axis !== undefined) {
-    if (!Number.isInteger(axis) || axis < 0) {
-      throw new Error(`The axis ${axis} should be an unsigned integer.`);
-    }
-    if (axis >= inputRank) {
-      throw new Error(`The axis ${axis} should be in the interval [0, ${inputRank}).`);
+    if (!Number.isInteger(axis) || axis < 0 || axis >= inputRank) {
+      throw new Error(
+          `The axis ${axis} should be an unsigned integer in the interval [0, ${inputRank}).`);
     }
   }
   const axisSize = input.shape[axis];
