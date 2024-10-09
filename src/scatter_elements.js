@@ -25,7 +25,7 @@ export function scatterElements(input, indices, updates, {axis = 0} = {}) {
     let indicesValue = indices.getValueByIndex(indicesIndex);
     indicesValue = indicesValue < 0 ? indicesValue + input.shape[axis] : indicesValue;
     const outputLocation =
-        [...indicesLocation.slice(0, axis), indicesValue, ...indicesLocation .slice(axis + 1)];
+        [...indicesLocation.slice(0, axis), indicesValue, ...indicesLocation.slice(axis + 1)];
     output.setValueByLocation(outputLocation, updates.getValueByIndex(indicesIndex));
   }
 
