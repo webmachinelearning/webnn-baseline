@@ -20,19 +20,18 @@ export function cumulativeSum(input, axis, {exclusive = false, reverse = false} 
   const inputElementStart = reverse ? elementCountAlongAxis - 1 : 0;
   const inputElementStep = reverse ? -1 : 1;
 
-  const cumulativeSums = new Array(elementCountAlongAxis).fill(0);
 
   for (let outputIndex = 0; outputIndex < totalElements; outputIndex++) {
     const location = output.locationFromIndex(outputIndex);
-
+    let cumulativeSum = 0;
     if (location[axis] !== inputElementStart) continue;
 
     for (let i = 0; i < elementCountAlongAxis; ++i) {
       const index = inputElementStart + i * inputElementStep;
       location[axis] = index;
       const inputValue = input.getValueByLocation(location);
-      cumulativeSums[i] = (i === 0 ? 0 : cumulativeSums[i - 1]) + inputValue;
-      const outputValue = exclusive ? (i === 0 ? 0 : cumulativeSums[i - 1]) : cumulativeSums[i];
+      const outputValue = exclusive ? cumulativeSum : cumulativeSum + inputValue;
+      cumulativeSum += inputValue;
       output.setValueByLocation(location, outputValue);
     }
   }
