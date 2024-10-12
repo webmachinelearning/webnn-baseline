@@ -8,7 +8,7 @@ import {binary} from './binary.js';
  * @param {Tensor} input
  * @return {Tensor}
  */
-function logicalNot(input) {
+function logicalNotImpl(input) {
   validateNotParams(input);
   const outputShape = input.shape;
   const outputSize = sizeOfShape(outputShape);
@@ -28,4 +28,4 @@ export const greaterOrEqual =
 export const lesser = (inputA, inputB) => binary(inputA, inputB, (a, b) => (a < b ? 1 : 0));
 export const lesserOrEqual =
     (inputA, inputB) => binary(inputA, inputB, (a, b) => (a <= b ? 1 : 0));
-export const not = (input) => logicalNot(input);
+export const logicalNot = (input) => logicalNotImpl(input);

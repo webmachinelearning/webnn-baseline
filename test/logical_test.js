@@ -1,6 +1,6 @@
 'use strict';
 
-import {equal, greater, greaterOrEqual, lesser, lesserOrEqual, not} from '../src/logical.js';
+import {equal, greater, greaterOrEqual, lesser, lesserOrEqual, logicalNot} from '../src/logical.js';
 import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
@@ -15,7 +15,7 @@ describe('test logical', function() {
 
   function testLogicalNot(input, expected) {
     const inputTensor = new Tensor(input.shape, input.data);
-    const outputTensor = not(inputTensor);
+    const outputTensor = logicalNot(inputTensor);
     utils.checkShape(outputTensor, expected.shape);
     utils.checkValue(outputTensor, expected.data);
   }
@@ -340,7 +340,7 @@ describe('test logical', function() {
     testLogical(inputA, inputB, expected, lesserOrEqual);
   });
 
-  it('not 0D scalar', function() {
+  it('logicalNot 0D scalar', function() {
     const input = {
       shape: [],
       data: [1],
@@ -353,7 +353,7 @@ describe('test logical', function() {
   });
 
 
-  it('not 4D', function() {
+  it('logicalNot 4D', function() {
     const input = {
       shape: [1, 2, 2, 1],
       data: [
