@@ -29,8 +29,8 @@ export const lesser = (inputA, inputB) => binary(inputA, inputB, (a, b) => (a < 
 export const lesserOrEqual =
     (inputA, inputB) => binary(inputA, inputB, (a, b) => (a <= b ? 1 : 0));
 export const logicalAnd =
-    (inputA, inputB) => binary(inputA, inputB, (a, b) => ((a > 0) && (b > 0) ? 1: 0));
+    (inputA, inputB) => binary(inputA, inputB, (a, b) => (!!a && !!b ? 1 : 0));
 export const logicalNot = (input) => logicalNotImpl(input);
 export const logicalOr =
-    (inputA, inputB) => binary(inputA, inputB, (a, b) => ((a > 0) || (b > 0) ? 1 : 0));
-export const logicalXor = (inputA, inputB) => binary(inputA, inputB, (a, b) => ((a > 0) ^ (b > 0)));
+    (inputA, inputB) => binary(inputA, inputB, (a, b) => (!!a || !!b ? 1 : 0));
+export const logicalXor = (inputA, inputB) => binary(inputA, inputB, (a, b) => (!!a ^ !!b));
