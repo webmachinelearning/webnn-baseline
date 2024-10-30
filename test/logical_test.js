@@ -1,6 +1,7 @@
 'use strict';
 
-import {equal, greater, greaterOrEqual, lesser, lesserOrEqual, not} from '../src/logical.js';
+import {equal, greater, greaterOrEqual, lesser, lesserOrEqual,
+  logicalAnd, logicalNot, logicalOr, logicalXor} from '../src/logical.js';
 import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
@@ -15,7 +16,7 @@ describe('test logical', function() {
 
   function testLogicalNot(input, expected) {
     const inputTensor = new Tensor(input.shape, input.data);
-    const outputTensor = not(inputTensor);
+    const outputTensor = logicalNot(inputTensor);
     utils.checkShape(outputTensor, expected.shape);
     utils.checkValue(outputTensor, expected.data);
   }
@@ -340,7 +341,55 @@ describe('test logical', function() {
     testLogical(inputA, inputB, expected, lesserOrEqual);
   });
 
-  it('not 0D scalar', function() {
+  it('logicalAnd 0D uint8 scalar', function() {
+    const inputA = {
+      shape: [],
+      data: [255],
+    };
+    const inputB = {
+      shape: [],
+      data: [0],
+    };
+    const expected = {
+      shape: [],
+      data: [0],
+    };
+    testLogical(inputA, inputB, expected, logicalAnd);
+  });
+
+  it('logicalAnd 4D uint8 tensors', function() {
+    const inputA = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 128, 255, 0, 10, 100, 200],
+    };
+    const inputB = {
+      shape: [2, 2, 2, 1],
+      data: [200, 100, 10, 0, 200, 100, 10, 0],
+    };
+    const expected = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 1, 0, 0, 1, 1, 0],
+    };
+    testLogical(inputA, inputB, expected, logicalAnd);
+  });
+
+  it('logicalAnd 4D uint8 tensors broadcast', function() {
+    const inputA = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 128, 255, 0, 10, 100, 200],
+    };
+    const inputB = {
+      shape: [2, 2, 1],
+      data: [200, 100, 10, 0],
+    };
+    const expected = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 1, 0, 0, 1, 1, 0],
+    };
+    testLogical(inputA, inputB, expected, logicalAnd);
+  });
+
+  it('logicalNot 0D scalar', function() {
     const input = {
       shape: [],
       data: [1],
@@ -353,7 +402,7 @@ describe('test logical', function() {
   });
 
 
-  it('not 4D', function() {
+  it('logicalNot 4D', function() {
     const input = {
       shape: [1, 2, 2, 1],
       data: [
@@ -369,5 +418,101 @@ describe('test logical', function() {
       ],
     };
     testLogicalNot(input, expected);
+  });
+
+  it('logicalOR 0D uint8 scalar', function() {
+    const inputA = {
+      shape: [],
+      data: [255],
+    };
+    const inputB = {
+      shape: [],
+      data: [0],
+    };
+    const expected = {
+      shape: [],
+      data: [1],
+    };
+    testLogical(inputA, inputB, expected, logicalOr);
+  });
+
+  it('logicalOr 4D uint8 tensors', function() {
+    const inputA = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 128, 255, 0, 10, 100, 200],
+    };
+    const inputB = {
+      shape: [2, 2, 2, 1],
+      data: [0, 0, 10, 0, 100, 100, 20, 255],
+    };
+    const expected = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 1, 1, 1, 1, 1, 1],
+    };
+    testLogical(inputA, inputB, expected, logicalOr);
+  });
+
+  it('logicalOr 4D uint8 tensors broadcast', function() {
+    const inputA = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 128, 255, 0, 10, 100, 200],
+    };
+    const inputB = {
+      shape: [2, 2, 1],
+      data: [0, 100, 10, 0],
+    };
+    const expected = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 1, 1, 0, 1, 1, 1],
+    };
+    testLogical(inputA, inputB, expected, logicalOr);
+  });
+
+  it('logicalXor 0D uint8 scalar', function() {
+    const inputA = {
+      shape: [],
+      data: [255],
+    };
+    const inputB = {
+      shape: [],
+      data: [0],
+    };
+    const expected = {
+      shape: [],
+      data: [1],
+    };
+    testLogical(inputA, inputB, expected, logicalXor);
+  });
+
+  it('logicalXor 4D uint8 tensors', function() {
+    const inputA = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 128, 255, 0, 10, 100, 200],
+    };
+    const inputB = {
+      shape: [2, 2, 2, 1],
+      data: [0, 0, 10, 0, 100, 100, 20, 255],
+    };
+    const expected = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 0, 1, 1, 0, 0, 0],
+    };
+    testLogical(inputA, inputB, expected, logicalXor);
+  });
+
+  it('logicalXor 4D uint8 tensors broadcast', function() {
+    const inputA = {
+      shape: [2, 2, 2, 1],
+      data: [0, 1, 128, 255, 0, 10, 100, 200],
+    };
+    const inputB = {
+      shape: [2, 2, 1],
+      data: [0, 100, 10, 0],
+    };
+    const expected = {
+      shape: [2, 2, 2, 1],
+      data: [0, 0, 0, 1, 0, 0, 0, 1],
+    };
+    testLogical(inputA, inputB, expected, logicalXor);
   });
 });
