@@ -17,8 +17,8 @@ Take an example for softsign operator tests:
 node gen-operator-with-single-input.js resources\softsign.json
 ```
 
-then, you can find two generated folders named 'test-data' and
-'test-data-wpt'. There're raw test data as being
+Then you can find two generated folders named 'test-data' and
+'test-data-wpt'. They're raw test data as being
 ./test-data/softsign-data.json,
 and raw WPT test-data file as being ./test-data-wpt/softsign.json.
 

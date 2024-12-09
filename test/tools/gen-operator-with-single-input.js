@@ -15,8 +15,7 @@ import {utils} from './utils.js';
       'softsign': softsign,
     };
     const inputTensor = new Tensor(input.shape, input.data);
-    const outputTensor =
-        operatorMappingDict[operatorName](inputTensor, options);
+    const outputTensor = operatorMappingDict[operatorName](inputTensor, options);
     return outputTensor.data;
   }
 
@@ -28,21 +27,20 @@ import {utils} from './utils.js';
       `${operatorString}-data.json`);
   const jsonDict = utils.readJsonFile(process.argv[2]);
   const inputsDataInfo = jsonDict.inputsData;
-  const inputsDataRange = jsonDict.inputsDataRange;
   const toSaveDataDict = utils.prepareInputsData(
-      inputsDataInfo, savedDataFile, inputsDataRange.min, inputsDataRange.max);
+      inputsDataInfo, savedDataFile, jsonDict.inputsDataRange);
   toSaveDataDict['expectedData'] = {};
   const tests = jsonDict.tests;
   const wptTests = JSON.parse(JSON.stringify(tests));
   for (const test of tests) {
-    console.log(`name ${test.name}`);
+    console.log(`Test case name: ${test.name}`);
     const precisionDataInput = utils.getPrecisionDataFromDataDict(
         toSaveDataDict['inputsData'], test.inputs.input.data,
-        test.inputs.input.type);
+        test.inputs.input.dataType);
     const input = {shape: test.inputs.input.shape, data: precisionDataInput};
     const result = computeBySingleInput(operatorString, input, test.options);
     toSaveDataDict['expectedData'][test.expected.data] =
-      utils.getPrecisionData(result, test.expected.type);
+      utils.getPrecisionData(result, test.expected.dataType);
   }
 
   utils.writeJsonFile(toSaveDataDict, savedDataFile);
@@ -59,7 +57,7 @@ import {utils} from './utils.js';
           test.inputs[inputName].data :
           utils.getPrecisionDataFromDataDict(
               toSaveDataDict['inputsData'], test.inputs[inputName].data,
-              test.inputs[inputName].type);
+              test.inputs[inputName].dataType);
     }
     // update weights (scale, bias, and etc.) data of options
     if (test.options) {
@@ -74,9 +72,10 @@ import {utils} from './utils.js';
     test.expected.data = toSaveDataDict['expectedData'][test.expected.data];
     wptConformanceTestsDict.tests.push(test);
   }
+
   const savedWPTDataFile = path.join(
       path.dirname(process.argv[1]), 'test-data-wpt', `${operatorString}.json`);
   utils.writeJsonFile(wptConformanceTestsDict, savedWPTDataFile);
 
-  console.log(`[ Done ] Generate test data file for WPT tests.`);
+  console.log(`[ Done ] Generate test data file ${savedWPTDataFile} for WPT tests.`);
 })();

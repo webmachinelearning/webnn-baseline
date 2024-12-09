@@ -5,15 +5,15 @@
       "inputs": {
         "input": {
           "shape": [24],
-          "data": "float641DPositiveInput",
-          "type": "float32"
+          "data": "float32_1DPositiveInput",
+          "dataType": "float32"
         }
       },
       "expected": {
         "name": "output",
         "shape": [24],
-        "data": "float321DPositiveDefault",
-        "type": "float32"
+        "data": "float32_1DPositiveDefault",
+        "dataType": "float32"
       }
     },
     {
@@ -21,15 +21,15 @@
       "inputs": {
         "input": {
           "shape": [24],
-          "data": "float641DNegativeInput",
-          "type": "float32"
+          "data": "float32_1DNegativeInput",
+          "dataType": "float32"
         }
       },
       "expected": {
         "name": "output",
         "shape": [24],
-        "data": "float321DNegativeDefault",
-        "type": "float32"
+        "data": "float32_1DNegativeDefault",
+        "dataType": "float32"
       }
     },
     {
@@ -37,15 +37,15 @@
       "inputs": {
         "input": {
           "shape": [4, 6],
-          "data": "float642DInput",
-          "type": "float32"
+          "data": "float32_2DInput",
+          "dataType": "float32"
         }
       },
       "expected": {
         "name": "output",
         "shape": [4, 6],
-        "data": "float322DDefault",
-        "type": "float32"
+        "data": "float32_2DDefault",
+        "dataType": "float32"
       }
     },
     {
@@ -53,15 +53,15 @@
       "inputs": {
         "input": {
           "shape": [2, 3, 4],
-          "data": "float642DInput",
-          "type": "float32"
+          "data": "float32_2DInput",
+          "dataType": "float32"
         }
       },
       "expected": {
         "name": "output",
         "shape": [2, 3, 4],
-        "data": "float322DDefault",
-        "type": "float32"
+        "data": "float32_2DDefault",
+        "dataType": "float32"
       }
     },
     {
@@ -69,15 +69,15 @@
       "inputs": {
         "input": {
           "shape": [1, 2, 3, 4],
-          "data": "float642DInput",
-          "type": "float32"
+          "data": "float32_2DInput",
+          "dataType": "float32"
         }
       },
       "expected": {
         "name": "output",
         "shape": [1, 2, 3, 4],
-        "data": "float322DDefault",
-        "type": "float32"
+        "data": "float32_2DDefault",
+        "dataType": "float32"
       }
     },
     {
@@ -85,15 +85,15 @@
       "inputs": {
         "input": {
           "shape": [1, 2, 1, 3, 4],
-          "data": "float642DInput",
-          "type": "float32"
+          "data": "float32_2DInput",
+          "dataType": "float32"
         }
       },
       "expected": {
         "name": "output",
         "shape": [1, 2, 1, 3, 4],
-        "data": "float322DDefault",
-        "type": "float32"
+        "data": "float32_2DDefault",
+        "dataType": "float32"
       }
     },
     {
@@ -101,15 +101,15 @@
       "inputs": {
         "input": {
           "shape": [24],
-          "data": "float641DPositiveInput",
-          "type": "float16"
+          "data": "float16_1DPositiveInput",
+          "dataType": "float16"
         }
       },
       "expected": {
         "name": "output",
         "shape": [24],
-        "data": "float161DPositiveDefault",
-        "type": "float16"
+        "data": "float16_1DPositiveDefault",
+        "dataType": "float16"
       }
     },
     {
@@ -117,15 +117,15 @@
       "inputs": {
         "input": {
           "shape": [24],
-          "data": "float641DNegativeInput",
-          "type": "float16"
+          "data": "float16_1DNegativeInput",
+          "dataType": "float16"
         }
       },
       "expected": {
         "name": "output",
         "shape": [24],
-        "data": "float161DNegativeDefault",
-        "type": "float16"
+        "data": "float16_1DNegativeDefault",
+        "dataType": "float16"
       }
     },
     {
@@ -133,15 +133,15 @@
       "inputs": {
         "input": {
           "shape": [4, 6],
-          "data": "float642DInput",
-          "type": "float16"
+          "data": "float16_2DInput",
+          "dataType": "float16"
         }
       },
       "expected": {
         "name": "output",
         "shape": [4, 6],
-        "data": "float162DDefault",
-        "type": "float16"
+        "data": "float16_2DDefault",
+        "dataType": "float16"
       }
     },
     {
@@ -149,15 +149,15 @@
       "inputs": {
         "input": {
           "shape": [2, 3, 4],
-          "data": "float642DInput",
-          "type": "float16"
+          "data": "float16_2DInput",
+          "dataType": "float16"
         }
       },
       "expected": {
         "name": "output",
         "shape": [2, 3, 4],
-        "data": "float162DDefault",
-        "type": "float16"
+        "data": "float16_2DDefault",
+        "dataType": "float16"
       }
     },
     {
@@ -165,15 +165,15 @@
       "inputs": {
         "input": {
           "shape": [1, 2, 3, 4],
-          "data": "float642DInput",
-          "type": "float16"
+          "data": "float16_2DInput",
+          "dataType": "float16"
         }
       },
       "expected": {
         "name": "output",
         "shape": [1, 2, 3, 4],
-        "data": "float162DDefault",
-        "type": "float16"
+        "data": "float16_2DDefault",
+        "dataType": "float16"
       }
     },
     {
@@ -181,32 +181,46 @@
       "inputs": {
         "input": {
           "shape": [1, 2, 1, 3, 4],
-          "data": "float642DInput",
-          "type": "float16"
+          "data": "float16_2DInput",
+          "dataType": "float16"
         }
       },
       "expected": {
         "name": "output",
         "shape": [1, 2, 1, 3, 4],
-        "data": "float162DDefault",
-        "type": "float16"
+        "data": "float16_2DDefault",
+        "dataType": "float16"
       }
     }
   ],
   "inputsData": {
-    "float641DPositiveInput": {
+    "float32_1DPositiveInput": {
       "shape": [24],
-      "type": "float64",
+      "dataType": "float32",
       "sign": "positive"
     },
-    "float641DNegativeInput": {
+    "float32_1DNegativeInput": {
       "shape": [24],
-      "type": "float64",
+      "dataType": "float32",
       "sign": "negative"
     },
-    "float642DInput": {
+    "float32_2DInput": {
       "shape": [24],
-      "type": "float64"
+      "dataType": "float32"
+    },
+    "float16_1DPositiveInput": {
+      "shape": [24],
+      "dataType": "float16",
+      "sign": "positive"
+    },
+    "float16_1DNegativeInput": {
+      "shape": [24],
+      "dataType": "float16",
+      "sign": "negative"
+    },
+    "float16_2DInput": {
+      "shape": [24],
+      "dataType": "float16"
     }
   },
   "inputsDataRange": {
