@@ -34,3 +34,4 @@ export const logicalNot = (input) => logicalNotImpl(input);
 export const logicalOr =
     (inputA, inputB) => binary(inputA, inputB, (a, b) => (!!a || !!b ? 1 : 0));
 export const logicalXor = (inputA, inputB) => binary(inputA, inputB, (a, b) => (!!a ^ !!b));
+export const notEqual = (inputA, inputB) => logicalNot(equal(inputA, inputB));
