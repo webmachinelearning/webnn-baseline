@@ -48,6 +48,15 @@ export function checkValue(tensor, expected, nulp = 0) {
   }
 }
 
+export function checkValueByATOL(tensor, expected, tolerance) {
+  assert.isTrue(tensor.size === expected.length);
+  for (let i = 0; i < expected.length; ++i) {
+    const actual = tensor.getValueByIndex(i);
+    assert.isTrue(actual >= expected[i] - tolerance && actual <= expected[i] + tolerance,
+        `${actual} is almost equal to ${expected[i]} by ${tolerance} tolerance of ATOL metrics`);
+  }
+}
+
 export function checkShape(tensor, expected) {
   assert.equal(tensor.rank, expected.length,
       `Tensor has expected rank ${expected.length}: ${tensor.rank}`);

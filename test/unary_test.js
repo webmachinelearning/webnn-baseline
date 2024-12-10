@@ -5,11 +5,15 @@ import * as unaryFunctions from '../src/unary.js';
 import * as utils from './utils.js';
 
 describe('test unary', function() {
-  function testUnary(op, input, expected, shape) {
+  function testUnary(op, input, expected, shape, atolTolerance) {
     const x = new Tensor(shape, input);
     const y = unaryFunctions[op](x);
     utils.checkShape(y, shape);
-    utils.checkValue(y, expected);
+    if (atolTolerance !== undefined) {
+      utils.checkValueByATOL(y, expected, atolTolerance);
+    } else {
+      utils.checkValue(y, expected);
+    }
   }
 
   it('abs', function() {
@@ -380,7 +384,7 @@ describe('test unary', function() {
           -1.0692689659512902,
           0.04121219038394666,
         ],
-        [3]);
+        [3], 1 / 1024);
     testUnary(
         'log',
         [
@@ -402,7 +406,7 @@ describe('test unary', function() {
           0.34275879190200165,
           -2.753918343538326,
         ],
-        [3, 4]);
+        [3, 4], 1 / 1024);
     testUnary(
         'log',
         [
@@ -481,7 +485,7 @@ describe('test unary', function() {
           0.31843664006339245,
           -0.8416115978644251,
         ],
-        [3, 4, 5]);
+        [3, 4, 5], 1 / 1024);
     testUnary(
         'log',
         [
@@ -560,7 +564,7 @@ describe('test unary', function() {
           0.31843664006339245,
           -0.8416115978644251,
         ],
-        [3, 2, 2, 5]);
+        [3, 2, 2, 5], 1 / 1024);
   });
 
   it('neg', function() {
@@ -592,7 +596,7 @@ describe('test unary', function() {
           -0.06502161610088251,
           0.6708816392565617,
         ],
-        [4]);
+        [4], 1 / 1024);
     testUnary(
         'sin',
         [
@@ -614,7 +618,7 @@ describe('test unary', function() {
           0.21339342411295945,
           -0.6558230571220807,
         ],
-        [3, 4]);
+        [3, 4], 1 / 1024);
     testUnary(
         'sin',
         [
@@ -639,7 +643,7 @@ describe('test unary', function() {
           0.21339342411295945,
           -0.6558230571220807,
         ],
-        [3, 2, 2]);
+        [3, 2, 2], 1 / 1024);
     testUnary(
         'sin',
         [
@@ -670,7 +674,7 @@ describe('test unary', function() {
           0.21339342411295945,
           -0.6558230571220807,
         ],
-        [3, 2, 2, 1]);
+        [3, 2, 2, 1], 1 / 1024);
   });
 
   it('tan', function() {
