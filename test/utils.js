@@ -48,12 +48,13 @@ export function checkValue(tensor, expected, nulp = 0) {
   }
 }
 
-export function checkValueByATOL(tensor, expected, tolerance) {
-  assert.isTrue(tensor.size === expected.length);
+export function checkValueByATOL(actual, expected, tolerance) {
+  assert.isTrue(actual.size === expected.length);
   for (let i = 0; i < expected.length; ++i) {
-    const actual = tensor.getValueByIndex(i);
-    assert.isTrue(actual >= expected[i] - tolerance && actual <= expected[i] + tolerance,
-        `${actual} is almost equal to ${expected[i]} by ${tolerance} tolerance of ATOL metrics`);
+    const actualValue = actual.getValueByIndex(i);
+    assert.isTrue(actualValue >= expected[i] - tolerance && actualValue <= expected[i] + tolerance,
+        `${actualValue} is almost equal to ${expected[i]} by ${tolerance} tolerance of ATOL` +
+        'metrics');
   }
 }
 
