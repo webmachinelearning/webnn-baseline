@@ -4,7 +4,7 @@ Step 1: Please prepare resources JSON file which includes those tests
 to test each operator of WebNN API without specified inputs and outputs
 data.
 
-Step 2: Implement generate test-data scripts
+Step 2: Generate test-data scripts
 
 Step 3: Execute command for generating test-data files for WPT tests.
 ```shell

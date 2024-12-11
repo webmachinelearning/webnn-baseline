@@ -19,9 +19,7 @@ import {utils} from './utils.js';
     return outputTensor.data;
   }
 
-  const testDataFileName = path.basename(process.argv[2]);
-  const operatorString =
-      testDataFileName.slice(0, testDataFileName.indexOf('.json'));
+  const operatorString = path.basename(process.argv[2], '.json');
   const savedDataFile = path.join(
       path.dirname(process.argv[1]), 'test-data',
       `${operatorString}-data.json`);

@@ -79,10 +79,7 @@ function getRandom(dataRange, dataType) {
   function getFloatRandomInclusive() {
     // The Math. random() method returns a random floating point number between 0 (inclusive)
     // and 1 (exclusive).
-    let value = Math.random() * 2;
-    if (value > 1) {
-      value = 1;
-    }
+    const value = Math.min(Math.random() * 2, 1);
     return value;
   }
 
@@ -97,14 +94,15 @@ function getRandom(dataRange, dataType) {
     } else if (type === 'uint32' && (min < 0 || max > Math.pow(2, 32) - 1)) {
       throw new Error(`The range of uint32 type should be [0, ${Math.pow(2, 32) - 1}].`);
     } else if (type === 'float16') {
-      const fp16Max = (2- Math.pow(2, -10)) * Math.pow(2, 15);
+      const fp16Max = (2 - Math.pow(2, -10)) * Math.pow(2, 15);
       if (min < -fp16Max || max > fp16Max) {
         throw new Error(`The range of float16 type should be [${-fp16Max}, ${fp16Max}].`);
       }
     } else if (type === 'int64') {
       const int64Max = 2n ** 64n - 1n;
-      if (min < -int64Max || max > int64Max) {
-        throw new Error(`The range of int64 type should be [${-int64Max}, ${int64Max}].`);
+      if (min < -int64Max - 1n || max > int64Max) {
+        throw new Error('The range of int64 type should be ' +
+          `[${-int64Max - 1n}, ${int64Max}].`);
       }
     } else if (type === 'uint64') {
       // In JavaScript, you can represent a BigUint64 using the BigInt data type.
@@ -113,7 +111,7 @@ function getRandom(dataRange, dataType) {
         throw new Error(`The range of uint64 type should be [0n, ${int64Max}].`);
       }
     } else if (type === 'float32') {
-      const fp32Max = (2- Math.pow(2, -23)) * Math.pow(2, 127);
+      const fp32Max = (2 - Math.pow(2, -23)) * Math.pow(2, 127);
       if (min < -fp32Max || max > fp32Max) {
         throw new Error(`The range of float32 type should be [${-fp32Max}, ${fp32Max}].`);
       }
@@ -152,7 +150,7 @@ function getRandom(dataRange, dataType) {
   if (dataType === 'float32' || dataType === 'float16') {
     data = factor * (max - min) + min;
   } else if (!['int64', 'uint64'].includes(dataType)) {
-    // interger
+    // integer
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     data = Math.floor(factor * (maxFloored - minCeiled) + minCeiled);
@@ -182,7 +180,7 @@ function getRandomNumbers(size, dataRange, dataType) {
 
 /**
  * Prepare input data by specified config of inputsDataInfo, dataFile, min,
- * max parameters .
+ * max parameters.
  * @param {Object} inputsDataInfo information object for input data
  * @param {String} dataFile saved data file path
  * @param {{min: Number, max: Number}} dataRange
