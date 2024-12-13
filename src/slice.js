@@ -23,12 +23,12 @@ export function slice(input, starts, sizes, {strides} = {}) {
 
   const output = new Tensor(outputShape);
   for (let outputIndex = 0; outputIndex < sizeOfShape(outputShape); ++outputIndex) {
-    const loc = output.locationFromIndex(outputIndex);
-    const selectedInputLoc = loc.slice();
-    for (let i = 0; i < loc.length; ++i) {
-      selectedInputLoc[i] = starts[i] + loc[i] * strides[i];
+    const outputLocation = output.locationFromIndex(outputIndex);
+    const selectedInputLocation = outputLocation.slice();
+    for (let i = 0; i < outputLocation.length; ++i) {
+      selectedInputLocation[i] = starts[i] + outputLocation[i] * strides[i];
     }
-    const inputValue = input.getValueByLocation(selectedInputLoc);
+    const inputValue = input.getValueByLocation(selectedInputLocation);
     output.setValueByIndex(outputIndex, inputValue);
   }
   return output;
