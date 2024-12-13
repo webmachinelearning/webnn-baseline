@@ -17,8 +17,7 @@ export function slice(input, starts, sizes, {strides} = {}) {
   const outputShape = input.shape.slice();
 
   for (let dimensionIndex = 0; dimensionIndex < input.rank; ++dimensionIndex) {
-    outputShape[dimensionIndex] = Math.floor(sizes[dimensionIndex] / strides[dimensionIndex]) +
-      Number(sizes[dimensionIndex] % strides[dimensionIndex]);
+    outputShape[dimensionIndex] = Math.ceil(sizes[dimensionIndex] / strides[dimensionIndex]);
   }
 
   const output = new Tensor(outputShape);
