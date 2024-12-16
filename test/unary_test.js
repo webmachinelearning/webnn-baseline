@@ -385,7 +385,7 @@ describe('test unary', function() {
           0.04121219038394666,
         ],
         [3],
-        1 / 1024);
+        /* atol=*/1 / 1024);
     testUnary(
         'log',
         [
@@ -408,7 +408,7 @@ describe('test unary', function() {
           -2.753918343538326,
         ],
         [3, 4],
-        1 / 1024);
+        /* atol=*/1 / 1024);
     testUnary(
         'log',
         [
@@ -488,7 +488,7 @@ describe('test unary', function() {
           -0.8416115978644251,
         ],
         [3, 4, 5],
-        1 / 1024);
+        /* atol=*/1 / 1024);
     testUnary(
         'log',
         [
@@ -568,7 +568,7 @@ describe('test unary', function() {
           -0.8416115978644251,
         ],
         [3, 2, 2, 5],
-        1 / 1024);
+        /* atol=*/1 / 1024);
   });
 
   it('neg', function() {
@@ -600,7 +600,8 @@ describe('test unary', function() {
           -0.06502161610088251,
           0.6708816392565617,
         ],
-        [4], 1 / 1024);
+        [4],
+        /* atol=*/1 / 1024);
     testUnary(
         'sin',
         [
@@ -623,7 +624,7 @@ describe('test unary', function() {
           -0.6558230571220807,
         ],
         [3, 4],
-        1 / 1024);
+        /* atol=*/1 / 1024);
     testUnary(
         'sin',
         [
@@ -649,7 +650,7 @@ describe('test unary', function() {
           -0.6558230571220807,
         ],
         [3, 2, 2],
-        1 / 1024);
+        /* atol=*/1 / 1024);
     testUnary(
         'sin',
         [
@@ -681,7 +682,7 @@ describe('test unary', function() {
           -0.6558230571220807,
         ],
         [3, 2, 2, 1],
-        1 / 1024);
+        /* atol=*/1 / 1024);
   });
 
   it('tan', function() {
