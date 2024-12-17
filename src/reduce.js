@@ -7,7 +7,7 @@ import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
 import {validateAxes} from './lib/validate-input.js';
 
 export function selectValuesToReduce(input, axes, inputLocation) {
-  validateAxes(input, {axes});
+  validateAxes(input, axes);
 
   const outputShape = input.shape.slice();
   for (let i = 0; i < axes.length; ++i) {
