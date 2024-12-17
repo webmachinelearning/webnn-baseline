@@ -623,6 +623,42 @@ export function validateGatherParams(input, indices, {axis = 0} = {}) {
   }
 }
 
+export function validateGatherNDParams(input, indices) {
+  const inputRank = input.rank;
+  const inputShape = input.shape;
+  const indicesRank = indices.rank;
+  const indicesShape = indices.shape;
+
+  // Refer to https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/ +
+  //   operation-specs/movement/gather-nd-8.html
+  if (inputRank < 1) {
+    throw new Error(`The input rank shouldn't be less than 1.`);
+  }
+
+  if (indicesRank < 1) {
+    throw new Error(`The indices rank shouldn't be less than 1.`);
+  }
+
+  const lastIndicesSize = indicesShape[indicesRank - 1];
+  if (lastIndicesSize < 1 || lastIndicesSize > inputRank) {
+    throw new Error(`The indices.shape[-1] should be in the range [1, ${inputRank}].`);
+  }
+
+  const indicesTotal = sizeOfShape(indicesShape);
+  for (let indicesIndex = 0; indicesIndex < indicesTotal; indicesIndex += lastIndicesSize) {
+    for (let i = 0; i < lastIndicesSize; i++) {
+      const indicesValue = indices.getValueByIndex(indicesIndex + i);
+      const maxSize = inputShape[i];
+      if (!Number.isInteger(indicesValue) ||
+        indicesValue < -maxSize ||
+        indicesValue > maxSize - 1) {
+        throw new Error(`Invalid indices value - it should be an integer in the interval ` +
+            `[${-maxSize}, ${maxSize - 1}]`);
+      }
+    }
+  }
+}
+
 export function validateScatterElementsParams(input, indices, updates, {axis = 0} = {}) {
   const inputRank = input.rank;
   const indicesRank = indices.rank;
