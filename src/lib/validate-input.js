@@ -483,7 +483,7 @@ export function validateReduceParams(input, {axes}) {
   }
 }
 
-export function validateSliceParams(input, starts, sizes) {
+export function validateSliceParams(input, starts, sizes, {strides} = {}) {
   const rank = input.rank;
   if (starts.length !== rank) {
     throw new Error(`The length ${starts.length} of starts is not equal to the length ` +
@@ -493,6 +493,11 @@ export function validateSliceParams(input, starts, sizes) {
     throw new Error(`The length ${sizes.length} of sizes is not equal` +
                     ` to the length ${rank} of input.`);
   }
+  if (strides !== undefined && strides.length !== rank) {
+    throw new Error(`The length ${strides.length} of strides is not equal` +
+                    ` to the length ${rank} of input.`);
+  }
+
   for (let i = 0; i < rank; ++i) {
     const size = input.shape[i];
     const start = starts[i];
@@ -506,6 +511,13 @@ export function validateSliceParams(input, starts, sizes) {
       const sliceSize = sizes[i];
       if (!Number.isInteger(sliceSize) || sliceSize <= 0) {
         throw new Error(`Invalid sizes value ${sliceSize} - it should be an unsigned integer.`);
+      }
+      if (strides !== undefined) {
+        const stride = strides[i];
+        if (!Number.isInteger(stride) || stride < 1) {
+          throw new Error(`Invalid strides value ${stride} - it should be an unsigned integer ` +
+                          'greater than or equal to 1.');
+        }
       }
       if (start + sliceSize > size) {
         throw new Error(`Invalid sizes value ${sliceSize} - the sum of the start ${start} ` +
