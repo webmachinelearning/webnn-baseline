@@ -1,7 +1,7 @@
 'use strict';
 
 import {sizeOfShape, Tensor} from './lib/tensor.js';
-import {validateReduceParams} from './lib/validate-input.js';
+import {validateAxes} from './lib/validate-input.js';
 
 /**
  * Reverse input along the given axes.
@@ -10,8 +10,7 @@ import {validateReduceParams} from './lib/validate-input.js';
  * @return {Tensor}
  */
 export function reverse(input, {axes}) {
-  // reuse validateReduceParams to check parameters of reverse
-  validateReduceParams(input, {axes});
+  validateAxes(input, {axes});
 
   const inputAxes = axes ?? new Array(input.rank).fill(0).map((_, i) => i);
   const inputShape = input.shape;

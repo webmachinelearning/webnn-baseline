@@ -471,7 +471,7 @@ export function validatePool2dParams(input, _, {roundingType = 'floor'}) {
   }
 }
 
-export function validateReduceParams(input, {axes}) {
+export function validateAxes(input, {axes}) {
   if (axes === undefined) {
     return;
   }

@@ -4,10 +4,10 @@ import {pow} from './binary.js';
 import {squeeze} from './reshape.js';
 import {abs, exp, log} from './unary.js';
 import {sizeOfShape, Scalar, Tensor} from './lib/tensor.js';
-import {validateReduceParams} from './lib/validate-input.js';
+import {validateAxes} from './lib/validate-input.js';
 
 export function selectValuesToReduce(input, axes, inputLocation) {
-  validateReduceParams(input, {axes});
+  validateAxes(input, {axes});
 
   const outputShape = input.shape.slice();
   for (let i = 0; i < axes.length; ++i) {
