@@ -1,0 +1,230 @@
+{
+  "tests": [
+    {
+      "name": "softsign positive float32 1D tensor",
+      "inputs": {
+        "input": {
+          "shape": [24],
+          "data": "float32_1DPositiveInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [24],
+        "data": "float32_1DPositiveDefault",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "softsign negative float32 1D tensor",
+      "inputs": {
+        "input": {
+          "shape": [24],
+          "data": "float32_1DNegativeInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [24],
+        "data": "float32_1DNegativeDefault",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "softsign float32 2D tensor",
+      "inputs": {
+        "input": {
+          "shape": [4, 6],
+          "data": "float32_2DInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [4, 6],
+        "data": "float32_2DDefault",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "softsign float32 3D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 3, 4],
+          "data": "float32_2DInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 3, 4],
+        "data": "float32_2DDefault",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "softsign float32 4D tensor",
+      "inputs": {
+        "input": {
+          "shape": [1, 2, 3, 4],
+          "data": "float32_2DInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [1, 2, 3, 4],
+        "data": "float32_2DDefault",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "softsign float32 5D tensor",
+      "inputs": {
+        "input": {
+          "shape": [1, 2, 1, 3, 4],
+          "data": "float32_2DInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [1, 2, 1, 3, 4],
+        "data": "float32_2DDefault",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "softsign positive float16 1D tensor",
+      "inputs": {
+        "input": {
+          "shape": [24],
+          "data": "float16_1DPositiveInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [24],
+        "data": "float16_1DPositiveDefault",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "softsign negative float16 1D tensor",
+      "inputs": {
+        "input": {
+          "shape": [24],
+          "data": "float16_1DNegativeInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [24],
+        "data": "float16_1DNegativeDefault",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "softsign float16 2D tensor",
+      "inputs": {
+        "input": {
+          "shape": [4, 6],
+          "data": "float16_2DInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [4, 6],
+        "data": "float16_2DDefault",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "softsign float16 3D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 3, 4],
+          "data": "float16_2DInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 3, 4],
+        "data": "float16_2DDefault",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "softsign float16 4D tensor",
+      "inputs": {
+        "input": {
+          "shape": [1, 2, 3, 4],
+          "data": "float16_2DInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [1, 2, 3, 4],
+        "data": "float16_2DDefault",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "softsign float16 5D tensor",
+      "inputs": {
+        "input": {
+          "shape": [1, 2, 1, 3, 4],
+          "data": "float16_2DInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [1, 2, 1, 3, 4],
+        "data": "float16_2DDefault",
+        "dataType": "float16"
+      }
+    }
+  ],
+  "inputsData": {
+    "float32_1DPositiveInput": {
+      "shape": [24],
+      "dataType": "float32",
+      "sign": "positive"
+    },
+    "float32_1DNegativeInput": {
+      "shape": [24],
+      "dataType": "float32",
+      "sign": "negative"
+    },
+    "float32_2DInput": {
+      "shape": [24],
+      "dataType": "float32"
+    },
+    "float16_1DPositiveInput": {
+      "shape": [24],
+      "dataType": "float16",
+      "sign": "positive"
+    },
+    "float16_1DNegativeInput": {
+      "shape": [24],
+      "dataType": "float16",
+      "sign": "negative"
+    },
+    "float16_2DInput": {
+      "shape": [24],
+      "dataType": "float16"
+    }
+  },
+  "inputsDataRange": {
+    "max": 10,
+    "min": -10
+  }
+}

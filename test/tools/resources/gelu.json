@@ -1,0 +1,218 @@
+{
+  "tests": [
+    {
+      "name": "gelu float32 0D scalar",
+      "inputs": {
+        "input": {
+          "shape": [],
+          "data": "float32DataScalarInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [],
+        "data": "float32DataScalarOutput",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "gelu float16 0D scalar",
+      "inputs": {
+        "input": {
+          "shape": [],
+          "data": "float16DataScalarInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [],
+        "data": "float16DataScalarOutput",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "gelu float32 1D tensor",
+      "inputs": {
+        "input": {
+          "shape": [24],
+          "data": "float32DataInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [24],
+        "data": "float32DataOutput",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "gelu float16 1D tensor",
+      "inputs": {
+        "input": {
+          "shape": [24],
+          "data": "float16DataInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [24],
+        "data": "float16DataOutput",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "gelu float32 2D tensor",
+      "inputs": {
+        "input": {
+          "shape": [4, 6],
+        "data": "float32DataInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [4, 6],
+        "data": "float32DataOutput",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "gelu float16 2D tensor",
+      "inputs": {
+        "input": {
+          "shape": [4, 6],
+          "data": "float16DataInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [4, 6],
+        "data": "float16DataOutput",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "gelu float32 3D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 3, 4],
+          "data": "float32DataInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 3, 4],
+        "data": "float32DataOutput",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "gelu float16 3D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 3, 4],
+          "data": "float16DataInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 3, 4],
+        "data": "float16DataOutput",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "gelu float32 4D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 2, 2, 3],
+          "data": "float32DataInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 2, 2, 3],
+        "data": "float32DataOutput",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "gelu float16 4D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 2, 2, 3],
+          "data": "float16DataInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 2, 2, 3],
+        "data": "float16DataOutput",
+        "dataType": "float16"
+      }
+    },
+    {
+      "name": "gelu float32 5D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 1, 4, 1, 3],
+          "data": "float32DataInput",
+          "dataType": "float32"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 1, 4, 1, 3],
+        "data": "float32DataOutput",
+        "dataType": "float32"
+      }
+    },
+    {
+      "name": "gelu float16 5D tensor",
+      "inputs": {
+        "input": {
+          "shape": [2, 1, 4, 1, 3],
+          "data": "float16DataInput",
+          "dataType": "float16"
+        }
+      },
+      "expected": {
+        "name": "output",
+        "shape": [2, 1, 4, 1, 3],
+        "data": "float16DataOutput",
+        "dataType": "float16"
+      }
+    }
+  ],
+  "inputsData": {
+    "float32DataScalarInput": {
+      "shape": [1],
+      "dataType": "float32"
+    },
+    "float32DataInput": {
+      "shape": [24],
+      "dataType": "float32"
+    },
+    "float16DataScalarInput": {
+      "shape": [1],
+      "dataType": "float16"
+    },    
+    "float16DataInput": {
+      "shape": [24],
+      "dataType":  "float16"
+    }
+  },
+  "inputsDataRange": {
+      "max": 1,
+      "min": -1
+  }
+}
