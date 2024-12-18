@@ -1,7 +1,7 @@
 'use strict';
 
 import {equal, greater, greaterOrEqual, lesser, lesserOrEqual,
-  logicalAnd, logicalNot, logicalOr, logicalXor} from '../src/logical.js';
+  logicalAnd, logicalNot, logicalOr, logicalXor, notEqual} from '../src/logical.js';
 import {Tensor} from '../src/lib/tensor.js';
 import * as utils from './utils.js';
 
@@ -514,5 +514,53 @@ describe('test logical', function() {
       data: [0, 0, 0, 1, 0, 0, 0, 1],
     };
     testLogical(inputA, inputB, expected, logicalXor);
+  });
+
+  it('notEqual 0D scalar', function() {
+    const inputA = {
+      shape: [],
+      data: [0.5],
+    };
+    const inputB = {
+      shape: [],
+      data: [0.5],
+    };
+    const expected = {
+      shape: [],
+      data: [0],
+    };
+    testLogical(inputA, inputB, expected, notEqual);
+  });
+
+  it('notEqual 4D', function() {
+    const inputA = {
+      shape: [1, 2, 2, 1],
+      data: [-1, 1, 1, 0],
+    };
+    const inputB = {
+      shape: [1, 2, 2, 1],
+      data: [1, 0, -1, 0],
+    };
+    const expected = {
+      shape: [1, 2, 2, 1],
+      data: [1, 1, 1, 0],
+    };
+    testLogical(inputA, inputB, expected, notEqual);
+  });
+
+  it('notEqual 4D broadcast', function() {
+    const inputA = {
+      shape: [1, 2, 2, 1],
+      data: [-1, 1, 1, 0],
+    };
+    const inputB = {
+      shape: [1],
+      data: [1],
+    };
+    const expected = {
+      shape: [1, 2, 2, 1],
+      data: [1, 0, 0, 1],
+    };
+    testLogical(inputA, inputB, expected, notEqual);
   });
 });
