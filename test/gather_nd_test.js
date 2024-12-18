@@ -85,6 +85,28 @@ describe('test gatherND', function() {
     testGatherND(input, indices, expected);
   });
 
+  it('gatherND 2D inputs when 3D negative indices has leading dimensions', function() {
+    const input = {
+      shape: [2, 2],
+      data: [
+        1, 2,
+        3, 4,
+      ],
+    };
+    const indices = {
+      shape: [2, 1, 1],
+      data: [-1, -2],
+    };
+    const expected = {
+      shape: [2, 1, 2],
+      data: [
+        3, 4,
+        1, 2,
+      ],
+    };
+    testGatherND(input, indices, expected);
+  });
+
   it('gatherND 3D inputs by 2D indices', function() {
     // Refer to Example 3 on https://onnx.ai/onnx/operators/onnx__GatherND.html
     const input = {
@@ -112,6 +134,7 @@ describe('test gatherND', function() {
     };
     testGatherND(input, indices, expected);
   });
+
 
   it('gatherND 3D inputs by 3D indices', function() {
     // Refer to Example 4 on https://onnx.ai/onnx/operators/onnx__GatherND.html

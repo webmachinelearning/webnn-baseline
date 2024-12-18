@@ -35,7 +35,8 @@ export function gatherND(input, indices) {
     const indicesLocation = indices.locationFromIndex(indicesIndex);
     const indicesArray = [];
     for (let i = 0; i < lastIndicesSize; i++) {
-      indicesArray.push(indices.getValueByIndex(indicesIndex + i));
+      const indicesValue = indices.getValueByIndex(indicesIndex + i);
+      indicesArray.push(indicesValue >= 0 ? indicesValue : inputShape[i] + indicesValue);
     }
     for (let tmpIndex = 0; tmpIndex < tmpTotal; ++tmpIndex) {
       const tmpLocation = tmp.locationFromIndex(tmpIndex);
