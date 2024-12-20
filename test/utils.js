@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = chai.assert;
+const expect = chai.expect;
 
 /**
  * Get bitwise of the given value.
@@ -39,6 +40,10 @@ assert.isAlmostEqualUlp = function(a, b, nulp, message) {
     return assert.isTrue(distance <= nulp, message);
   }
 };
+
+export function expectThrowError(errorFunc, message) {
+  expect(errorFunc).to.throw(message);
+}
 
 export function checkValue(tensor, expected, nulp = 0) {
   assert.isTrue(tensor.size === expected.length);

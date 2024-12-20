@@ -121,4 +121,26 @@ describe('test scatterElements', function() {
     };
     testScatterElements(input, indices, updates, expected, {axis: 1});
   });
+
+  it('scatterElements throws error with overlapping indices', function() {
+    const input = {
+      shape: [1, 5],
+      data: [1, 2, 3, 4, 5],
+    };
+    const indices = {
+      shape: [1, 2],
+      data: [3, -2],
+    };
+    const updates = {
+      shape: [1, 2],
+      data: [1.1, 2.1],
+    };
+    const expected = {
+      shape: [1, 5],
+      data: [1, 2, 3, 2.1, 5],
+    };
+    utils.expectThrowError(() => {
+      testScatterElements(input, indices, updates, expected, {axis: 1});
+    }, 'Invalid indices, [0,-2] and [0,3] point to the same output location.');
+  });
 });

@@ -653,11 +653,25 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
         `The axis ${axis} should be an unsigned integer in the interval [0, ${inputRank}).`);
   }
   const axisSize = input.shape[axis];
+  const updatedLocationDict = {};
   for (let i = 0; i < sizeOfShape(indices.shape); ++i) {
-    const index = indices.getValueByIndex(i);
+    let index = indices.getValueByIndex(i);
     if (!Number.isInteger(index) || index < -axisSize || index >= axisSize) {
       throw new Error(`Invalid indices value - it should be an integer in the interval ` +
       `[${-axisSize}, ${axisSize - 1}]`);
+    }
+    const indicesLocation = indices.locationFromIndex(i);
+    const originOutputLocation =
+        [...indicesLocation.slice(0, axis), index, ...indicesLocation.slice(axis + 1)];
+    index = index < 0 ? index + input.shape[axis] : index;
+    const outputLocation =
+        [...indicesLocation.slice(0, axis), index, ...indicesLocation.slice(axis + 1)];
+    const locationString = outputLocation.toString();
+    if (Object.hasOwn(updatedLocationDict, locationString)) {
+      throw new Error(`Invalid indices, [${originOutputLocation}] and ` +
+        `[${updatedLocationDict[locationString]}] point to the same output location.`);
+    } else {
+      updatedLocationDict[locationString] = originOutputLocation;
     }
   }
 }
