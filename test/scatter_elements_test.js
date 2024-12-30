@@ -141,6 +141,6 @@ describe('test scatterElements', function() {
     };
     utils.expectThrowError(() => {
       testScatterElements(input, indices, updates, expected, {axis: 1});
-    }, 'Invalid indices, [0,-2] and [0,3] point to the same output location.');
+    }, 'Invalid indices, [0,-2] is not unique.');
   });
 });
