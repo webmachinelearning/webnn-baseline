@@ -629,8 +629,8 @@ export function validateGatherNDParams(input, indices) {
   const indicesRank = indices.rank;
   const indicesShape = indices.shape;
 
-  // Refer to https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/ +
-  //   operation-specs/movement/gather-nd-8.html
+  /* eslint-disable max-len */
+  // Refer to https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/operation-specs/movement/gather-nd-8.html
   if (inputRank < 1) {
     throw new Error(`The input rank shouldn't be less than 1.`);
   }

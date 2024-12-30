@@ -14,8 +14,8 @@ describe('test gatherND', function() {
   }
 
   it('gatherND with elements from 2D inputs by 2D indices', function() {
-    // Refer to Example 1 on https://docs.openvino.ai/2024/documentation/openvino-ir-format/ +
-    //   operation-sets/operation-specs/movement/gather-nd-8.html
+    /* eslint-disable max-len */
+    // Refer to Example 1 on https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/operation-specs/movement/gather-nd-8.html
     const input = {
       shape: [2, 2],
       data: [
@@ -38,8 +38,8 @@ describe('test gatherND', function() {
   });
 
   it('gatherND with slices from 2D inputs by 2D indices', function() {
-    // Refer to Example 2 on https://docs.openvino.ai/2024/documentation/openvino-ir-format/ +
-    //   operation-sets/operation-specs/movement/gather-nd-8.html
+    /* eslint-disable max-len */
+    // Refer to Example 2 on https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/operation-specs/movement/gather-nd-8.html
     const input = {
       shape: [2, 2],
       data: [
@@ -62,8 +62,8 @@ describe('test gatherND', function() {
   });
 
   it('gatherND 2D inputs when 3D indices has leading dimensions', function() {
-    // Refer to Example 3 on https://docs.openvino.ai/2024/documentation/openvino-ir-format/ +
-    //   operation-sets/operation-specs/movement/gather-nd-8.html
+    /* eslint-disable max-len */
+    // Refer to Example 3 on https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/operation-specs/movement/gather-nd-8.html
     const input = {
       shape: [2, 2],
       data: [

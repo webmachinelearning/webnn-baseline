@@ -19,8 +19,8 @@ export function gatherND(input, indices) {
   const lastIndicesSize = indicesShape[indicesRank - 1];
   const tmpShape = inputShape.slice(lastIndicesSize);
 
-  // Refer to https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/ +
-  //   operation-specs/movement/gather-nd-8.html
+  /* eslint-disable max-len */
+  // Refer to https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/operation-specs/movement/gather-nd-8.html
   let outputShape = indicesShape.slice(0, indicesRank - 1);
   if (lastIndicesSize !== inputRank) {
     outputShape = outputShape.concat(tmpShape);
