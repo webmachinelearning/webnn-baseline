@@ -653,7 +653,7 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
         `The axis ${axis} should be an unsigned integer in the interval [0, ${inputRank}).`);
   }
   const axisSize = input.shape[axis];
-  const updatedLocationDict = new Set();
+  const updatedLocationSet = new Set();
   for (let i = 0; i < sizeOfShape(indices.shape); ++i) {
     let index = indices.getValueByIndex(i);
     if (!Number.isInteger(index) || index < -axisSize || index >= axisSize) {
@@ -667,10 +667,10 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
     const outputLocation =
         [...indicesLocation.slice(0, axis), index, ...indicesLocation.slice(axis + 1)];
     const locationString = outputLocation.toString();
-    if (updatedLocationDict.has(locationString)) {
+    if (updatedLocationSet.has(locationString)) {
       throw new Error(`Invalid indices, [${originOutputLocation}] is not unique.`);
     } else {
-      updatedLocationDict.add(locationString);
+      updatedLocationSet.add(locationString);
     }
   }
 }
