@@ -685,7 +685,7 @@ export function validateScatterNDParams(input, indices, updates) {
 
   const inputShape = input.shape;
   const indicesTotal = sizeOfShape(indicesShape);
-  const updatedLocationDict = {};
+  const updatedLocationSet = new Set();
   for (let indicesIndex = 0; indicesIndex < indicesTotal; indicesIndex += lastIndicesSize) {
     const originIndicesArray = [];
     const indicesArray = [];
@@ -702,11 +702,10 @@ export function validateScatterNDParams(input, indices, updates) {
       indicesArray.push(indicesValue >= 0 ? indicesValue : inputShape[i] + indicesValue);
     }
     const locationString = indicesArray.toString();
-    if (Object.hasOwn(updatedLocationDict, locationString)) {
-      throw new Error(`Invalid indices, [${originIndicesArray}] and ` +
-        `[${updatedLocationDict[locationString]}] point to the same output location.`);
+    if (updatedLocationSet.has(locationString)) {
+      throw new Error(`Invalid indices, [${originIndicesArray}] is not unique.`);
     } else {
-      updatedLocationDict[locationString] = originIndicesArray;
+      updatedLocationSet.add(locationString);
     }
   }
 
