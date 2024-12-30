@@ -17,31 +17,31 @@ export function gatherND(input, indices) {
   const indicesRank = indices.rank;
   const indicesShape = indices.shape;
   const lastIndicesSize = indicesShape[indicesRank - 1];
-  const tmpShape = inputShape.slice(lastIndicesSize);
+  const sliceShape = inputShape.slice(lastIndicesSize);
 
   /* eslint-disable max-len */
   // Refer to https://docs.openvino.ai/2024/documentation/openvino-ir-format/operation-sets/operation-specs/movement/gather-nd-8.html
   let outputShape = indicesShape.slice(0, indicesRank - 1);
   if (lastIndicesSize !== inputRank) {
-    outputShape = outputShape.concat(tmpShape);
+    outputShape = outputShape.concat(sliceShape);
   }
 
   const output = new Tensor(outputShape);
-  const indicesTotal = sizeOfShape(indicesShape);
-  const tmp = new Tensor(tmpShape);
-  const tmpTotal = sizeOfShape(tmpShape);
+  const indicesSize = sizeOfShape(indicesShape);
+  const slice = new Tensor(sliceShape);
+  const sliceSize = sizeOfShape(sliceShape);
 
-  for (let indicesIndex = 0; indicesIndex < indicesTotal; indicesIndex += lastIndicesSize) {
+  for (let indicesIndex = 0; indicesIndex < indicesSize; indicesIndex += lastIndicesSize) {
     const indicesLocation = indices.locationFromIndex(indicesIndex);
     const indicesArray = [];
     for (let i = 0; i < lastIndicesSize; i++) {
       const indicesValue = indices.getValueByIndex(indicesIndex + i);
       indicesArray.push(indicesValue >= 0 ? indicesValue : inputShape[i] + indicesValue);
     }
-    for (let tmpIndex = 0; tmpIndex < tmpTotal; ++tmpIndex) {
-      const tmpLocation = tmp.locationFromIndex(tmpIndex);
-      const outputLocation = indicesLocation.slice(0, indicesRank - 1).concat(tmpLocation);
-      const inputValue = input.getValueByLocation(indicesArray.concat(tmpLocation));
+    for (let sliceIndex = 0; sliceIndex < sliceSize; ++sliceIndex) {
+      const sliceLocation = slice.locationFromIndex(sliceIndex);
+      const outputLocation = indicesLocation.slice(0, indicesRank - 1).concat(sliceLocation);
+      const inputValue = input.getValueByLocation(indicesArray.concat(sliceLocation));
       // output[i_0, ..., i_{K-2},:,...,:] = data[indices[i_0, ..., i_{K-2}],:,...,:]
       output.setValueByLocation(outputLocation, inputValue);
     }

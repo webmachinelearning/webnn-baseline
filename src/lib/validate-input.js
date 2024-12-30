@@ -652,7 +652,7 @@ export function validateGatherNDParams(input, indices) {
       if (!Number.isInteger(indicesValue) ||
         indicesValue < -maxSize ||
         indicesValue > maxSize - 1) {
-        throw new Error(`Invalid indices value - it should be an integer in the interval ` +
+        throw new Error(`Invalid indices value - it should be an integer in the range ` +
             `[${-maxSize}, ${maxSize - 1}]`);
       }
     }
