@@ -665,7 +665,7 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
 export function validateScatterNDParams(input, indices, updates) {
   // Refer to https://onnx.ai/onnx/operators/onnx__ScatterND.html
   // ScatterND takes three inputs data tensor of rank r >= 1, indices tensor of rank q >= 1,
-  // and updates tensor of rank q + r - indices.shape[-1] - 1.
+  // and updates tensor of rank equal to input rank + indices rank - indices.shape[-1] - 1.
 
   const inputRank = input.rank;
   if (inputRank < 1) {
@@ -684,9 +684,9 @@ export function validateScatterNDParams(input, indices, updates) {
   }
 
   const inputShape = input.shape;
-  const indicesTotal = sizeOfShape(indicesShape);
+  const indicesSize = sizeOfShape(indicesShape);
   const updatedLocationSet = new Set();
-  for (let indicesIndex = 0; indicesIndex < indicesTotal; indicesIndex += lastIndicesSize) {
+  for (let indicesIndex = 0; indicesIndex < indicesSize; indicesIndex += lastIndicesSize) {
     const originIndicesArray = [];
     const indicesArray = [];
     for (let i = 0; i < lastIndicesSize; i++) {
@@ -695,8 +695,8 @@ export function validateScatterNDParams(input, indices, updates) {
       if (!Number.isInteger(indicesValue) ||
         indicesValue < -maxSize ||
         indicesValue > maxSize - 1) {
-        throw new Error(`Invalid indices value - it should be an integer in the interval ` +
-            `[${-maxSize}, ${maxSize - 1}]`);
+        throw new Error(`Invalid indices value (${indicesValue}), it should be an integer in the` +
+            ` range [${-maxSize}, ${maxSize - 1}]`);
       }
       originIndicesArray.push(indicesValue);
       indicesArray.push(indicesValue >= 0 ? indicesValue : inputShape[i] + indicesValue);
@@ -710,17 +710,18 @@ export function validateScatterNDParams(input, indices, updates) {
   }
 
   const updatesRank = updates.rank;
-  const targetUpdatesRank = indicesRank + inputRank - lastIndicesSize -1;
+  const targetUpdatesRank = indicesRank + inputRank - lastIndicesSize - 1;
   if (updatesRank !== targetUpdatesRank) {
     throw new Error(
-        `Invalid updates value - updates rank should be equal to ${targetUpdatesRank}.`);
+        `Invalid updates rank ${updatesRank}, it should be equal to ${targetUpdatesRank}.`);
   }
 
   const updatesShape = updates.shape;
   const targetUpdatesShape =
     indicesShape.slice(0, indicesRank - 1).concat(inputShape.slice(lastIndicesSize));
   if (!updatesShape.every((size, index) => size === targetUpdatesShape[index])) {
-    throw new Error(`Invalid updates shape, it should be [${targetUpdatesShape}].`);
+    throw new Error(`Invalid updates shape ([${updatesShape}]), it should be ` +
+        `[${targetUpdatesShape}].`);
   }
 }
 

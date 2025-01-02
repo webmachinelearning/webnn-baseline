@@ -25,24 +25,24 @@ export function scatterND(input, indices, updates) {
   const inputShape = input.shape;
   const indicesRank = indices.rank;
   const indicesShape = indices.shape;
-  const indicesTotal = sizeOfShape(indicesShape);
+  const indicesSize = sizeOfShape(indicesShape);
   const lastIndicesSize = indicesShape[indicesRank - 1];
-  const tmpShape = inputShape.slice(lastIndicesSize, inputRank);
-  const tmp = new Tensor(tmpShape);
-  const tmpTotal = sizeOfShape(tmpShape);
+  const sliceShape = inputShape.slice(lastIndicesSize, inputRank);
+  const slice = new Tensor(sliceShape);
+  const sliceSize = sizeOfShape(sliceShape);
 
-  for (let indicesIndex = 0; indicesIndex < indicesTotal; indicesIndex += lastIndicesSize) {
+  for (let indicesIndex = 0; indicesIndex < indicesSize; indicesIndex += lastIndicesSize) {
     const indicesLocation = indices.locationFromIndex(indicesIndex);
     const indicesArray = [];
     for (let i = 0; i < lastIndicesSize; i++) {
       const indicesValue = indices.getValueByIndex(indicesIndex + i);
       indicesArray.push(indicesValue >= 0 ? indicesValue : inputShape[i] + indicesValue);
     }
-    for (let tmpIndex = 0; tmpIndex < tmpTotal; ++tmpIndex) {
-      const tmpLocation = tmp.locationFromIndex(tmpIndex);
-      const outputLocation = indicesArray.concat(tmpLocation);
+    for (let sliceIndex = 0; sliceIndex < sliceSize; ++sliceIndex) {
+      const sliceLocation = slice.locationFromIndex(sliceIndex);
+      const outputLocation = indicesArray.concat(sliceLocation);
       const updateValue =
-        updates.getValueByLocation(indicesLocation.slice(0, indicesRank - 1).concat(tmpLocation));
+        updates.getValueByLocation(indicesLocation.slice(0, indicesRank - 1).concat(sliceLocation));
       output.setValueByLocation(outputLocation, updateValue);
     }
   }
