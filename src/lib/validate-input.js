@@ -711,6 +711,69 @@ export function validateScatterElementsParams(input, indices, updates, {axis = 0
   }
 }
 
+export function validateScatterNDParams(input, indices, updates) {
+  // Refer to https://onnx.ai/onnx/operators/onnx__ScatterND.html
+  // ScatterND takes three inputs data tensor of rank r >= 1, indices tensor of rank q >= 1,
+  // and updates tensor of rank equal to input rank + indices rank - indices.shape[-1] - 1.
+
+  const inputRank = input.rank;
+  if (inputRank < 1) {
+    throw new Error(`The input should be at least a 1-D tensor.`);
+  }
+
+  const indicesRank = indices.rank;
+  if (indicesRank < 1) {
+    throw new Error(`The indices should be at least a 1-D tensor.`);
+  }
+
+  const indicesShape = indices.shape;
+  const lastIndicesSize = indicesShape[indicesRank - 1];
+  if (lastIndicesSize < 1 || lastIndicesSize > inputRank) {
+    throw new Error(`The indices.shape[-1] should be in the range [1, ${inputRank}].`);
+  }
+
+  const inputShape = input.shape;
+  const indicesSize = sizeOfShape(indicesShape);
+  const updatedLocationSet = new Set();
+  for (let indicesIndex = 0; indicesIndex < indicesSize; indicesIndex += lastIndicesSize) {
+    const originIndicesArray = [];
+    const indicesArray = [];
+    for (let i = 0; i < lastIndicesSize; i++) {
+      const indicesValue = indices.getValueByIndex(indicesIndex + i);
+      const maxSize = inputShape[i];
+      if (!Number.isInteger(indicesValue) ||
+        indicesValue < -maxSize ||
+        indicesValue > maxSize - 1) {
+        throw new Error(`Invalid indices value (${indicesValue}), it should be an integer in the` +
+            ` range [${-maxSize}, ${maxSize - 1}]`);
+      }
+      originIndicesArray.push(indicesValue);
+      indicesArray.push(indicesValue >= 0 ? indicesValue : inputShape[i] + indicesValue);
+    }
+    const locationString = indicesArray.toString();
+    if (updatedLocationSet.has(locationString)) {
+      throw new Error(`Invalid indices, [${originIndicesArray}] is not unique.`);
+    } else {
+      updatedLocationSet.add(locationString);
+    }
+  }
+
+  const updatesRank = updates.rank;
+  const targetUpdatesRank = indicesRank + inputRank - lastIndicesSize - 1;
+  if (updatesRank !== targetUpdatesRank) {
+    throw new Error(
+        `Invalid updates rank ${updatesRank}, it should be equal to ${targetUpdatesRank}.`);
+  }
+
+  const updatesShape = updates.shape;
+  const targetUpdatesShape =
+    indicesShape.slice(0, indicesRank - 1).concat(inputShape.slice(lastIndicesSize));
+  if (!updatesShape.every((size, index) => size === targetUpdatesShape[index])) {
+    throw new Error(`Invalid updates shape ([${updatesShape}]), it should be ` +
+        `[${targetUpdatesShape}].`);
+  }
+}
+
 export function validateGatherElementsParams(input, indices, {axis = 0} = {}) {
   const inputRank = input.rank;
   const indicesRank = indices.rank;
