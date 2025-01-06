@@ -86,8 +86,8 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
             recurrentBias: currentRecurrentBias[dir], peepholeWeight: currentPeepholeWeight[dir],
             layout: layout, activations: activations});
 
-      const output = reshape(results[0], [1, null, hiddenSize]);
-      const cell = reshape(results[1], [1, null, hiddenSize]);
+      const output = reshape(results[0], [1, batchSize, hiddenSize]);
+      const cell = reshape(results[1], [1, batchSize, hiddenSize]);
 
       nextHidden = (nextHidden ? concat([nextHidden, output], 0) : output);
       nextCell = (nextCell ? concat([nextCell, cell], 0) : cell);
@@ -97,7 +97,7 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
     cellState = nextCell;
 
     if (returnSequence) {
-      nextHidden = reshape(nextHidden, [1, numDirections, null, hiddenSize]);
+      nextHidden = reshape(nextHidden, [1, numDirections, batchSize, hiddenSize]);
       sequence = (sequence ? concat([sequence, nextHidden], 0) : nextHidden);
     }
   }
