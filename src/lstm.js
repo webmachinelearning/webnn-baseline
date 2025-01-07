@@ -91,7 +91,7 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
       const output = reshape(results[0], [1, batchSize, hiddenSize]);
       const cell = reshape(results[1], [1, batchSize, hiddenSize]);
 
-      // Concat along 0 axis (for numDirections dimension)
+      // Concat along axis 0 (numDirections dimension)
       nextHidden = (nextHidden ? concat([nextHidden, output], 0) : output);
       nextCell = (nextCell ? concat([nextCell, cell], 0) : cell);
     }
@@ -103,19 +103,22 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
       // Expand [numDirections, batchSize, hiddenSize] to
       // [steps, numDirections, batchSize, hiddenSize]
       nextHidden = reshape(nextHidden, [1, numDirections, batchSize, hiddenSize]);
-      // Concat output sequence along 0 axis (for steps dimension)
+      // Concat output sequence along axis 0 (steps dimension)
       sequence = (sequence ? concat([sequence, nextHidden], 0) : nextHidden);
     }
   }
 
   if (direction === 'backward') {
-    // Reverse output sequence alog [0] axes (for steps dimension)
+    // Refer to https://www.w3.org/TR/webnn/#api-mlgraphbuilder-lstm, Spec says the
+    // sequence should contain every output from each time step in the temporal sequence, while
+    // the loop for steps concatenates sequence in a reversed order when direction is backward,
+    // so here need reverse output sequence along axis 0 (steps dimension).
     sequence = reverse(sequence, {axes: [0]});
   } else if (direction === 'both') {
-    // Split output sequence into forward-sequence and backward-sequence two sequences along 1 axis
-    // (for numDirections dimension)
+    // Split output sequence into forward-sequence and backward-sequence two sequences along axis 1
+    // (numDirections dimension)
     const [sequenceForward, sequenceBackward] = split(sequence, 2, {axis: 1});
-    // Reverse backward-sequence alog [0] axes (for only steps dimension)
+    // Reverse backward-sequence along axis 0 (steps dimension)
     const reversedSequenceBackward = reverse(sequenceBackward, {axes: [0]});
     sequence = concat([sequenceForward, reversedSequenceBackward], 1);
   } else {
