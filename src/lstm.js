@@ -3,8 +3,10 @@
 import {concat} from './concat.js';
 import {lstmCell} from './lstm_cell.js';
 import {reshape, squeeze} from './reshape.js';
+import {reverse} from './reverse.js';
 import {sizeOfShape, Tensor} from './lib/tensor.js';
 import {sigmoid} from './sigmoid.js';
+import {split} from './split.js';
 import {slice} from './slice.js';
 import {tanh} from './tanh.js';
 import {validateLstmParams} from './lib/validate-input.js';
@@ -85,10 +87,11 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
           currentHidden[dir], currentCell[dir], hiddenSize, {bias: currentBias[dir],
             recurrentBias: currentRecurrentBias[dir], peepholeWeight: currentPeepholeWeight[dir],
             layout: layout, activations: activations});
-
+      // Expand [batchSize, hiddenSize] to [numDirections, batchSize, hiddenSize]
       const output = reshape(results[0], [1, batchSize, hiddenSize]);
       const cell = reshape(results[1], [1, batchSize, hiddenSize]);
 
+      // Concat along 0 axis (for numDirections dimension)
       nextHidden = (nextHidden ? concat([nextHidden, output], 0) : output);
       nextCell = (nextCell ? concat([nextCell, cell], 0) : cell);
     }
@@ -97,9 +100,26 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
     cellState = nextCell;
 
     if (returnSequence) {
+      // Expand [numDirections, batchSize, hiddenSize] to
+      // [steps, numDirections, batchSize, hiddenSize]
       nextHidden = reshape(nextHidden, [1, numDirections, batchSize, hiddenSize]);
+      // Concat output sequence along 0 axis (for steps dimension)
       sequence = (sequence ? concat([sequence, nextHidden], 0) : nextHidden);
     }
+  }
+
+  if (direction === 'backward') {
+    // Reverse output sequence alog [0] axes (for steps dimension)
+    sequence = reverse(sequence, {axes: [0]});
+  } else if (direction === 'both') {
+    // Split output sequence into forward-sequence and backward-sequence two sequences along 1 axis
+    // (for numDirections dimension)
+    const [sequenceForward, sequenceBackward] = split(sequence, 2, {axis: 1});
+    // Reverse backward-sequence alog [0] axes (for only steps dimension)
+    const reversedSequenceBackward = reverse(sequenceBackward, {axes: [0]});
+    sequence = concat([sequenceForward, reversedSequenceBackward], 1);
+  } else {
+    // No need update sequence for 'forward' direction
   }
 
   return (sequence ? [hiddenState, cellState, sequence] : [hiddenState, cellState]);
