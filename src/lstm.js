@@ -116,8 +116,8 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
       // so here need reverse output sequence along axis 0 (steps dimension).
       sequence = reverse(sequence, {axes: [0]});
     } else if (direction === 'both') {
-      // Split output sequence into forward-sequence and backward-sequence two sequences along axis 1
-      // (numDirections dimension)
+      // Split output sequence into forward-sequence and backward-sequence two sequences along axis
+      // 1 (numDirections dimension)
       const [sequenceForward, sequenceBackward] = split(sequence, 2, {axis: 1});
       // Reverse backward-sequence along axis 0 (steps dimension)
       const reversedSequenceBackward = reverse(sequenceBackward, {axes: [0]});
