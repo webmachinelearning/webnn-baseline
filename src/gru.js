@@ -38,55 +38,67 @@ export function gru(input, weight, recurrentWeight, steps, hiddenSize,
         initialHiddenStateShape, new Array(sizeOfShape(initialHiddenStateShape)).fill(0));
   }
 
-  let sequence;
-  const cellWeight = [];
-  const cellRecurrentWeight = [];
-  const cellBias = [];
-  const cellRecurrentBias = [];
+  const currentWeight = [];
+  const currentRecurrentWeight = [];
+  const currentBias = [];
+  const currentRecurrentBias = [];
+  let forwardSequence = null;
+  let backwardSequence = null;
+  let outputHidden = null;
 
-  for (let slot = 0; slot < numDirections; ++slot) {
-    cellWeight.push(
-        squeeze(slice(weight, [slot, 0, 0], [1, 3 * hiddenSize, inputSize]), [0]));
-    cellRecurrentWeight.push(squeeze(
-        slice(recurrentWeight, [slot, 0, 0], [1, 3 * hiddenSize, hiddenSize]), [0]));
-    cellBias.push(
-        bias ? (squeeze(slice(bias, [slot, 0], [1, 3 * hiddenSize]), [0])) :
-                undefined);
-    cellRecurrentBias.push(
-        recurrentBias ? (squeeze(slice(recurrentBias, [slot, 0], [1, 3 * hiddenSize]), [0])) :
-                         undefined);
+  for (let dir = 0; dir < numDirections; ++dir) {
+    currentWeight.push(squeeze(slice(weight, [dir, 0, 0], [1, 3 * hiddenSize, inputSize])));
+    currentRecurrentWeight.push(squeeze(
+        slice(recurrentWeight, [dir, 0, 0], [1, 3 * hiddenSize, hiddenSize])));
+    currentBias.push(
+        bias ? (squeeze(slice(bias, [dir, 0], [1, 3 * hiddenSize]))) : null);
+    currentRecurrentBias.push(
+        recurrentBias ? (squeeze(slice(recurrentBias, [dir, 0], [1, 3 * hiddenSize]))) : null);
+    let currentHidden = squeeze(slice(hiddenState, [dir, 0, 0], [1, batchSize, hiddenSize]));
+
+    for (let step = 0; step < steps; ++step) {
+      const sliceStart = (dir === 1 || direction === 'backward' ? steps - step - 1 : step);
+      const currentInput = squeeze(slice(input, [sliceStart, 0, 0], [1, batchSize, inputSize]));
+      currentHidden = gruCell(
+          currentInput, currentWeight[dir], currentRecurrentWeight[dir],
+          currentHidden, hiddenSize, {bias: currentBias[dir],
+            recurrentBias: currentRecurrentBias[dir], resetAfter, layout, activations});
+
+      if (returnSequence) {
+        // Expand hidden of 2D([batchSize, hiddenSize]) to
+        // 4D([steps, numDirections, batchSize, hiddenSize])
+        const expandedHiddenAs4D = reshape(currentHidden, [1, 1, batchSize, hiddenSize]);
+        if (direction === 'forward' || (dir === 0 && direction === 'both')) {
+          forwardSequence = forwardSequence ?
+              concat([forwardSequence, expandedHiddenAs4D], 0) :
+              expandedHiddenAs4D;
+        } else if (direction === 'backward' || (dir === 1 && direction === 'both')) {
+          backwardSequence = backwardSequence ?
+              concat([expandedHiddenAs4D, backwardSequence], 0) :
+              expandedHiddenAs4D;
+        }
+      }
+    }
+
+    // Expand hidden of 2D([batchSize, hiddenSize]) to 3D([numDirections, batchSize, hiddenSize])
+    const expandHiddenAs3D = reshape(currentHidden, [1, batchSize, hiddenSize]);
+    // Concat along axis 0 (numDirections dimension)
+    outputHidden = outputHidden ? concat([outputHidden, expandHiddenAs3D], 0) : expandHiddenAs3D;
   }
 
-  for (let step = 0; step < steps; ++step) {
-    const cellHidden = [];
-    let cellOutput;
-
-    for (let slot = 0; slot < numDirections; ++slot) {
-      cellHidden.push(squeeze(slice(hiddenState, [slot, 0, 0], [1, batchSize, hiddenSize]), [0]));
+  if (returnSequence) {
+    // outputSequence: [steps, numDirections, batchSize, hiddenSize]
+    let outputSequence = null;
+    if (direction === 'forward') {
+      outputSequence = forwardSequence;
+    } else if (direction === 'backward') {
+      outputSequence = backwardSequence;
+    } else if (direction === 'both') {
+      // Concat along axis 1 (numDirections dimension)
+      outputSequence = concat([forwardSequence, backwardSequence], 1);
     }
-
-    for (let slot = 0; slot < numDirections; ++slot) {
-      const sliceStart = (slot === 1 || direction === 'backward' ? steps - step - 1 : step);
-      const cellInput = squeeze(slice(input, [sliceStart, 0, 0], [1, batchSize, inputSize]), [0]);
-
-      const result = reshape(
-          gruCell(
-              cellInput, cellWeight[slot], cellRecurrentWeight[slot],
-              cellHidden[slot], hiddenSize, {bias: cellBias[slot],
-                recurrentBias: cellRecurrentBias[slot], resetAfter, layout, activations}),
-          [1, null, hiddenSize]);
-
-      cellOutput = (cellOutput ? concat([cellOutput, result], 0) : result);
-    }
-
-    hiddenState = cellOutput;
-
-    if (returnSequence) {
-      cellOutput = reshape(cellOutput, [1, numDirections, null, hiddenSize]);
-      sequence =
-          (sequence ? concat([sequence, cellOutput], 0) : cellOutput);
-    }
+    return [outputHidden, outputSequence];
+  } else {
+    return [outputHidden];
   }
-
-  return [hiddenState, sequence];
 }
