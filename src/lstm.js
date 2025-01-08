@@ -108,22 +108,25 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
     }
   }
 
-  if (direction === 'backward') {
-    // Refer to https://www.w3.org/TR/webnn/#api-mlgraphbuilder-lstm, Spec says the
-    // sequence should contain every output from each time step in the temporal sequence, while
-    // the loop for steps concatenates sequence in a reversed order when direction is backward,
-    // so here need reverse output sequence along axis 0 (steps dimension).
-    sequence = reverse(sequence, {axes: [0]});
-  } else if (direction === 'both') {
-    // Split output sequence into forward-sequence and backward-sequence two sequences along axis 1
-    // (numDirections dimension)
-    const [sequenceForward, sequenceBackward] = split(sequence, 2, {axis: 1});
-    // Reverse backward-sequence along axis 0 (steps dimension)
-    const reversedSequenceBackward = reverse(sequenceBackward, {axes: [0]});
-    sequence = concat([sequenceForward, reversedSequenceBackward], 1);
+  if (returnSequence) {
+    if (direction === 'backward') {
+      // Refer to https://www.w3.org/TR/webnn/#api-mlgraphbuilder-lstm, Spec says the
+      // sequence should contain every output from each time step in the temporal sequence, while
+      // the loop for steps concatenates sequence in a reversed order when direction is backward,
+      // so here need reverse output sequence along axis 0 (steps dimension).
+      sequence = reverse(sequence, {axes: [0]});
+    } else if (direction === 'both') {
+      // Split output sequence into forward-sequence and backward-sequence two sequences along axis 1
+      // (numDirections dimension)
+      const [sequenceForward, sequenceBackward] = split(sequence, 2, {axis: 1});
+      // Reverse backward-sequence along axis 0 (steps dimension)
+      const reversedSequenceBackward = reverse(sequenceBackward, {axes: [0]});
+      sequence = concat([sequenceForward, reversedSequenceBackward], 1);
+    } else {
+      // No need update sequence for 'forward' direction
+    }
+    return [hiddenState, cellState, sequence];
   } else {
-    // No need update sequence for 'forward' direction
+    return [hiddenState, cellState];
   }
-
-  return (sequence ? [hiddenState, cellState, sequence] : [hiddenState, cellState]);
 }
