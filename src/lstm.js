@@ -54,10 +54,8 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
   const currentPeepholeWeight = [];
   let forwardSequence = null;
   let backwardSequence = null;
-  let currentHidden;
-  let currentCell;
-  let outputHidden;
-  let outputCell;
+  let outputHidden = null;
+  let outputCell = null;
 
   for (let dir = 0; dir < numDirections; ++dir) {
     currentWeight.push(squeeze(slice(weight, [dir, 0, 0], [1, 4 * hiddenSize, inputSize])));
@@ -69,8 +67,8 @@ export function lstm(input, weight, recurrentWeight, steps, hiddenSize,
     currentPeepholeWeight.push(peepholeWeight ?
       (squeeze(slice(peepholeWeight, [dir, 0], [1, 3 * hiddenSize]))) : null);
 
-    currentHidden = squeeze(slice(hiddenState, [dir, 0, 0], [1, batchSize, hiddenSize]));
-    currentCell = squeeze(slice(cellState, [dir, 0, 0], [1, batchSize, hiddenSize]));
+    let currentHidden = squeeze(slice(hiddenState, [dir, 0, 0], [1, batchSize, hiddenSize]));
+    let currentCell = squeeze(slice(cellState, [dir, 0, 0], [1, batchSize, hiddenSize]));
 
     for (let step = 0; step < steps; ++step) {
       const slice0 = dir === 1 || direction === 'backward' ? steps - step - 1 : step;
