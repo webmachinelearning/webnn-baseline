@@ -166,13 +166,14 @@ export function reduceL1(input, options = {}) {
 
 /* The l2 reducer */
 export function l2Reducer(previousValue, currentValue, currentIndex, array) {
+  let sumOfSquares;
   if (currentIndex == 1) {
-    const sumOfSquares = previousValue * previousValue + currentValue * currentValue;
-    return sumOfSquares;
+    sumOfSquares = previousValue * previousValue + currentValue * currentValue;
   } else {
-    const sumOfSquares = previousValue + currentValue * currentValue;
-    return (currentIndex === array.length - 1) ? Math.sqrt(sumOfSquares) :sumOfSquares;
+    sumOfSquares = previousValue + currentValue * currentValue;
   }
+
+  return (currentIndex === array.length - 1) ? Math.sqrt(sumOfSquares) : sumOfSquares;
 }
 
 /**
