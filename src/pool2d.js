@@ -1,8 +1,10 @@
 'use strict';
 
-import {Tensor} from './lib/tensor.js';
+import {Tensor, Scalar} from './lib/tensor.js';
 import {transpose} from './transpose.js';
-import {l2Reducer, meanReducer, maxReducer} from './reduce.js';
+import {pow} from './binary.js';
+import {sqrt} from './unary.js';
+import {maxReducer, meanReducer, sumReducer} from './reduce.js';
 import {validatePool2dParams} from './lib/validate-input.js';
 
 /**
@@ -120,5 +122,7 @@ export function maxPool2d(input, options = {}) {
  * @return {Tensor}
  */
 export function l2Pool2d(input, options = {}) {
-  return pool2d(input, l2Reducer, options);
+  const squaredInput = pow(input, new Scalar(2));
+  const pooledInput = pool2d(squaredInput, sumReducer, options);
+  return sqrt(pooledInput);
 }
