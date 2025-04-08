@@ -199,4 +199,22 @@ describe('test pool2d', function() {
     ];
     utils.checkValue(y, expected);
   });
+
+  it('l2Pool2d pads roundingType=ceil', function() {
+    const x = new Tensor([1, 1, 5, 5], [
+      1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+      14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    ]);
+    const windowDimensions = [3, 3];
+    const padding = [1, 0, 0, 1];
+    const strides = [2, 2];
+    const y = l2Pool2d(x, {windowDimensions, padding, strides, roundingType: 'ceil'});
+    utils.checkShape(y, [1, 1, 3, 3]);
+    const expected = [
+      12.767145334803704, 17.175564037317667, 11.180339887498949,
+      38.1051177665153,   43.81780460041329,  26.92582403567252,
+      48.19751030914356,  53.056573579529235, 32.01562118716424,
+    ];
+    utils.checkValue(y, expected);
+  });
 });

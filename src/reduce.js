@@ -101,6 +101,11 @@ export function meanReducer(previousValue, currentValue, currentIndex, array) {
   }
 }
 
+/* The sum reducer */
+export function sumReducer(previousValue, currentValue) {
+  return previousValue + currentValue;
+}
+
 /**
  * Compute the average value of all the input values along the axes.
  * @param {Tensor} input
@@ -140,8 +145,7 @@ export function reduceProduct(input, options = {}) {
  * @return {Tensor}
  */
 export function reduceSum(input, options = {}) {
-  return reduce(input,
-      (previousValue, currentValue) => previousValue + currentValue, options);
+  return reduce(input, sumReducer, options);
 }
 
 /**
@@ -162,17 +166,6 @@ export function reduceSumSquare(input, options = {}) {
  */
 export function reduceL1(input, options = {}) {
   return reduceSum(abs(input), options);
-}
-
-/* The l2 reducer */
-export function l2Reducer(previousValue, currentValue, currentIndex, array) {
-  if (currentIndex == 1) {
-    const sumOfSquares = previousValue * previousValue + currentValue * currentValue;
-    return sumOfSquares;
-  } else {
-    const sumOfSquares = previousValue + currentValue * currentValue;
-    return (currentIndex === array.length - 1) ? Math.sqrt(sumOfSquares) :sumOfSquares;
-  }
 }
 
 /**
