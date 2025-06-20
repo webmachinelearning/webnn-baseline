@@ -141,7 +141,7 @@ describe('test dequantizeLinear', function() {
           ],
         },
         { // scale
-          shape: [3, 1],
+          shape: [1, 1, 3, 1],
           value: [
             1,
             2,
@@ -149,8 +149,10 @@ describe('test dequantizeLinear', function() {
           ],
         },
         { // zeroPoint
-          shape: [1],
+          shape: [1, 1, 3, 1],
           value: [
+            0,
+            0,
             0,
           ],
         },

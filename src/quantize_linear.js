@@ -3,6 +3,7 @@
 import {add, div} from './binary.js';
 import {clamp} from './clamp.js';
 import {unary} from './unary.js';
+import {validateQDQParams} from './lib/validate-input.js';
 
 function roundToNearestEvens(x) {
   return Math.floor(x) % 2 == 0 ? Math.floor(x) : Math.ceil(x);
@@ -19,6 +20,7 @@ function roundToNearestEvens(x) {
  * @return {Tensor}
  */
 export function quantizeLinear(input, scale, zeroPoint, dataType) {
+  validateQDQParams(input, scale, zeroPoint);
   const dividedOutput = div(input, scale);
   const roundedOutput = unary(dividedOutput, (x) => roundToNearestEvens(x));
   const addedOutput = add(roundedOutput, zeroPoint);

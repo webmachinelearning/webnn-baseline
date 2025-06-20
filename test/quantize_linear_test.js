@@ -107,15 +107,16 @@ describe('test quantizeLinear', function() {
           ],
         },
         { // scale
-          shape: [2, 1],
+          shape: [1, 1, 2, 1],
           value: [
             2,
             2,
           ],
         },
         { // zeroPoint
-          shape: [1],
+          shape: [1, 1, 2, 1],
           value: [
+            10,
             10,
           ],
         },
@@ -139,11 +140,11 @@ describe('test quantizeLinear', function() {
           ],
         },
         { // scale
-          shape: [1],
+          shape: [1, 1, 1, 1],
           value: [1],
         },
         { // zeroPoint
-          shape: [1],
+          shape: [1, 1, 1, 1],
           value: [100],
         },
         'int8',

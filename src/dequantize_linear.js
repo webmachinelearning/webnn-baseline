@@ -1,6 +1,7 @@
 'use strict';
 
 import {mul, sub} from './binary.js';
+import {validateQDQParams} from './lib/validate-input.js';
 
 /**
  * Elementwise operator to scale a low precision integer (typically uint8 with a zero-point bias)
@@ -12,5 +13,6 @@ import {mul, sub} from './binary.js';
  * @return {Tensor}
  */
 export function dequantizeLinear(input, scale, zeroPoint) {
+  validateQDQParams(input, scale, zeroPoint);
   return mul(sub(input, zeroPoint), scale);
 }

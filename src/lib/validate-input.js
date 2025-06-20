@@ -861,3 +861,32 @@ export function validatePadParams(input, beginningPadding, endingPadding, mode) 
     }
   }
 }
+
+export function validateQDQParams(input, scale, zeroPoint) {
+  const inputRank = input.rank;
+  const inputShape = input.shape;
+  const scaleRank = scale.rank;
+  const scaleShape = scale.shape;
+  const zeroPointRank = zeroPoint.rank;
+  const zeroPointShape = zeroPoint.shape;
+
+  if (inputRank != scaleRank) {
+    throw new Error(
+        `The scale's rank ${scaleRank} is not equal to the input's rank ${inputRank}.`);
+  }
+
+  if (inputRank != zeroPointRank) {
+    throw new Error(
+        `The zeroPoint's rank ${zeroPointRank} is not equal to the input's rank ${inputRank}.`);
+  }
+
+  if (!scaleShape.every((size, index) => size === zeroPointShape[index])) {
+    throw new Error(
+        `The scale's shape [${scaleShape}] is not equal to the zeroPoint's shape [${zeroPointShape}].`);
+  }
+
+  if (!inputShape.every((size, index) => size % scaleShape[index]) === 0) {
+    throw new Error(
+        `The scale's shape or zeroPoint's shape [${scaleShape}] is not equal to the zeroPoint's shape [${zeroPointShape}].`);
+  }
+}
