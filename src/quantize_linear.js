@@ -6,8 +6,23 @@ import {unary} from './unary.js';
 import {blockwiseExpand} from './lib/broadcast.js';
 import {validateQDQParams} from './lib/validate-input.js';
 
+/**
+ * This function finds the nearest integer for x.
+ * In case of halves, the rule is to round them to the nearest even integer.
+ * @param {Number} x
+ * @return {Number} An interger number
+ */
 function roundToNearestEvens(x) {
-  return Math.floor(x) % 2 == 0 ? Math.floor(x) : Math.ceil(x);
+  if (Number.isInteger(x)) {
+    return x;
+  } else {
+    if (Math.abs(x - Math.trunc(x)) === 0.5) {
+      // case of halves
+      return Math.floor(x) % 2 == 0 ? Math.floor(x) : Math.ceil(x);
+    } else {
+      return Math.round(x);
+    }
+  }
 }
 
 /**

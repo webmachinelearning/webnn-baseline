@@ -91,7 +91,7 @@ describe('test quantizeLinear', function() {
           value: [
             0, 2, 3, 255,
             0, 1, 2, 255,
-            0, 0, 0, 200,
+            0, 0, 1, 200,
           ],
         },
     );
