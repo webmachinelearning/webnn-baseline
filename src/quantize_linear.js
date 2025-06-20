@@ -3,6 +3,7 @@
 import {add, div} from './binary.js';
 import {clamp} from './clamp.js';
 import {unary} from './unary.js';
+import {blockwiseExpand} from './lib/broadcast.js';
 import {validateQDQParams} from './lib/validate-input.js';
 
 function roundToNearestEvens(x) {
@@ -21,9 +22,12 @@ function roundToNearestEvens(x) {
  */
 export function quantizeLinear(input, scale, zeroPoint, dataType) {
   validateQDQParams(input, scale, zeroPoint);
-  const dividedOutput = div(input, scale);
+
+  const broadcastedScale = blockwiseExpand(scale, input.shape);
+  const broadcastedZeroPoint = blockwiseExpand(zeroPoint, input.shape);
+  const dividedOutput = div(input, broadcastedScale);
   const roundedOutput = unary(dividedOutput, (x) => roundToNearestEvens(x));
-  const addedOutput = add(roundedOutput, zeroPoint);
+  const addedOutput = add(roundedOutput, broadcastedZeroPoint);
 
   let maxValue; let minValue;
   switch (dataType) {

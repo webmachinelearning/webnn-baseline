@@ -1,6 +1,7 @@
 'use strict';
 
 import {mul, sub} from './binary.js';
+import {blockwiseExpand} from './lib/broadcast.js';
 import {validateQDQParams} from './lib/validate-input.js';
 
 /**
@@ -14,5 +15,8 @@ import {validateQDQParams} from './lib/validate-input.js';
  */
 export function dequantizeLinear(input, scale, zeroPoint) {
   validateQDQParams(input, scale, zeroPoint);
-  return mul(sub(input, zeroPoint), scale);
+
+  const broadcastedScale = blockwiseExpand(scale, input.shape);
+  const broadcastedZeroPoint = blockwiseExpand(zeroPoint, input.shape);
+  return mul(sub(input, broadcastedZeroPoint), broadcastedScale);
 }
