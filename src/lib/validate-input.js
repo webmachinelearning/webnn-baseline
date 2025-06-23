@@ -887,6 +887,6 @@ export function validateQDQParams(input, scale, zeroPoint) {
 
   if (!inputShape.every((size, index) => size % scaleShape[index]) === 0) {
     throw new Error(
-        `The scale's shape or zeroPoint's shape [${scaleShape}] is not equal to the zeroPoint's shape [${zeroPointShape}].`);
+        `The scale's shape or zeroPoint's shape [${scaleShape}] is not a multiple of the zeroPoint's shape [${zeroPointShape}].`);
   }
 }

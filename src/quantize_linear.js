@@ -10,7 +10,7 @@ import {validateQDQParams} from './lib/validate-input.js';
  * This function finds the nearest integer for x.
  * In case of halves, the rule is to round them to the nearest even integer.
  * @param {Number} x
- * @return {Number} An interger number
+ * @return {Number} An integer number
  */
 function roundToNearestEvens(x) {
   if (Number.isInteger(x)) {
