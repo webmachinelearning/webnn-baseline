@@ -1,4 +1,6 @@
 import {Tensor} from './tensor.js';
+import {expand} from '../expand.js';
+import {reshape} from '../reshape.js';
 
 /**
  * Broadcast a Tensor to a compatible shape NumPy-style.
@@ -69,4 +71,59 @@ export function getBroadcastShape(shapeA, shapeB) {
     }
   }
   return outShape;
+}
+
+export function blockwiseExpand(input, outputShape) {
+  // Given the original input and a desired output shape, this expands each axis
+  // by repeating the block the number of times per that axis. Though, backend
+  // implementations might have much more efficient upsampling operators that
+  // can accept multiple dimensions to upsample all dimensions at once by
+  // integer multiples (like tile) using nearest neighbor resampling:
+  // output = resample(scale, {sizes: input.shape})
+
+  let output = input;
+
+  for (let axis = 0; axis < input.shape.length; ++axis) {
+    const oldShape = output.shape;
+    const oldDimensionLength = oldShape[axis];
+    const newDimensionLength = outputShape[axis];
+
+    if (newDimensionLength != oldDimensionLength) {
+      // Since tile/expand can only accept repetitions of entire dimension
+      // slices (not repeating individual elements along an axis), temporarily
+      // reshape the tensor to enable them to broadcast the elements up to the
+      // full block size, utilizing an inserted dimension of size 1.
+      const elementRepeatCount = newDimensionLength / oldDimensionLength;
+      const flattenedShape = getFlattenedShapeAroundAxis(oldShape, axis);
+      const unexpandedShape =
+        [flattenedShape[0], flattenedShape[1], 1, flattenedShape[2]];
+      const expandedShape = [
+        flattenedShape[0],
+        flattenedShape[1],
+        elementRepeatCount,
+        flattenedShape[2],
+      ];
+      const reshapedInput = reshape(output, unexpandedShape);
+      output = expand(reshapedInput, expandedShape);
+
+      const newShape = [...oldShape];
+      newShape[axis] = newDimensionLength;
+      output = reshape(output, newShape);
+    }
+  }
+
+  return output;
+}
+
+// Compute the flattened shape before and after the given axis, yielding a
+// 3-element list: e.g.
+// - inputShape = [2,3,4,5,6] with axis = 2 yields shape [6,4,30].
+// - inputShape = [4] with axis = 0 yields shape [1,4,1].
+function getFlattenedShapeAroundAxis(inputShape, axis) {
+  axis = Math.max(Math.min(axis, inputShape.length - 1), 0);
+  const shapeBefore = inputShape.slice(0, axis);
+  const shapeAfter = inputShape.slice(axis + 1, inputShape.length);
+  const countBefore = shapeBefore.reduce((a, b) => a * b, 1);
+  const countAfter = shapeAfter.reduce((a, b) => a * b, 1);
+  return [countBefore, inputShape[axis], countAfter];
 }

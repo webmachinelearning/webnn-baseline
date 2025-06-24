@@ -1,6 +1,8 @@
 'use strict';
 
 import {mul, sub} from './binary.js';
+import {blockwiseExpand} from './lib/broadcast.js';
+import {validateQDQParams} from './lib/validate-input.js';
 
 /**
  * Elementwise operator to scale a low precision integer (typically uint8 with a zero-point bias)
@@ -12,5 +14,9 @@ import {mul, sub} from './binary.js';
  * @return {Tensor}
  */
 export function dequantizeLinear(input, scale, zeroPoint) {
-  return mul(sub(input, zeroPoint), scale);
+  validateQDQParams(input, scale, zeroPoint);
+
+  const broadcastedScale = blockwiseExpand(scale, input.shape);
+  const broadcastedZeroPoint = blockwiseExpand(zeroPoint, input.shape);
+  return mul(sub(input, broadcastedZeroPoint), broadcastedScale);
 }

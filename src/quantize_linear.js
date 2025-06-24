@@ -3,9 +3,26 @@
 import {add, div} from './binary.js';
 import {clamp} from './clamp.js';
 import {unary} from './unary.js';
+import {blockwiseExpand} from './lib/broadcast.js';
+import {validateQDQParams} from './lib/validate-input.js';
 
+/**
+ * This function finds the nearest integer for x.
+ * In case of halves, the rule is to round them to the nearest even integer.
+ * @param {Number} x
+ * @return {Number} An integer number
+ */
 function roundToNearestEvens(x) {
-  return Math.floor(x) % 2 == 0 ? Math.floor(x) : Math.ceil(x);
+  if (Number.isInteger(x)) {
+    return x;
+  } else {
+    if (Math.abs(x - Math.trunc(x)) === 0.5) {
+      // case of halves
+      return Math.floor(x) % 2 == 0 ? Math.floor(x) : Math.ceil(x);
+    } else {
+      return Math.round(x);
+    }
+  }
 }
 
 /**
@@ -19,9 +36,13 @@ function roundToNearestEvens(x) {
  * @return {Tensor}
  */
 export function quantizeLinear(input, scale, zeroPoint, dataType) {
-  const dividedOutput = div(input, scale);
+  validateQDQParams(input, scale, zeroPoint);
+
+  const broadcastedScale = blockwiseExpand(scale, input.shape);
+  const broadcastedZeroPoint = blockwiseExpand(zeroPoint, input.shape);
+  const dividedOutput = div(input, broadcastedScale);
   const roundedOutput = unary(dividedOutput, (x) => roundToNearestEvens(x));
-  const addedOutput = add(roundedOutput, zeroPoint);
+  const addedOutput = add(roundedOutput, broadcastedZeroPoint);
 
   let maxValue; let minValue;
   switch (dataType) {
