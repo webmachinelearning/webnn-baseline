@@ -831,3 +831,33 @@ export function validateTileParams(input, repetitions) {
         `Invalid repetitions ${repetitions} - it should be an Array of positive integers.`);
   }
 }
+
+export function validatePadParams(input, beginningPadding, endingPadding, mode) {
+  const inputRank = input.rank;
+  if (inputRank === 0) {
+    throw new Error(`The input's rank should be greater than 0.`);
+  }
+  if (beginningPadding.length !== inputRank) {
+    throw new Error(`Invalid beginningPadding, beginningPadding's size ${beginningPadding.length}` +
+        ` is not equal to input's rank ${inputRank}.`);
+  }
+  if (endingPadding.length !== inputRank) {
+    throw new Error(`Invalid endingPadding, endingPadding's size ${beginningPadding.length} is ` +
+        `not equal to input's rank ${inputRank}.`);
+  }
+  if (mode === 'reflection') {
+    const inputShape = input.shape;
+    for (let index = 0; index < inputRank; ++index) {
+      if (beginningPadding[index] >= inputShape[index]) {
+        throw new Error(`Invalid beginningPadding on reflection mode, beginningPadding[index] ` +
+            `${beginningPadding[index]} is greater than or equal to inputShape[index] ` +
+            `${inputShape[index]}.`);
+      }
+      if (endingPadding[index] >= inputShape[index]) {
+        throw new Error(`Invalid endingPadding on reflection mode, endingPadding[index] ` +
+            `${endingPadding[index]} is greater than or equal to inputShape[index] ` +
+            `${inputShape[index]}.`);
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 'use strict';
 
 import {Tensor} from './lib/tensor.js';
+import {validatePadParams} from './lib/validate-input.js';
 
 /**
  * Get mapped location from source tensor.
@@ -24,16 +25,14 @@ function getMappedLocation(location, inputShape, beginningPadding, mode) {
       }
     }
   } else {
-    // reflection mode or symmetric mode
-    const offset = mode === 'symmetric' ? 1 : 0;
+    // reflection mode
     for (let i = 0; i < rank; i++) {
       if (mappedLocation[i] < beginningPadding[i]) {
         mappedLocation[i] = beginningPadding[i] + (beginningPadding[i] - mappedLocation[i]) -
-            beginningPadding[i] - offset;
+            beginningPadding[i];
       } else if (mappedLocation[i] >= beginningPadding[i] + inputShape[i]) {
         mappedLocation[i] = beginningPadding[i] + inputShape[i] - 1 -
-            (mappedLocation[i] - (beginningPadding[i] + inputShape[i] -1)) -
-            beginningPadding[i] + offset;
+            (mappedLocation[i] - (beginningPadding[i] + inputShape[i] -1)) - beginningPadding[i];
       } else {
         mappedLocation[i] -= beginningPadding[i];
       }
@@ -66,7 +65,7 @@ function updateOutputElement(index, source, destination, beginningPadding, mode,
   if (needPadding) {
     if (mode === 'constant') {
       result = value;
-    } else if (mode === 'edge' || mode === 'reflection' || mode === 'symmetric') {
+    } else if (mode === 'edge' || mode === 'reflection') {
       const targetLocation = getMappedLocation(location, sourceShape, beginningPadding, mode);
       result = source.getValueByLocation(targetLocation);
     } else {
@@ -95,6 +94,7 @@ export function pad(
       mode='constant',
       value=0,
     } = {}) {
+  validatePadParams(input, beginningPadding, endingPadding, mode);
   const outputShape = input.shape.map((v, i) => v + beginningPadding[i] + endingPadding[i]);
   const output = new Tensor(outputShape);
   for (let i = 0; i < output.size; ++i) {
